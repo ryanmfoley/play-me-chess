@@ -1,7 +1,9 @@
 function Cell(row, col) {
 	this.row = row
 	this.col = col
+	this.color = ''
 	this.piece = ''
+	this.empty = true
 	this.cellBox = document.querySelectorAll(`.row-${row}`)[col]
 }
 
@@ -29,16 +31,20 @@ const assignPiecesToSquares = (board) => {
 	// Create function to assign pawns to squares
 	const assignPawns = () => {
 		for (const column of board[1]) {
+			column.color = 'black'
 			column.piece = 'pawn'
 		}
 		for (const column of board[6]) {
+			column.color = 'white'
 			column.piece = 'pawn'
 		}
 	}
 
 	// Create function to assign pieces to squares
 	const assignPiece = (piece, column) => {
+		board[0][column].color = 'black'
 		board[0][column].piece = piece
+		board[7][column].color = 'white'
 		board[7][column].piece = piece
 	}
 
@@ -58,59 +64,66 @@ const assignPiecesToSquares = (board) => {
 	return board
 }
 
-const setupBoard = (board) => {
-	// Create function that places pawns on the board
-	const placePawns = (color, row) => {
-		for (const col of board[row]) {
-			const pawn = document.createElement('img')
-			pawn.src = color === 'white' ? './pieces/wp.svg' : './pieces/bp.svg'
-			col.cellBox.append(pawn)
-		}
-	}
-
-	// Create function that places the major pieces on the board
-	const placePieces = (color) => {
-		board.forEach((row) =>
-			row.forEach((square) => {
-				let img
-				switch (square.piece) {
-					case 'pawn':
-						img = document.createElement('img')
-						img.src = square.row > 5 ? './pieces/wp.svg' : './pieces/bp.svg'
-						square.cellBox.append(img)
-						break
-					case 'knight':
-						img = document.createElement('img')
-						img.src = square.row > 5 ? './pieces/wk.svg' : './pieces/bk.svg'
-						square.cellBox.append(img)
-						break
-					case 'bishop':
-						img = document.createElement('img')
-						img.src = square.row > 5 ? './pieces/wb.svg' : './pieces/bb.svg'
-						square.cellBox.append(img)
-						break
-					case 'rook':
-						img = document.createElement('img')
-						img.src = square.row > 5 ? './pieces/wr.svg' : './pieces/br.svg'
-						square.cellBox.append(img)
-						break
-					case 'queen':
-						img = document.createElement('img')
-						img.src = square.row > 5 ? './pieces/wq.svg' : './pieces/bq.svg'
-						square.cellBox.append(img)
-						break
-					case 'king':
-						img = document.createElement('img')
-						img.src = square.row > 5 ? './pieces/wk.svg' : './pieces/bk.svg'
-						square.cellBox.append(img)
-						break
-				}
-			})
-		)
-	}
-
-	// Place pieces on board
-	placePieces()
+// Create function that places the pieces on the board
+const displayPieces = (board) => {
+	board.forEach((row) =>
+		row.forEach((square) => {
+			let img
+			switch (square.piece) {
+				case 'pawn':
+					img = document.createElement('img')
+					img.src =
+						square.color === 'white' ? './pieces/wp.svg' : './pieces/bp.svg'
+					square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
+					square.empty = false
+					break
+				case 'knight':
+					img = document.createElement('img')
+					img.src =
+						square.color === 'white' ? './pieces/wn.svg' : './pieces/bn.svg'
+					square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
+					square.empty = false
+					break
+				case 'bishop':
+					img = document.createElement('img')
+					img.src =
+						square.color === 'white' ? './pieces/wb.svg' : './pieces/bb.svg'
+					square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
+					square.empty = false
+					break
+				case 'rook':
+					img = document.createElement('img')
+					img.src =
+						square.color === 'white' ? './pieces/wr.svg' : './pieces/br.svg'
+					square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
+					square.empty = false
+					break
+				case 'queen':
+					img = document.createElement('img')
+					img.src =
+						square.color === 'white' ? './pieces/wq.svg' : './pieces/bq.svg'
+					square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
+					square.empty = false
+					break
+				case 'king':
+					img = document.createElement('img')
+					img.src =
+						square.color === 'white' ? './pieces/wk.svg' : './pieces/bk.svg'
+					square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
+					square.empty = false
+					break
+				default:
+					square.cellBox.innerHTML = ''
+					square.empty = true
+			}
+		})
+	)
 }
 
 // Create a function that clears the board
@@ -124,6 +137,6 @@ export {
 	build2DArray,
 	setupGrid,
 	assignPiecesToSquares,
-	setupBoard,
+	displayPieces,
 	clearBoard,
 }

@@ -1,30 +1,29 @@
 import {
 	build2DArray,
 	setupGrid,
-	setupBoard,
 	assignPiecesToSquares,
+	displayPieces,
 	clearBoard,
 } from './createBoard.js'
+
+import { selectSquare, movePiece } from './moves.js'
+
+/////////////////////// Game started ///////////////////////
+let startGame = false
+
+let squareSelected = false
 
 // Start Button
 const startGameButton = document.querySelector('#start-game')
 
-function selectCell(cell) {
-	const cellRow = cell.classList[0].match(/\d+/)
-	const cellCol = cell.classList[1].match(/\d+/)
-	return grid[cellRow][cellCol]
-}
-
-// Game started
-let startGame = false
-
 // Grab squares
 const squares = document.querySelector('.board')
 
-startGameButton.addEventListener('click', () => {
-	// Build Grid
-	const board = setupGrid()
+// Build Grid
+let board = setupGrid()
 
+// Listen for Start-Game event
+startGameButton.addEventListener('click', () => {
 	// Clear Board
 	clearBoard(board)
 
@@ -32,5 +31,32 @@ startGameButton.addEventListener('click', () => {
 	assignPiecesToSquares(board)
 
 	// Place pieces on board
-	setupBoard(board)
+	displayPieces(board)
+	startGame = true
+})
+
+let color
+let piece
+let selectedSquare
+let destination
+
+// Listen for cell clicks
+squares.addEventListener('click', (event) => {
+	if (startGame) {
+		if (!squareSelected) {
+			selectedSquare = selectSquare(board, event.path)
+			color = selectedSquare.color ? selectedSquare.color : ''
+			piece = selectedSquare.piece
+
+			if (piece) {
+				squareSelected = true
+			}
+		} else {
+			destination = selectSquare(board, event.path)
+			movePiece[piece](board, selectedSquare, destination)
+			// clearBoard(board)
+			displayPieces(board)
+			squareSelected = false
+		}
+	}
 })

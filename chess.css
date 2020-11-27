@@ -8,6 +8,24 @@ header {
 	justify-items: center;
 }
 
+header > h1 {
+	font-size: 48px;
+}
+
+#start-game {
+	background: url('pieces/wp.svg') no-repeat;
+	display: inline-block;
+	width: 60px;
+	height: 60px;
+	cursor: pointer;
+	border: 5px solid black;
+	border-radius: 10px;
+}
+
+#start-game:hover {
+	background: url('pieces/bp.svg') no-repeat;
+}
+
 .board {
 	display: grid;
 	width: 800px;
