@@ -35,7 +35,7 @@ startGameButton.addEventListener('click', () => {
 	startGame = true
 })
 
-let color
+let turn = 'white'
 let piece
 let selectedSquare
 let destination
@@ -45,18 +45,18 @@ squares.addEventListener('click', (event) => {
 	if (startGame) {
 		if (!squareSelected) {
 			selectedSquare = selectSquare(board, event.path)
-			color = selectedSquare.color ? selectedSquare.color : ''
+			const color = selectedSquare.color ? selectedSquare.color : ''
 			piece = selectedSquare.piece
 
-			if (piece) {
+			if (selectedSquare.color === turn && piece) {
 				squareSelected = true
 			}
 		} else {
 			destination = selectSquare(board, event.path)
 			movePiece[piece](board, selectedSquare, destination)
-			// clearBoard(board)
 			displayPieces(board)
 			squareSelected = false
+			turn = 'black'
 		}
 	}
 })
