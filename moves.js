@@ -10,9 +10,7 @@ const selectSquare = (board, cell) => {
 }
 
 const movePiece = {
-	// pawn: function (board, color, currentSquare, destination) {
 	pawn: function (board, selectedSquare, destination) {
-		// console.log(currentSquare.cellBox)
 		const moveUpOne = () => {
 			const row = selectedSquare.row
 			const col = selectedSquare.col

@@ -1,14 +1,12 @@
-import {
-	build2DArray,
-	setupGrid,
-	assignPiecesToSquares,
-	displayPieces,
-	clearBoard,
-} from './createBoard.js'
-
+import { board } from './board.js'
+import { whitePieces, blackPieces } from './pieces.js'
 import { selectSquare, movePiece } from './moves.js'
 
 /////////////////////// Game started ///////////////////////
+
+console.log('whitePieces', whitePieces)
+console.log('blackPieces', blackPieces)
+
 let startGame = false
 
 let squareSelected = false
@@ -19,19 +17,14 @@ const startGameButton = document.querySelector('#start-game')
 // Grab squares
 const squares = document.querySelector('.board')
 
-// Build Grid
-let board = setupGrid()
-
 // Listen for Start-Game event
 startGameButton.addEventListener('click', () => {
-	// Clear Board
-	clearBoard(board)
+	board.clearBoard()
+	board.setPieces()
+	board.displayPieces()
 
-	// Assign pieces to squares
-	assignPiecesToSquares(board)
+	// board.printBoard()
 
-	// Place pieces on board
-	displayPieces(board)
 	startGame = true
 })
 
@@ -44,7 +37,7 @@ let destination
 squares.addEventListener('click', (event) => {
 	if (startGame) {
 		if (!squareSelected) {
-			selectedSquare = selectSquare(board, event.path)
+			selectedSquare = selectSquare(board.board, event.path)
 			const color = selectedSquare.color ? selectedSquare.color : ''
 			piece = selectedSquare.piece
 
@@ -52,11 +45,11 @@ squares.addEventListener('click', (event) => {
 				squareSelected = true
 			}
 		} else {
-			destination = selectSquare(board, event.path)
-			movePiece[piece](board, selectedSquare, destination)
-			displayPieces(board)
+			destination = selectSquare(board.board, event.path)
+			movePiece[piece](board.board, selectedSquare, destination)
+			board.displayPieces()
 			squareSelected = false
-			turn = 'black'
+			turn = turn === 'white' ? 'black' : 'white'
 		}
 	}
 })
