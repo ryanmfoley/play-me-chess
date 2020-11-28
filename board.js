@@ -9,15 +9,21 @@ function Cell(row, col) {
 
 class Board {
 	constructor() {
-		this.board = new Array(8)
+		const board = new Array(8)
 		for (let i = 0; i < 8; i++) {
-			this.board[i] = new Array(8)
+			board[i] = new Array(8)
 		}
 		for (let row = 0; row < 8; row++) {
 			for (let col = 0; col < 8; col++) {
-				this.board[row][col] = new Cell(row, col)
+				board[row][col] = new Cell(row, col)
 			}
 		}
+
+		Board.board = board
+	}
+
+	setBoard() {
+		this.board = Board.board
 	}
 
 	displayPieces() {
@@ -81,40 +87,41 @@ class Board {
 		)
 	}
 
+	// Maybe place this inside setPieces()
+	// assignPieceToSquare(piece, column) {
+	// 	this.board[0][column].color = 'black'
+	// 	this.board[0][column].piece = piece
+	// 	this.board[7][column].color = 'white'
+	// 	this.board[7][column].piece = piece
+	// }
+
+	// setPieces() {
+	// 	// Assign pawns to squares
+	// 	for (const column of this.board[1]) {
+	// 		column.color = 'black'
+	// 		column.piece = 'pawn'
+	// 	}
+
+	// 	for (const column of this.board[6]) {
+	// 		column.color = 'white'
+	// 		column.piece = 'pawn'
+	// 	}
+
+	// 	// Assign pieces to squares
+	// 	this.assignPieceToSquare('knight', 1)
+	// 	this.assignPieceToSquare('knight', 6)
+	// 	this.assignPieceToSquare('bishop', 2)
+	// 	this.assignPieceToSquare('bishop', 5)
+	// 	this.assignPieceToSquare('rook', 0)
+	// 	this.assignPieceToSquare('rook', 7)
+	// 	this.assignPieceToSquare('queen', 3)
+	// 	this.assignPieceToSquare('king', 4)
+	// }
+
 	clearBoard() {
 		this.board.forEach((row) =>
 			row.forEach((square) => (square.cellBox.innerHTML = ''))
 		)
-	}
-
-	assignPieceToSquare(piece, column) {
-		this.board[0][column].color = 'black'
-		this.board[0][column].piece = piece
-		this.board[7][column].color = 'white'
-		this.board[7][column].piece = piece
-	}
-
-	setPieces() {
-		// Assign pawns to squares
-		for (const column of this.board[1]) {
-			column.color = 'black'
-			column.piece = 'pawn'
-		}
-
-		for (const column of this.board[6]) {
-			column.color = 'white'
-			column.piece = 'pawn'
-		}
-
-		// Assign pieces to squares
-		this.assignPieceToSquare('knight', 1)
-		this.assignPieceToSquare('knight', 6)
-		this.assignPieceToSquare('bishop', 2)
-		this.assignPieceToSquare('bishop', 5)
-		this.assignPieceToSquare('rook', 0)
-		this.assignPieceToSquare('rook', 7)
-		this.assignPieceToSquare('queen', 3)
-		this.assignPieceToSquare('king', 4)
 	}
 
 	printBoard() {

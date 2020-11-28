@@ -8,9 +8,48 @@ class Piece extends Board {
 		this.row = row
 		this.col = col
 	}
+
+	changePosition(row, col) {
+		this.row = row
+		this.col = col
+	}
+
+	assignPieceToSquare() {
+		Board.board[this.row][this.col].color = this.color
+		Board.board[this.row][this.col].piece = this.piece
+	}
+
+	printPiece() {
+		console.log(this.piece)
+	}
 }
 
 class Pawn extends Piece {
+	constructor(color, piece, row, col) {
+		super(color, piece, row, col)
+	}
+}
+class Knight extends Piece {
+	constructor(color, piece, row, col) {
+		super(color, piece, row, col)
+	}
+}
+class Bishop extends Piece {
+	constructor(color, piece, row, col) {
+		super(color, piece, row, col)
+	}
+}
+class Rook extends Piece {
+	constructor(color, piece, row, col) {
+		super(color, piece, row, col)
+	}
+}
+class Queen extends Piece {
+	constructor(color, piece, row, col) {
+		super(color, piece, row, col)
+	}
+}
+class King extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
 	}
@@ -27,4 +66,32 @@ for (let color of ['white', 'black']) {
 	}
 }
 
-export { whitePieces, blackPieces }
+whitePieces.push(new Knight('white', 'knight', 7, 1))
+whitePieces.push(new Knight('white', 'knight', 7, 6))
+whitePieces.push(new Bishop('white', 'bishop', 7, 2))
+whitePieces.push(new Bishop('white', 'bishop', 7, 5))
+whitePieces.push(new Rook('white', 'rook', 7, 0))
+whitePieces.push(new Rook('white', 'rook', 7, 7))
+whitePieces.push(new Queen('white', 'queen', 7, 3))
+whitePieces.push(new King('white', 'king', 7, 4))
+
+blackPieces.push(new Knight('black', 'knight', 0, 1))
+blackPieces.push(new Knight('black', 'knight', 0, 6))
+blackPieces.push(new Bishop('black', 'bishop', 0, 2))
+blackPieces.push(new Bishop('black', 'bishop', 0, 5))
+blackPieces.push(new Rook('black', 'rook', 0, 0))
+blackPieces.push(new Rook('black', 'rook', 0, 7))
+blackPieces.push(new Queen('black', 'queen', 0, 3))
+blackPieces.push(new King('black', 'king', 0, 4))
+
+const placePiecesOnBoard = () => {
+	whitePieces.forEach((piece) => {
+		piece.assignPieceToSquare()
+	})
+
+	blackPieces.forEach((piece) => {
+		piece.assignPieceToSquare()
+	})
+}
+
+export { placePiecesOnBoard }
