@@ -34,7 +34,7 @@ header > h1 {
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
 	cursor: pointer;
-	border: 2px solid purple;
+	border: 1px solid black;
 }
 
 .board > div {

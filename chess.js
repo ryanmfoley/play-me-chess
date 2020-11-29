@@ -1,11 +1,11 @@
 import { board } from './board.js'
 import { placePiecesOnBoard } from './pieces.js'
+// import { whitePlayer, blackPlayer } from './players.js'
 import { selectSquare, movePiece } from './moves.js'
 
-/////////////////////// Game started ///////////////////////
+// console.log('whitePlayer', whitePlayer, 'blackPlayer', blackPlayer)
 
-// console.log('whitePieces', whitePieces)
-// console.log('blackPieces', blackPieces)
+/////////////////////// Game started ///////////////////////
 
 let startGame = false
 
@@ -19,9 +19,8 @@ const squares = document.querySelector('.board')
 
 // Listen for Start-Game event
 startGameButton.addEventListener('click', () => {
-	board.setBoard()
+	board.updateBoard()
 	board.clearBoard()
-
 	placePiecesOnBoard()
 	board.displayPieces()
 
@@ -30,26 +29,32 @@ startGameButton.addEventListener('click', () => {
 
 let turn = 'white'
 let piece
-let selectedSquare
-let destination
+let selectedPiece
+let landingSquare
+let validMove
 
 // Listen for cell clicks
-// squares.addEventListener('click', (event) => {
-// 	if (startGame) {
-// 		if (!squareSelected) {
-// 			selectedSquare = selectSquare(board.board, event.path)
-// 			const color = selectedSquare.color ? selectedSquare.color : ''
-// 			piece = selectedSquare.piece
+squares.addEventListener('click', (event) => {
+	if (startGame) {
+		if (!selectedPiece) {
+			const selectedSquare = board.selectSquare(event.path)
 
-// 			if (selectedSquare.color === turn && piece) {
-// 				squareSelected = true
-// 			}
-// 		} else {
-// 			destination = selectSquare(board.board, event.path)
-// 			movePiece[piece](board.board, selectedSquare, destination)
-// 			board.displayPieces()
-// 			squareSelected = false
-// 			turn = turn === 'white' ? 'black' : 'white'
-// 		}
-// 	}
-// })
+			// Check if a piece was selected and it's their turn
+			if (selectedSquare.color === turn) {
+				selectedPiece = selectedSquare.piece
+			}
+		} else if (!validMove) {
+			landingSquare = selectSquare(board.board, event.path)
+			validMove = selectedPiece.checkIfMoveIsValid(landingSquare)
+			if (validMove) {
+				movePiece(board, selectedPiece, landingSquare)
+
+				selectedPiece = false
+				turn = turn === 'white' ? 'black' : 'white'
+
+				// Reset validMove switch
+				validMove = false
+			}
+		}
+	}
+})
