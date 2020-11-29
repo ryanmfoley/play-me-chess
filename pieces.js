@@ -109,7 +109,67 @@ class Bishop extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
 	}
-	checkForValidMove() {}
+	checkForValidMove(landingSquare) {
+		// Get board
+		const board = Board.board
+
+		// Check movement direction
+		const xDirection = landingSquare.col < this.col ? 'left' : 'right'
+		const yDirection = landingSquare.row < this.row ? 'up' : 'down'
+		let direction
+		if (yDirection === 'up' && xDirection === 'left') direction = 'upLeft'
+		if (yDirection === 'up' && xDirection === 'right') direction = 'upRight'
+		if (yDirection === 'down' && xDirection === 'left') direction = 'downLeft'
+		if (yDirection === 'down' && xDirection === 'right') direction = 'downRight'
+
+		// Check if movement is diagonal
+		if (
+			Math.abs(this.row - landingSquare.row) ===
+			Math.abs(this.col - landingSquare.col)
+		) {
+			// Check for piece in the way
+			let isPieceInWay = false
+			if (direction === 'upLeft') {
+				let row = this.row - 1
+				let col = this.col - 1
+				for (; row > landingSquare.row; row--, col--) {
+					if (board[row][col].piece) {
+						isPieceInWay = true
+					}
+				}
+			}
+			if (direction === 'upRight') {
+				let row = this.row - 1
+				let col = this.col + 1
+				for (; row > landingSquare.row; row--, col++) {
+					if (board[row][col].piece) {
+						isPieceInWay = true
+					}
+				}
+			}
+			if (direction === 'downLeft') {
+				let row = this.row + 1
+				let col = this.col - 1
+				for (; row < landingSquare.row; row++, col--) {
+					if (board[row][col].piece) {
+						isPieceInWay = true
+					}
+				}
+			}
+			if (direction === 'downRight') {
+				let row = this.row + 1
+				let col = this.col + 1
+				for (; row < landingSquare.row; row++, col++) {
+					if (board[row][col].piece) {
+						isPieceInWay = true
+					}
+				}
+			}
+
+			if (!isPieceInWay && landingSquare.piece.color !== this.color) return true
+		}
+		return false
+	}
 }
 
 class Rook extends Piece {

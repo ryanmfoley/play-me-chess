@@ -1,7 +1,6 @@
 import { board } from './board.js'
 import { placePiecesOnBoard } from './pieces.js'
 // import { whitePlayer, blackPlayer } from './players.js'
-import { selectSquare } from './moves.js'
 
 // console.log('whitePlayer', whitePlayer, 'blackPlayer', blackPlayer)
 
@@ -44,7 +43,7 @@ squares.addEventListener('click', (event) => {
 				selectedPiece = selectedSquare.piece
 			}
 		} else if (!validMove) {
-			landingSquare = selectSquare(board.board, event.path)
+			landingSquare = board.selectSquare(event.path)
 			validMove = selectedPiece.checkForValidMove(landingSquare)
 			if (validMove) {
 				selectedPiece.movePiece(board, landingSquare)
@@ -61,3 +60,4 @@ squares.addEventListener('click', (event) => {
 
 // NOTES
 // maybe a while loop to wait for player to get out of check
+// still need to write code for "pawn en passant" and "pawn promotion"
