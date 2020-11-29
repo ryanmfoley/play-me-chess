@@ -1,7 +1,7 @@
 import { board } from './board.js'
 import { placePiecesOnBoard } from './pieces.js'
 // import { whitePlayer, blackPlayer } from './players.js'
-import { selectSquare, movePiece } from './moves.js'
+import { selectSquare } from './moves.js'
 
 // console.log('whitePlayer', whitePlayer, 'blackPlayer', blackPlayer)
 
@@ -45,9 +45,9 @@ squares.addEventListener('click', (event) => {
 			}
 		} else if (!validMove) {
 			landingSquare = selectSquare(board.board, event.path)
-			validMove = selectedPiece.checkIfMoveIsValid(landingSquare)
+			validMove = selectedPiece.checkForValidMove(landingSquare)
 			if (validMove) {
-				movePiece(board, selectedPiece, landingSquare)
+				selectedPiece.movePiece(board, landingSquare)
 
 				selectedPiece = false
 				turn = turn === 'white' ? 'black' : 'white'
@@ -58,3 +58,6 @@ squares.addEventListener('click', (event) => {
 		}
 	}
 })
+
+// NOTES
+// maybe a while loop to wait for player to get out of check

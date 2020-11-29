@@ -26,6 +26,16 @@ class Piece extends Board {
 		Board.board[this.row][this.col].empty = false
 	}
 
+	movePiece(board, landingSquare) {
+		this.removePieceFromSquare()
+		this.changePosition(landingSquare.row, landingSquare.col)
+		this.assignPieceToSquare()
+
+		board.clearBoard()
+		board.updateBoard()
+		board.displayPieces()
+	}
+
 	printPiece() {
 		console.log(this.piece)
 	}
@@ -36,13 +46,21 @@ class Pawn extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkIfMoveIsValid(landingSquare) {
+	checkForValidMove(landingSquare) {
 		if (this.color === 'white') {
 			if (
 				(this.col === landingSquare.col &&
 					!landingSquare.piece &&
 					landingSquare.row === this.row - 1) ||
-				(this.row === 6 && landingSquare.row === this.row - 2)
+				(this.col === landingSquare.col &&
+					this.row === 6 &&
+					landingSquare.row === this.row - 2 &&
+					!landingSquare.piece) ||
+				// Check for capture of opponents piece
+				(Math.abs(this.row - landingSquare.row) === 1 &&
+					Math.abs(this.col - landingSquare.col) === 1 &&
+					landingSquare.piece &&
+					this.color !== landingSquare.piece.color)
 			) {
 				return true
 			}
@@ -51,7 +69,15 @@ class Pawn extends Piece {
 				(this.col === landingSquare.col &&
 					!landingSquare.piece &&
 					landingSquare.row === this.row + 1) ||
-				(this.row === 1 && landingSquare.row === this.row + 2)
+				(this.col === landingSquare.col &&
+					this.row === 1 &&
+					landingSquare.row === this.row + 2 &&
+					!landingSquare.piece) ||
+				// Check for capture of opponents piece
+				(Math.abs(this.row - landingSquare.row) === 1 &&
+					Math.abs(this.col - landingSquare.col) === 1 &&
+					landingSquare.piece &&
+					this.color !== landingSquare.piece.color)
 			) {
 				return true
 			}
@@ -64,7 +90,19 @@ class Knight extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
 	}
-	checkForValidMove() {}
+	checkForValidMove(landingSquare) {
+		if (
+			(Math.abs(this.row - landingSquare.row) === 1 &&
+				Math.abs(this.col - landingSquare.col) === 2 &&
+				this.color !== landingSquare.piece.color) ||
+			(Math.abs(this.row - landingSquare.row) === 2 &&
+				Math.abs(this.col - landingSquare.col) === 1 &&
+				this.color !== landingSquare.piece.color)
+		) {
+			return true
+		}
+		return false
+	}
 }
 
 class Bishop extends Piece {

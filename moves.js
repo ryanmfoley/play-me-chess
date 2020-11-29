@@ -9,14 +9,4 @@ const selectSquare = (board, cell) => {
 	return board[cellRow][cellCol]
 }
 
-const movePiece = (board, piece, landingSquare) => {
-	piece.removePieceFromSquare()
-	piece.changePosition(landingSquare.row, landingSquare.col)
-	piece.assignPieceToSquare()
-
-	board.clearBoard()
-	board.updateBoard()
-	board.displayPieces()
-}
-
-export { selectSquare, movePiece }
+export { selectSquare }
