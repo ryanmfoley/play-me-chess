@@ -226,10 +226,10 @@ class Queen extends Piece {
 		super(color, piece, row, col)
 	}
 	checkForValidMove(landingSquare) {
-		const checkBishopMove = () => {
-			// Get board
-			const board = Board.board
+		// Get board
+		const board = Board.board
 
+		const checkBishopMove = () => {
 			// Check movement direction
 			const xDirection = landingSquare.col < this.col ? 'left' : 'right'
 			const yDirection = landingSquare.row < this.row ? 'up' : 'down'
@@ -286,9 +286,6 @@ class Queen extends Piece {
 			}
 		}
 		const checkRookMove = () => {
-			// Get board
-			const board = Board.board
-
 			// Check movement direction
 			let direction
 			if (landingSquare.col < this.col) {
@@ -301,14 +298,12 @@ class Queen extends Piece {
 
 			let isPieceInWay = false
 			if (direction === 'left') {
-				console.log('left')
 				for (let i = this.col - 1; i > landingSquare.col; i--) {
 					if (board[this.row][i].piece) {
 						isPieceInWay = true
 					}
 				}
 			} else if (direction === 'right') {
-				console.log('right')
 				for (let i = this.col + 1; i > landingSquare.col; i++) {
 					if (board[this.row][i].piece) {
 						isPieceInWay = true
@@ -321,7 +316,6 @@ class Queen extends Piece {
 					}
 				}
 			} else if (direction === 'down') {
-				console.log('down')
 				for (let i = this.row + 1; i > landingSquare.row; i++) {
 					if (board[i][this.col].piece) {
 						isPieceInWay = true
@@ -339,7 +333,16 @@ class King extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
 	}
-	checkForValidMove() {}
+	checkForValidMove(landingSquare) {
+		if (
+			Math.abs(this.row - landingSquare.row) <= 1 &&
+			Math.abs(this.col - landingSquare.col) <= 1 &&
+			landingSquare.color !== this.color
+		) {
+			return true
+		}
+		return false
+	}
 }
 
 const whitePieces = []
