@@ -61,3 +61,4 @@ squares.addEventListener('click', (event) => {
 // NOTES
 // maybe a while loop to wait for player to get out of check
 // still need to write code for "pawn en passant" and "pawn promotion"
+// Do a code review

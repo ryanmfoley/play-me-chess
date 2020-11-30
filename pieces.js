@@ -137,8 +137,7 @@ class Bishop extends Piece {
 						isPieceInWay = true
 					}
 				}
-			}
-			if (direction === 'upRight') {
+			} else if (direction === 'upRight') {
 				let row = this.row - 1
 				let col = this.col + 1
 				for (; row > landingSquare.row; row--, col++) {
@@ -146,8 +145,7 @@ class Bishop extends Piece {
 						isPieceInWay = true
 					}
 				}
-			}
-			if (direction === 'downLeft') {
+			} else if (direction === 'downLeft') {
 				let row = this.row + 1
 				let col = this.col - 1
 				for (; row < landingSquare.row; row++, col--) {
@@ -155,8 +153,7 @@ class Bishop extends Piece {
 						isPieceInWay = true
 					}
 				}
-			}
-			if (direction === 'downRight') {
+			} else if (direction === 'downRight') {
 				let row = this.row + 1
 				let col = this.col + 1
 				for (; row < landingSquare.row; row++, col++) {
@@ -176,7 +173,53 @@ class Rook extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
 	}
-	checkForValidMove() {}
+	checkForValidMove(landingSquare) {
+		// Get board
+		const board = Board.board
+
+		// Check movement direction
+		let direction
+		if (landingSquare.col < this.col) {
+			direction = 'left'
+		} else if (landingSquare.col > this.col) {
+			direction = 'right'
+		} else if (landingSquare.row < this.row) {
+			direction = 'up'
+		} else if (landingSquare.row > this.row) direction = 'down'
+
+		let isPieceInWay = false
+		if (direction === 'left') {
+			console.log('left')
+			for (let i = this.col - 1; i > landingSquare.col; i--) {
+				if (board[this.row][i].piece) {
+					isPieceInWay = true
+				}
+			}
+		} else if (direction === 'right') {
+			console.log('right')
+			for (let i = this.col + 1; i > landingSquare.col; i++) {
+				if (board[this.row][i].piece) {
+					isPieceInWay = true
+				}
+			}
+		} else if (direction === 'up') {
+			for (let i = this.row - 1; i > landingSquare.row; i--) {
+				if (board[i][this.col].piece) {
+					isPieceInWay = true
+				}
+			}
+		} else if (direction === 'down') {
+			console.log('down')
+			for (let i = this.row + 1; i > landingSquare.row; i++) {
+				if (board[i][this.col].piece) {
+					isPieceInWay = true
+				}
+			}
+			console.log(!isPieceInWay && landingSquare.piece.color !== this.color)
+		}
+		if (!isPieceInWay && landingSquare.piece.color !== this.color) return true
+		return false
+	}
 }
 
 class Queen extends Piece {
