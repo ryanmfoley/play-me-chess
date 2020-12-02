@@ -7,6 +7,12 @@ class Player {
 		this.inCheck = false
 		this.checkMate = false
 	}
+
+	getKingsPosition() {
+		this.kingPosition = this.pieces.find((piece) => piece.name === 'king')
+	}
+
+	isKingInCheck(enemySquares) {}
 }
 
 const whitePlayer = new Player('white', whitePieces)
