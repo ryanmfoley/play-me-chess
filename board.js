@@ -120,8 +120,8 @@ class Board {
 		)
 
 		// Assign marked squares to board
-		const whiteSquares = whitePlayer.pieces.map((piece) => piece.targets)
-		const blackSquares = blackPlayer.pieces.map((piece) => piece.targets)
+		this.whiteSquares = whitePlayer.pieces.map((piece) => piece.targets)
+		this.blackSquares = blackPlayer.pieces.map((piece) => piece.targets)
 	}
 
 	printBoard() {

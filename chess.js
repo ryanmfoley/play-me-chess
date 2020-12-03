@@ -2,8 +2,6 @@ import { chessBoard } from './board.js'
 import { placePiecesOnBoard } from './pieces.js'
 import { whitePlayer, blackPlayer } from './players.js'
 
-// console.log('whitePlayer', whitePlayer, 'blackPlayer', blackPlayer)
-
 /////////////////////// Game started ///////////////////////
 
 let startGame = false
@@ -16,11 +14,11 @@ const startGameButton = document.querySelector('#start-game')
 // Grab squares
 const squares = document.querySelector('.board')
 
-let turn = 'white'
-let player = turn === 'white' ? whitePlayer : blackPlayer
+// Grab check display
+const check = document.querySelector('.check-text')
+
 const players = [whitePlayer, blackPlayer]
-// let whiteKingPosition
-// let blackKingPosition
+let turn = 'white'
 let selectedPiece
 let landingSquare
 let validMove
@@ -41,6 +39,9 @@ startGameButton.addEventListener('click', () => {
 
 // Listen for cell clicks
 squares.addEventListener('click', (event) => {
+	const player = turn === 'white' ? whitePlayer : blackPlayer
+	const opponent = turn === 'white' ? blackPlayer : whitePlayer
+
 	if (startGame) {
 		if (!selectedPiece) {
 			const selectedSquare = chessBoard.selectSquare(event.path)
@@ -48,31 +49,34 @@ squares.addEventListener('click', (event) => {
 			// Check if a piece was selected and it's their turn
 			if (selectedSquare.color === turn) {
 				selectedPiece = selectedSquare.piece
-				// console.log(selectedPiece)
 			}
 		} else if (!validMove) {
 			landingSquare = chessBoard.selectSquare(event.path)
 
-			// Build board when selects a valid move
-
 			// Check the timing on this code
-			validMove =
-				selectedPiece.checkForValidMove(players, chessBoard, landingSquare) &&
-				!player.inCheck
+			validMove = selectedPiece.checkForValidMove(
+				players,
+				chessBoard,
+				landingSquare
+			)
 
 			if (validMove) {
 				// Check if king is in check
 
 				// Move piece
-				selectedPiece.movePiece(landingSquare)
+				selectedPiece.movePiece(landingSquare, opponent)
 
 				// Mark enemy squares
 				chessBoard.markEnemySquares(chessBoard, whitePlayer, blackPlayer)
 
-				const kingInCheck =
-					turn === 'white' ? whitePlayer.inCheck : blackPlayer.inCheck
+				player.isKingInCheck(chessBoard)
+				opponent.isKingInCheck(chessBoard)
 
-				console.log(kingInCheck)
+				if (player.inCheck || opponent.inCheck) {
+					check.innerHTML = 'CHECK!'
+				} else {
+					check.innerHTML = ''
+				}
 
 				// Reset turn variables
 				selectedPiece = false

@@ -8,11 +8,54 @@ class Player {
 		this.checkMate = false
 	}
 
-	getKingsPosition() {
-		this.kingPosition = this.pieces.find((piece) => piece.name === 'king')
+	removePieceFromGame(enemyPiece) {
+		this.pieces = this.pieces.filter(
+			(piece) => piece.row !== enemyPiece.row && piece.col !== enemyPiece.col
+		)
 	}
 
-	isKingInCheck(enemySquares) {}
+	getKingsPosition() {
+		this.kingsPosition = this.pieces.find((piece) => piece.name === 'king')
+	}
+
+	isKingInCheck(chessBoard) {
+		this.getKingsPosition()
+
+		let enemySquares = []
+
+		let myArr = chessBoard.whiteSquares.flat()
+		// console.log(myArr)
+		// myArr.forEach((arr) => console.log(arr))
+
+		enemySquares =
+			this.color === 'white'
+				? chessBoard.blackSquares.flat()
+				: chessBoard.whiteSquares.flat()
+
+		// enemySquares.forEach((square) => {
+		// 	if (
+		// 		this.kingsPosition.row === square.row &&
+		// 		this.kingsPosition.col === square.col
+		// 	) {
+		// 		console.log('found king', square.row, square.col)
+		// 	}
+		// })
+		// console.log(this.color, enemySquares)
+		// console.log(chessBoard.whiteSquares.flat())
+
+		if (
+			enemySquares.find(
+				(square) =>
+					this.kingsPosition.row === square.row &&
+					this.kingsPosition.col === square.col
+			)
+		) {
+			// console.log('found king')
+			this.inCheck = true
+		} else {
+			this.inCheck = false
+		}
+	}
 }
 
 const whitePlayer = new Player('white', whitePieces)

@@ -26,9 +26,14 @@ class Piece {
 		Board.board[this.row][this.col].empty = false
 	}
 
-	movePiece(landingSquare) {
-		// Move piece
+	movePiece(landingSquare, opponent) {
+		// Remove piece from square
 		this.removePieceFromSquare()
+
+		// If capture, remove piece from game
+		if (landingSquare.piece) opponent.removePieceFromGame(landingSquare.piece)
+
+		// Move piece to new square
 		this.changePosition(landingSquare.row, landingSquare.col)
 		this.assignPieceToSquare()
 
@@ -81,7 +86,7 @@ class Pawn extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard, whitePlayer, blackPlayer) {
+	markEnemySquares(chessBoard) {
 		// Get targeted squares
 		let row
 		if (this.color === 'white') {
@@ -98,15 +103,6 @@ class Pawn extends Piece {
 			if (leftCol) this.targets.push(chessBoard.board[row][leftCol])
 			if (rightCol) this.targets.push(chessBoard.board[row][rightCol])
 		}
-
-		// Check if king is threatened
-		this.targets.forEach((target) => {
-			if (target.piece.name === 'king' && target.piece.color != this.color) {
-				this.color === 'white'
-					? (whitePlayer.inCheck = true)
-					: (blackPlayer.inCheck = true)
-			}
-		})
 	}
 }
 
@@ -132,7 +128,7 @@ class Knight extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard, whitePlayer, blackPlayer) {
+	markEnemySquares(chessBoard) {
 		// Mark target squares
 		for (let row = this.row - 2; row <= this.row + 2; row++) {
 			for (let col = this.col - 2; col <= this.col + 2; col++) {
@@ -146,15 +142,6 @@ class Knight extends Piece {
 				}
 			}
 		}
-
-		// Check if king is threatened
-		this.targets.forEach((target) => {
-			if (target.piece.name === 'king' && target.piece.color != this.color) {
-				this.color === 'white'
-					? (whitePlayer.inCheck = true)
-					: (blackPlayer.inCheck = true)
-			}
-		})
 	}
 }
 
@@ -221,7 +208,7 @@ class Bishop extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard, whitePlayer, blackPlayer) {
+	markEnemySquares(chessBoard) {
 		// Mark target squares
 
 		// Check upLeft direction
@@ -263,15 +250,6 @@ class Bishop extends Piece {
 				break
 			}
 		}
-
-		// Check if king is threatened
-		this.targets.forEach((target) => {
-			if (target.piece.name === 'king' && target.piece.color != this.color) {
-				this.color === 'white'
-					? (whitePlayer.inCheck = true)
-					: (blackPlayer.inCheck = true)
-			}
-		})
 	}
 }
 
@@ -324,8 +302,7 @@ class Rook extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard, whitePlayer, blackPlayer) {
-		this.clearTargetSquares()
+	markEnemySquares(chessBoard) {
 		// Mark target squares
 
 		// Check left direction
@@ -359,15 +336,6 @@ class Rook extends Piece {
 				break
 			}
 		}
-
-		// Check if king is threatened
-		this.targets.forEach((target) => {
-			if (target.piece.name === 'king' && target.piece.color != this.color) {
-				this.color === 'white'
-					? (whitePlayer.inCheck = true)
-					: (blackPlayer.inCheck = true)
-			}
-		})
 	}
 }
 
@@ -479,7 +447,7 @@ class Queen extends Piece {
 		return checkBishopMove() || checkRookMove()
 	}
 
-	markEnemySquares(chessBoard, whitePlayer, blackPlayer) {
+	markEnemySquares(chessBoard) {
 		// Mark target squares
 		const markBishopSquares = () => {
 			// Check upLeft direction
@@ -524,45 +492,37 @@ class Queen extends Piece {
 		}
 
 		const markRookSquares = () => {
-			// Set target squares
+			// Mark target squares
 
 			// Check left direction
-			for (let col = this.col > 0 ? this.col - 1 : null; col >= 0; col--) {
-				if (col) {
-					this.targets.push(chessBoard.board[this.row][col])
-					if (chessBoard.board[this.row][col].piece) {
-						break
-					}
+			for (let col = this.col - 1; col >= 0; col--) {
+				this.targets.push(chessBoard.board[this.row][col])
+				if (chessBoard.board[this.row][col].piece) {
+					break
 				}
 			}
 
 			// Check right direction
-			for (let col = this.col < 7 ? this.col + 1 : null; col <= 7; col++) {
-				if (col) {
-					this.targets.push(chessBoard.board[this.row][col])
-					if (chessBoard.board[this.row][col].piece) {
-						break
-					}
+			for (let col = this.col + 1; col <= 7; col++) {
+				this.targets.push(chessBoard.board[this.row][col])
+				if (chessBoard.board[this.row][col].piece) {
+					break
 				}
 			}
 
 			// Check up direction
-			for (let row = this.row > 0 ? this.row - 1 : null; row >= 0; row--) {
-				if (row) {
-					this.targets.push(chessBoard.board[row][this.col])
-					if (chessBoard.board[row][this.col].piece) {
-						break
-					}
+			for (let row = this.row - 1; row >= 0; row--) {
+				this.targets.push(chessBoard.board[row][this.col])
+				if (chessBoard.board[row][this.col].piece) {
+					break
 				}
 			}
 
 			// Check down direction
-			for (let row = this.row < 7 ? this.row + 1 : null; row <= 7; row++) {
-				if (row) {
-					this.targets.push(chessBoard.board[row][this.col])
-					if (chessBoard.board[row][this.col].piece) {
-						break
-					}
+			for (let row = this.row + 1; row <= 7; row++) {
+				this.targets.push(chessBoard.board[row][this.col])
+				if (chessBoard.board[row][this.col].piece) {
+					break
 				}
 			}
 		}
@@ -571,13 +531,13 @@ class Queen extends Piece {
 		markRookSquares()
 
 		// Check if king is threatened
-		this.targets.forEach((target) => {
-			if (target.piece.name === 'king' && target.piece.color != this.color) {
-				this.color === 'white'
-					? (whitePlayer.inCheck = true)
-					: (blackPlayer.inCheck = true)
-			}
-		})
+		// this.targets.forEach((target) => {
+		// 	if (target.piece.name === 'king' && target.piece.color != this.color) {
+		// 		this.color === 'white'
+		// 			? (whitePlayer.inCheck = true)
+		// 			: (blackPlayer.inCheck = true)
+		// 	}
+		// })
 	}
 }
 

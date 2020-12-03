@@ -2,6 +2,10 @@
 	box-sizing: border-box;
 }
 
+body {
+	font-family: Helvetica Neue;
+}
+
 header {
 	display: grid;
 	height: 180px;
@@ -61,4 +65,11 @@ header > h1 {
 .board div > img {
 	width: 100px;
 	height: 100px;
+}
+
+.check-text {
+	font-size: 38px;
+	text-align: center;
+	background-color: rgb(255, 160, 160);
+	border: 3px solid black;
 }
