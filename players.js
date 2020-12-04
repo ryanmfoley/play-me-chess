@@ -9,9 +9,7 @@ class Player {
 	}
 
 	removePieceFromGame(enemyPiece) {
-		this.pieces = this.pieces.filter(
-			(piece) => piece.row !== enemyPiece.row && piece.col !== enemyPiece.col
-		)
+		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
 	}
 
 	getKingsPosition() {
@@ -23,34 +21,21 @@ class Player {
 
 		let enemySquares = []
 
-		let myArr = chessBoard.whiteSquares.flat()
-		// console.log(myArr)
-		// myArr.forEach((arr) => console.log(arr))
-
 		enemySquares =
 			this.color === 'white'
 				? chessBoard.blackSquares.flat()
 				: chessBoard.whiteSquares.flat()
 
-		// enemySquares.forEach((square) => {
-		// 	if (
-		// 		this.kingsPosition.row === square.row &&
-		// 		this.kingsPosition.col === square.col
-		// 	) {
-		// 		console.log('found king', square.row, square.col)
-		// 	}
-		// })
-		// console.log(this.color, enemySquares)
-		// console.log(chessBoard.whiteSquares.flat())
+		console.log(this.pieces)
 
 		if (
+			this.kingsPosition &&
 			enemySquares.find(
 				(square) =>
 					this.kingsPosition.row === square.row &&
 					this.kingsPosition.col === square.col
 			)
 		) {
-			// console.log('found king')
 			this.inCheck = true
 		} else {
 			this.inCheck = false
