@@ -4,24 +4,40 @@ function Cell(row, col) {
 	this.color = ''
 	this.piece = ''
 	this.empty = true
-	this.whiteSquares = []
-	this.blackSquares = []
 	this.cellBox = document.querySelectorAll(`.row-${row}`)[col]
 }
 
 class Board {
 	constructor() {
-		const board = new Array(8)
+		Board.board = new Array(8)
 		for (let i = 0; i < 8; i++) {
-			board[i] = new Array(8)
+			Board.board[i] = new Array(8)
 		}
 		for (let row = 0; row < 8; row++) {
 			for (let col = 0; col < 8; col++) {
-				board[row][col] = new Cell(row, col)
+				Board.board[row][col] = new Cell(row, col)
 			}
 		}
+		// may not need
+		Board.markEnemySquares = this.markEnemySquares
+	}
 
-		Board.board = board
+	// copyBoard() {
+	// 	this.boardCopy = [...Board.board].map((row) =>
+	// 		[...row].map((cell) => ({ ...cell }))
+	// 	)
+	// }
+
+	copyBoard({ board }) {
+		this.boardCopy = [...board].map((row) =>
+			[...row].map((cell) => ({ ...cell }))
+		)
+	}
+
+	// may not need
+	copyTargets({ whiteSquares, blackSquares }) {
+		this.whiteSquares = [...whiteSquares].map((cell) => ({ ...cell }))
+		this.blackSquares = [...blackSquares].map((cell) => ({ ...cell }))
 	}
 
 	selectSquare(cell) {
@@ -35,8 +51,8 @@ class Board {
 		return this.board[cellRow][cellCol]
 	}
 
-	updateBoard() {
-		this.board = Board.board
+	get board() {
+		return Board.board
 	}
 
 	displayPieces() {
@@ -106,23 +122,31 @@ class Board {
 		)
 	}
 
-	markEnemySquares(chessBoard, whitePlayer, blackPlayer) {
+	markEnemySquares(whitePlayer, blackPlayer, board = this.board) {
 		// Clear enemy squares
 		whitePlayer.pieces.forEach((piece) => piece.clearTargetSquares())
 		blackPlayer.pieces.forEach((piece) => piece.clearTargetSquares())
 
 		// Mark enemy squares
-		whitePlayer.pieces.forEach((piece) =>
-			piece.markEnemySquares(chessBoard, whitePlayer, blackPlayer)
-		)
-		blackPlayer.pieces.forEach((piece) =>
-			piece.markEnemySquares(chessBoard, whitePlayer, blackPlayer)
-		)
+		// whitePlayer.pieces.forEach((piece) => piece.markEnemySquares(this.board))
+		// blackPlayer.pieces.forEach((piece) => piece.markEnemySquares(this.board))
+		whitePlayer.pieces.forEach((piece) => piece.markEnemySquares(board))
+		blackPlayer.pieces.forEach((piece) => piece.markEnemySquares(board))
 
 		// Assign marked squares to board
-		this.whiteSquares = whitePlayer.pieces.map((piece) => piece.targets)
-		this.blackSquares = blackPlayer.pieces.map((piece) => piece.targets)
+		this.whiteSquares = whitePlayer.pieces.map((piece) => piece.targets).flat()
+		this.blackSquares = blackPlayer.pieces.map((piece) => piece.targets).flat()
+		Board.whiteSquares = whitePlayer.pieces.map((piece) => piece.targets).flat()
+		Board.blackSquares = blackPlayer.pieces.map((piece) => piece.targets).flat()
 	}
+
+	// get whiteSquares() {
+	// 	return Board.whiteSquares
+	// }
+
+	// get blackSquares() {
+	// 	return Board.blackSquares
+	// }
 
 	printBoard() {
 		console.log(this.board)

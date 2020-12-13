@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Scratch Pad</title>
+		<script>
+			function allowDrop(ev) {
+				ev.preventDefault()
+			}
+
+			function drag(ev) {
+				const dt = ev.dataTransfer
+				dt.mozSetDataAt('./pieces/wp.svg', stream, 0)
+				// dt.mozSetDataAt('application/x-moz-file', file, 0)
+				dt.setData('text/uri-list', ev.target.src)
+			}
+
+			function drop(ev) {
+				ev.preventDefault()
+				var data = ev.dataTransfer.getData('text/uri-list')
+				// ev.target.appendChild(document.getElementById(data))
+				ev.target.appendChild(data)
+			}
+		</script>
+		<style>
+			#drag1 {
+				width: 60px;
+				height: 60px;
+				border: 1px solid green;
+			}
+			#div1 {
+				width: 60px;
+				height: 60px;
+				border: 1px solid red;
+			}
+			#div2 {
+				width: 60px;
+				height: 60px;
+				border: 1px solid blue;
+			}
+			#div3 {
+				width: 60px;
+				height: 60px;
+				border: 1px solid purple;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+		<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+		<div id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+		<div id="drag1" draggable="true" ondragstart="drag(event)">
+			<img src="./pieces/wp.svg" />
+		</div>
+	</body>
+</html>

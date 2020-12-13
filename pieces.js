@@ -9,38 +9,34 @@ class Piece {
 		this.targets = []
 	}
 
-	removePieceFromSquare() {
-		Board.board[this.row][this.col].color = ''
-		Board.board[this.row][this.col].piece = ''
-		Board.board[this.row][this.col].empty = true
-	}
-
 	changePosition(row, col) {
 		this.row = row
 		this.col = col
 	}
 
-	assignPieceToSquare() {
-		Board.board[this.row][this.col].color = this.color
-		Board.board[this.row][this.col].piece = this
-		Board.board[this.row][this.col].empty = false
+	removePieceFromSquare(board = Board.board) {
+		board[this.row][this.col].color = ''
+		board[this.row][this.col].piece = ''
+		board[this.row][this.col].empty = true
 	}
 
-	movePiece(landingSquare, opponent) {
+	assignPieceToSquare(board = Board.board) {
+		board[this.row][this.col].color = this.color
+		board[this.row][this.col].piece = this
+		board[this.row][this.col].empty = false
+	}
+
+	movePiece(landingSquare, opponent, board = Board.board) {
 		// Remove piece from square
-		this.removePieceFromSquare()
+		this.removePieceFromSquare(board)
 
 		// If capture, remove piece from game
-		if (landingSquare.piece) opponent.removePieceFromGame(landingSquare.piece)
+		if (landingSquare.piece && arguments.length === 2)
+			opponent.removePieceFromGame(landingSquare.piece)
 
 		// Move piece to new square
 		this.changePosition(landingSquare.row, landingSquare.col)
-		this.assignPieceToSquare()
-
-		// Update board
-		this.chessBoard.clearBoard()
-		this.chessBoard.updateBoard()
-		this.chessBoard.displayPieces()
+		this.assignPieceToSquare(board)
 	}
 
 	clearTargetSquares() {
@@ -57,10 +53,7 @@ class Pawn extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
-		// Set board
-		this.chessBoard = chessBoard
-
+	checkForValidMove(player, { board }, landingSquare) {
 		// Check if move puts their king in check
 		const startingSquare = this.color === 'white' ? 6 : 1
 		const oneSquareUp = this.color === 'white' ? this.row - 1 : this.row + 1
@@ -86,7 +79,7 @@ class Pawn extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard) {
+	markEnemySquares(board) {
 		// Get targeted squares
 		let row
 		if (this.color === 'white') {
@@ -100,8 +93,8 @@ class Pawn extends Piece {
 
 		// Add squares to targets array
 		if (row) {
-			if (leftCol) this.targets.push(chessBoard.board[row][leftCol])
-			if (rightCol) this.targets.push(chessBoard.board[row][rightCol])
+			if (leftCol !== null) this.targets.push(board[row][leftCol])
+			if (rightCol !== null) this.targets.push(board[row][rightCol])
 		}
 	}
 }
@@ -111,10 +104,7 @@ class Knight extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
-		// Set board
-		this.chessBoard = chessBoard
-
+	checkForValidMove(player, { board }, landingSquare) {
 		if (
 			(Math.abs(this.row - landingSquare.row) === 1 &&
 				Math.abs(this.col - landingSquare.col) === 2 &&
@@ -128,7 +118,7 @@ class Knight extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard) {
+	markEnemySquares(board) {
 		// Mark target squares
 		for (let row = this.row - 2; row <= this.row + 2; row++) {
 			for (let col = this.col - 2; col <= this.col + 2; col++) {
@@ -137,7 +127,7 @@ class Knight extends Piece {
 					(Math.abs(this.row - row) === 1 && Math.abs(this.col - col) === 2)
 				) {
 					if (row >= 0 && row <= 7 && col >= 0 && col <= 7) {
-						this.targets.push(chessBoard.board[row][col])
+						this.targets.push(board[row][col])
 					}
 				}
 			}
@@ -150,10 +140,7 @@ class Bishop extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
-		// Set board
-		this.chessBoard = chessBoard
-
+	checkForValidMove(player, { board }, landingSquare) {
 		// Check movement direction
 		const xDirection = landingSquare.col < this.col ? 'left' : 'right'
 		const yDirection = landingSquare.row < this.row ? 'up' : 'down'
@@ -174,7 +161,7 @@ class Bishop extends Piece {
 				let row = this.row - 1
 				let col = this.col - 1
 				for (; row > landingSquare.row; row--, col--) {
-					if (this.chessBoard.board[row][col].piece) {
+					if (board[row][col].piece) {
 						isPieceInWay = true
 					}
 				}
@@ -182,7 +169,7 @@ class Bishop extends Piece {
 				let row = this.row - 1
 				let col = this.col + 1
 				for (; row > landingSquare.row; row--, col++) {
-					if (this.chessBoard.board[row][col].piece) {
+					if (board[row][col].piece) {
 						isPieceInWay = true
 					}
 				}
@@ -190,7 +177,7 @@ class Bishop extends Piece {
 				let row = this.row + 1
 				let col = this.col - 1
 				for (; row < landingSquare.row; row++, col--) {
-					if (this.chessBoard.board[row][col].piece) {
+					if (board[row][col].piece) {
 						isPieceInWay = true
 					}
 				}
@@ -198,7 +185,7 @@ class Bishop extends Piece {
 				let row = this.row + 1
 				let col = this.col + 1
 				for (; row < landingSquare.row; row++, col++) {
-					if (this.chessBoard.board[row][col].piece) {
+					if (board[row][col].piece) {
 						isPieceInWay = true
 					}
 				}
@@ -208,15 +195,15 @@ class Bishop extends Piece {
 		return false
 	}
 
-	markEnemySquares(chessBoard) {
+	markEnemySquares(board) {
 		// Mark target squares
 
 		// Check upLeft direction
 		let row = this.row - 1
 		let col = this.col - 1
 		for (; row >= 0 && col >= 0; row--, col--) {
-			this.targets.push(chessBoard.board[row][col])
-			if (chessBoard.board[row][col].piece) {
+			this.targets.push(board[row][col])
+			if (board[row][col].piece) {
 				break
 			}
 		}
@@ -225,8 +212,8 @@ class Bishop extends Piece {
 		row = this.row - 1
 		col = this.col + 1
 		for (; row >= 0 && col <= 7; row--, col++) {
-			this.targets.push(chessBoard.board[row][col])
-			if (chessBoard.board[row][col].piece) {
+			this.targets.push(board[row][col])
+			if (board[row][col].piece) {
 				break
 			}
 		}
@@ -235,8 +222,8 @@ class Bishop extends Piece {
 		row = this.row + 1
 		col = this.col - 1
 		for (; row <= 7 && col >= 0; row++, col--) {
-			this.targets.push(chessBoard.board[row][col])
-			if (chessBoard.board[row][col].piece) {
+			this.targets.push(board[row][col])
+			if (board[row][col].piece) {
 				break
 			}
 		}
@@ -245,8 +232,8 @@ class Bishop extends Piece {
 		row = this.row + 1
 		col = this.col + 1
 		for (; row <= 7 && col <= 7; row++, col++) {
-			this.targets.push(chessBoard.board[row][col])
-			if (chessBoard.board[row][col].piece) {
+			this.targets.push(board[row][col])
+			if (board[row][col].piece) {
 				break
 			}
 		}
@@ -258,81 +245,80 @@ class Rook extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
-		// Set board
-		this.chessBoard = chessBoard
-
+	checkForValidMove(player, { board }, landingSquare) {
 		// Check movement direction
 		let direction
-		if (landingSquare.col < this.col) {
+		if (landingSquare.col < this.col && landingSquare.row === this.row) {
 			direction = 'left'
-		} else if (landingSquare.col > this.col) {
+		} else if (landingSquare.col > this.col && landingSquare.row === this.row) {
 			direction = 'right'
-		} else if (landingSquare.row < this.row) {
+		} else if (landingSquare.row < this.row && landingSquare.col === this.col) {
 			direction = 'up'
-		} else if (landingSquare.row > this.row) direction = 'down'
+		} else if (landingSquare.row > this.row && landingSquare.col === this.col)
+			direction = 'down'
 
 		let isPieceInWay = false
 		if (direction === 'left') {
 			for (let i = this.col - 1; i > landingSquare.col; i--) {
-				if (this.chessBoard.board[this.row][i].piece) {
+				if (board[this.row][i].piece) {
 					isPieceInWay = true
 				}
 			}
 		} else if (direction === 'right') {
 			for (let i = this.col + 1; i > landingSquare.col; i++) {
-				if (this.chessBoard.board[this.row][i].piece) {
+				if (board[this.row][i].piece) {
 					isPieceInWay = true
 				}
 			}
 		} else if (direction === 'up') {
 			for (let i = this.row - 1; i > landingSquare.row; i--) {
-				if (this.chessBoard.board[i][this.col].piece) {
+				if (board[i][this.col].piece) {
 					isPieceInWay = true
 				}
 			}
 		} else if (direction === 'down') {
 			for (let i = this.row + 1; i > landingSquare.row; i++) {
-				if (this.chessBoard.board[i][this.col].piece) {
+				if (board[i][this.col].piece) {
 					isPieceInWay = true
 				}
 			}
 		}
-		if (!isPieceInWay && landingSquare.piece.color !== this.color) return true
+		if (direction && !isPieceInWay && landingSquare.piece.color !== this.color)
+			return true
 		return false
 	}
 
-	markEnemySquares(chessBoard) {
+	markEnemySquares(board) {
 		// Mark target squares
 
 		// Check left direction
 		for (let col = this.col - 1; col >= 0; col--) {
-			this.targets.push(chessBoard.board[this.row][col])
-			if (chessBoard.board[this.row][col].piece) {
+			this.targets.push(board[this.row][col])
+			if (board[this.row][col].piece) {
 				break
 			}
 		}
 
 		// Check right direction
 		for (let col = this.col + 1; col <= 7; col++) {
-			this.targets.push(chessBoard.board[this.row][col])
-			if (chessBoard.board[this.row][col].piece) {
+			this.targets.push(board[this.row][col])
+			if (board[this.row][col].piece) {
 				break
 			}
 		}
 
 		// Check up direction
 		for (let row = this.row - 1; row >= 0; row--) {
-			this.targets.push(chessBoard.board[row][this.col])
-			if (chessBoard.board[row][this.col].piece) {
+			this.targets.push(board[row][this.col])
+			if (board[row][this.col].piece) {
 				break
 			}
 		}
 
 		// Check down direction
 		for (let row = this.row + 1; row <= 7; row++) {
-			this.targets.push(chessBoard.board[row][this.col])
-			if (chessBoard.board[row][this.col].piece) {
+			this.targets.push(board[row][this.col])
+			if (board[row][this.col].piece) {
 				break
 			}
 		}
@@ -344,10 +330,7 @@ class Queen extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
-		// Set board
-		this.chessBoard = chessBoard
-
+	checkForValidMove(player, { board }, landingSquare) {
 		const checkBishopMove = () => {
 			// Check movement direction
 			const xDirection = landingSquare.col < this.col ? 'left' : 'right'
@@ -370,7 +353,7 @@ class Queen extends Piece {
 					let row = this.row - 1
 					let col = this.col - 1
 					for (; row > landingSquare.row; row--, col--) {
-						if (this.chessBoard.board[row][col].piece) {
+						if (board[row][col].piece) {
 							isPieceInWay = true
 						}
 					}
@@ -378,7 +361,7 @@ class Queen extends Piece {
 					let row = this.row - 1
 					let col = this.col + 1
 					for (; row > landingSquare.row; row--, col++) {
-						if (this.chessBoard.board[row][col].piece) {
+						if (board[row][col].piece) {
 							isPieceInWay = true
 						}
 					}
@@ -386,7 +369,7 @@ class Queen extends Piece {
 					let row = this.row + 1
 					let col = this.col - 1
 					for (; row < landingSquare.row; row++, col--) {
-						if (this.chessBoard.board[row][col].piece) {
+						if (board[row][col].piece) {
 							isPieceInWay = true
 						}
 					}
@@ -394,7 +377,7 @@ class Queen extends Piece {
 					let row = this.row + 1
 					let col = this.col + 1
 					for (; row < landingSquare.row; row++, col++) {
-						if (this.chessBoard.board[row][col].piece) {
+						if (board[row][col].piece) {
 							isPieceInWay = true
 						}
 					}
@@ -407,55 +390,67 @@ class Queen extends Piece {
 		const checkRookMove = () => {
 			// Check movement direction
 			let direction
-			if (landingSquare.col < this.col) {
+			if (landingSquare.col < this.col && landingSquare.row === this.row) {
 				direction = 'left'
-			} else if (landingSquare.col > this.col) {
+			} else if (
+				landingSquare.col > this.col &&
+				landingSquare.row === this.row
+			) {
 				direction = 'right'
-			} else if (landingSquare.row < this.row) {
+			} else if (
+				landingSquare.row < this.row &&
+				landingSquare.col === this.col
+			) {
 				direction = 'up'
-			} else if (landingSquare.row > this.row) direction = 'down'
+			} else if (landingSquare.row > this.row && landingSquare.col === this.col)
+				direction = 'down'
 
 			let isPieceInWay = false
 			if (direction === 'left') {
 				for (let i = this.col - 1; i > landingSquare.col; i--) {
-					if (this.chessBoard.board[this.row][i].piece) {
+					if (board[this.row][i].piece) {
 						isPieceInWay = true
 					}
 				}
 			} else if (direction === 'right') {
 				for (let i = this.col + 1; i > landingSquare.col; i++) {
-					if (this.chessBoard.board[this.row][i].piece) {
+					if (board[this.row][i].piece) {
 						isPieceInWay = true
 					}
 				}
 			} else if (direction === 'up') {
 				for (let i = this.row - 1; i > landingSquare.row; i--) {
-					if (this.chessBoard.board[i][this.col].piece) {
+					if (board[i][this.col].piece) {
 						isPieceInWay = true
 					}
 				}
 			} else if (direction === 'down') {
 				for (let i = this.row + 1; i > landingSquare.row; i++) {
-					if (this.chessBoard.board[i][this.col].piece) {
+					if (board[i][this.col].piece) {
 						isPieceInWay = true
 					}
 				}
 			}
-			if (!isPieceInWay && landingSquare.piece.color !== this.color) return true
+			if (
+				direction &&
+				!isPieceInWay &&
+				landingSquare.piece.color !== this.color
+			)
+				return true
 			return false
 		}
 		return checkBishopMove() || checkRookMove()
 	}
 
-	markEnemySquares(chessBoard) {
+	markEnemySquares(board) {
 		// Mark target squares
 		const markBishopSquares = () => {
 			// Check upLeft direction
 			let row = this.row - 1
 			let col = this.col - 1
 			for (; row >= 0 && col >= 0; row--, col--) {
-				this.targets.push(chessBoard.board[row][col])
-				if (chessBoard.board[row][col].piece) {
+				this.targets.push(board[row][col])
+				if (board[row][col].piece) {
 					break
 				}
 			}
@@ -464,8 +459,8 @@ class Queen extends Piece {
 			row = this.row - 1
 			col = this.col + 1
 			for (; row >= 0 && col <= 7; row--, col++) {
-				this.targets.push(chessBoard.board[row][col])
-				if (chessBoard.board[row][col].piece) {
+				this.targets.push(board[row][col])
+				if (board[row][col].piece) {
 					break
 				}
 			}
@@ -474,8 +469,8 @@ class Queen extends Piece {
 			row = this.row + 1
 			col = this.col - 1
 			for (; row <= 7 && col >= 0; row++, col--) {
-				this.targets.push(chessBoard.board[row][col])
-				if (chessBoard.board[row][col].piece) {
+				this.targets.push(board[row][col])
+				if (board[row][col].piece) {
 					break
 				}
 			}
@@ -484,8 +479,8 @@ class Queen extends Piece {
 			row = this.row + 1
 			col = this.col + 1
 			for (; row <= 7 && col <= 7; row++, col++) {
-				this.targets.push(chessBoard.board[row][col])
-				if (chessBoard.board[row][col].piece) {
+				this.targets.push(board[row][col])
+				if (board[row][col].piece) {
 					break
 				}
 			}
@@ -496,32 +491,32 @@ class Queen extends Piece {
 
 			// Check left direction
 			for (let col = this.col - 1; col >= 0; col--) {
-				this.targets.push(chessBoard.board[this.row][col])
-				if (chessBoard.board[this.row][col].piece) {
+				this.targets.push(board[this.row][col])
+				if (board[this.row][col].piece) {
 					break
 				}
 			}
 
 			// Check right direction
 			for (let col = this.col + 1; col <= 7; col++) {
-				this.targets.push(chessBoard.board[this.row][col])
-				if (chessBoard.board[this.row][col].piece) {
+				this.targets.push(board[this.row][col])
+				if (board[this.row][col].piece) {
 					break
 				}
 			}
 
 			// Check up direction
 			for (let row = this.row - 1; row >= 0; row--) {
-				this.targets.push(chessBoard.board[row][this.col])
-				if (chessBoard.board[row][this.col].piece) {
+				this.targets.push(board[row][this.col])
+				if (board[row][this.col].piece) {
 					break
 				}
 			}
 
 			// Check down direction
 			for (let row = this.row + 1; row <= 7; row++) {
-				this.targets.push(chessBoard.board[row][this.col])
-				if (chessBoard.board[row][this.col].piece) {
+				this.targets.push(board[row][this.col])
+				if (board[row][this.col].piece) {
 					break
 				}
 			}
@@ -547,26 +542,34 @@ class King extends Piece {
 	}
 	// maybe remove player argument
 	checkForValidMove(player, chessBoard, landingSquare) {
-		// Set board
-		this.chessBoard = chessBoard
+		const enemySquares =
+			this.color === 'white'
+				? chessBoard.blackSquares.flat()
+				: chessBoard.whiteSquares.flat()
+
+		const isEnemySquare = enemySquares.find(
+			(square) => square === landingSquare
+		)
+
 		if (
 			Math.abs(this.row - landingSquare.row) <= 1 &&
 			Math.abs(this.col - landingSquare.col) <= 1 &&
-			landingSquare.color !== this.color
+			landingSquare.color !== this.color &&
+			!isEnemySquare
 		) {
 			return true
 		}
 		return false
 	}
 
-	markEnemySquares(chessBoard) {
+	markEnemySquares(board) {
 		// Mark target squares
 		let row = this.row > 0 ? this.row - 1 : null
 		let col = this.col > 0 ? this.col - 1 : null
 		for (; row <= this.row + 1; row++) {
 			for (; col <= this.col + 1; col++) {
 				if (row && col) {
-					this.targets.push(chessBoard.board[row][col])
+					this.targets.push(board[row][col])
 				}
 			}
 		}
@@ -604,13 +607,13 @@ blackPieces.push(new Queen('black', 'queen', 0, 3))
 blackPieces.push(new King('black', 'king', 0, 4))
 
 // Assign pieces to squares on board
-const placePiecesOnBoard = () => {
+const placePiecesOnBoard = ({ board }) => {
 	whitePieces.forEach((piece) => {
-		piece.assignPieceToSquare()
+		piece.assignPieceToSquare(board)
 	})
 
 	blackPieces.forEach((piece) => {
-		piece.assignPieceToSquare()
+		piece.assignPieceToSquare(board)
 	})
 }
 
