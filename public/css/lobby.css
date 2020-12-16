@@ -1,0 +1,34 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #322f2f;
+	/* border: 1px solid blue; */
+	font-family: Helvetica;
+}
+
+.lobby-container {
+	display: grid;
+	margin: 40px auto;
+	width: 50%;
+	/* justify-content: center; */
+	/* border: 1px solid purple; */
+}
+
+.lobby {
+	width: 100%;
+	margin: 20px auto;
+	color: white;
+	border: 1px solid white;
+}
+
+#create-game-btn {
+	padding: 10px;
+	width: 100%;
+}
+
+#create-game-btn:hover {
+	box-shadow: 0 8px 16px 0 rgba(198, 198, 198, 0.2),
+		0 6px 20px 0 rgba(198, 198, 198, 0.19);
+}

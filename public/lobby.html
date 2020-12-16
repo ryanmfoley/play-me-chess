@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+			integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4="
+			crossorigin="anonymous"
+		></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script defer src="js/lobby.js"></script>
+		<title>Chess Lobby</title>
+	</head>
+	<body>
+		<div class="lobby-container">
+			<div class="lobby">
+				<button id="create-game-btn" type="button">
+					<strong>CREATE A GAME</strong>
+				</button>
+				<table class="lobby-rooms">
+					<thead>
+						<tr>
+							<th>Player</th>
+							<th>Room</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
