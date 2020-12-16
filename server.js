@@ -34,27 +34,41 @@ io.on('connection', (socket) => {
 		// console.log('server', players)
 	})
 
+	socket.on('updatePlayersInLobby', (roomID) => {
+		// Get list of players in lobby
+		const players2 = getPlayers()
+
+		// Remove player from lobby
+		removePlayer(roomID)
+
+		// Get list of players in lobby
+		const players = getPlayers()
+
+		// Send list of players to client
+		io.emit('playersInLobby', players)
+	})
+
 	socket.on('joinRoom', async ({ username, room }) => {
 		// Create player
 		const player = await new Player(socket.id, username, room)
-		// console.log('hello again', player)
 
 		// Add player to list of players
 		addPlayer(player)
-
-		// console.log('player', player)
-
-		// Join socket to a given room
-		// socket.join(player.room)
 
 		const players = getPlayers()
 
 		// Send currentPlayer to client
 		socket.emit('joinRoom', player)
-		console.log('emit')
 
 		// Send list of players to client
 		io.emit('playersInLobby', players)
+	})
+
+	socket.on('joinGame', ({ username, room }) => {
+		// Join socket to a given room
+		socket.join(room)
+
+		io.to(room).emit('test', `this is a test in room ${room}`)
 	})
 
 	let turn = -1

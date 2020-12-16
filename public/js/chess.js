@@ -9,8 +9,6 @@ const { username, room } = Qs.parse(location.search, {
 	ignoreQueryPrefix: true,
 })
 
-console.log('chess', 'username', username, 'room', room)
-
 const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
 const squares = document.querySelector('.board')
@@ -31,6 +29,12 @@ let landingSquare
 let validMove
 
 const socket = io()
+
+socket.emit('joinGame', { room })
+
+socket.on('test', (blah) => {
+	console.log(blah)
+})
 
 // Get your player number
 socket.on('players-turn', (turn) => {
