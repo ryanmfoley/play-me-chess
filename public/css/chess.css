@@ -36,6 +36,11 @@ header > h1 {
 	justify-content: flex-end;
 }
 
+#leave-game {
+	width: 100px;
+	border: 2px solid black;
+}
+
 .board {
 	display: grid;
 	width: 800px;
