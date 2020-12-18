@@ -78,13 +78,13 @@ class Player {
 					////////////////////////////// nf3 triggers checkmate //////////////////////////////
 					// Check if player can escape check
 					if (!opponentCopy.isKingInCheck(chessBoardCopy)) {
-						console.log('is escape', piece, target)
+						// console.log('is escape', piece, target)
 						this.checkMate = false
 						// console.log('found an escape')
 						// console.log('from player', playerCopy.isKingInCheck(chessBoardCopy))
 						// if (opponentCopy.inCheck) console.log('target', target)
 						if (playerCopy.inCheck) {
-							console.log('check', piece.name, target)
+							// console.log('check', piece.name, target)
 						}
 					} else console.log('check', piece.name, target)
 					// }

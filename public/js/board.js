@@ -22,20 +22,20 @@ class Board {
 		Board.markEnemySquares = this.markEnemySquares
 	}
 
-	copyBoard({ board }) {
-		// this.boardCopy = [...board].map((row) =>
-		// 	[...row].map((cell) => ({ ...cell }))
-		// )
-		// return [...board].map((row) => [...row].map((cell) => ({ ...cell })))
-		// Board.board = [...board].map((row) =>
-		// 	[...row].map((cell) =>
-		// 		Object.assign(Object.create(Object.getPrototypeOf(cell)), cell)
-		// 	)
-		// )
-		// const boardCopy = [...board].map((row) =>
-		// 	[...row].map((cell) => ({ ...cell }))
-		// )
-	}
+	// copyBoard({ board }) {
+	// 	this.boardCopy = [...board].map((row) =>
+	// 		[...row].map((cell) => ({ ...cell }))
+	// 	)
+	// 	return [...board].map((row) => [...row].map((cell) => ({ ...cell })))
+	// 	Board.board = [...board].map((row) =>
+	// 		[...row].map((cell) =>
+	// 			Object.assign(Object.create(Object.getPrototypeOf(cell)), cell)
+	// 		)
+	// 	)
+	// 	const boardCopy = [...board].map((row) =>
+	// 		[...row].map((cell) => ({ ...cell }))
+	// 	)
+	// }
 
 	// updateBoard() {
 	// 	this.board = Board.board
@@ -50,15 +50,18 @@ class Board {
 		this.blackSquares = [...blackSquares].map((cell) => ({ ...cell }))
 	}
 
-	selectSquare({ cellRow, cellCol }) {
-		// console.log(this.board[cellRow][cellCol])
-		// const cellRow = !!cell[0].src
-		// 	? cell[1].classList[0].match(/\d+/)
-		// 	: cell[0].classList[0].match(/\d+/)
-		// const cellCol = !!cell[0].src
-		// 	? cell[1].classList[1].match(/\d+/)
-		// 	: cell[0].classList[1].match(/\d+/)
+	identifyCell(cell) {
+		const square =
+			cell.parentElement.classList.value === 'board'
+				? cell.classList
+				: cell.parentElement.classList
+		const [cellRow] = square[0].match(/\d+/)
+		const [cellCol] = square[1].match(/\d+/)
 
+		return { cellRow, cellCol }
+	}
+
+	selectSquare({ cellRow, cellCol }) {
 		return this.board[cellRow][cellCol]
 	}
 
