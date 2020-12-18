@@ -2,7 +2,6 @@ const path = require('path')
 const express = require('express')
 const app = express()
 const server = require('http').createServer(app)
-// const io = require('socket.io')(server)
 const io = require('socket.io')(server, { cors: true })
 
 const {
@@ -76,13 +75,9 @@ io.on('connection', (socket) => {
 
 		// Tell the client what player number they are
 		socket.emit('players-turn', turn)
-
-		// if (turn === 'black') io.to(room).emit('startGame')
 	})
 
 	socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
-		console.log(room, turn, selectedCell, landingCell)
-
 		// Change turn
 		turn = turn === 'white' ? 'black' : 'white'
 
