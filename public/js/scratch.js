@@ -1,4 +1,5 @@
-import { Board, chessBoard } from './board.js'
+// import { Board, chessBoard } from './board.js'
+import { Board } from './board.js'
 import { placePiecesOnBoard } from './pieces.js'
 import { whitePlayer, blackPlayer } from './players.js'
 
@@ -13,26 +14,20 @@ const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
 const squares = document.querySelector('.board')
 const check = document.querySelector('.check-text')
+const infoDisplay = document.querySelector('#info')
 let startGame = false
+
 let currentPlayer
 let opponent
-let selectedCell
-let landingCell
+let playerNum = 0
+let ready = false
+let enemyReady = false
+let piecesPlaced = false
+
+let squareSelected = false
 let selectedPiece
 let landingSquare
 let validMove
-
-const identifyCell = (square) => {
-	const [cellRow] = !!square[0].src
-		? square[1].classList[0].match(/\d+/)
-		: square[0].classList[0].match(/\d+/)
-	const [cellCol] = !!square[0].src
-		? square[1].classList[1].match(/\d+/)
-		: square[0].classList[1].match(/\d+/)
-	// console.log(cellRow[0])
-
-	return { cellRow, cellCol }
-}
 
 const socket = io()
 
@@ -48,72 +43,48 @@ socket.on('players-turn', (turn) => {
 //______________________________________________________________
 // Listen for Start-Game event
 
-startGameButton.addEventListener('click', () => {
+socket.on('startGame', () => {
+	const chessBoard = new Board()
+
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
 	chessBoard.displayPieces()
+	console.log(currentPlayer)
+	// Send game state to server
+	const { board } = chessBoard
+
+	const turn = 'black'
+	socket.emit('updateBoard', { board, room, turn })
 
 	startGame = true
-
-	// Get position of kings on board
-	// whitePlayer.getKingsPosition()
-	// blackPlayer.getKingsPosition()
 })
 
 //______________________________________________________________
 // Listen for piece moves
-
-socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
+socket.on('updateBoard', ({ board, turn }) => {
 	currentPlayer.turn = turn
-	console.log(room, turn, selectedCell, landingCell)
-	const selectedSquare = chessBoard.selectSquare(selectedCell)
-	const landingSquare = chessBoard.selectSquare(landingCell)
-	const selectedPiece = selectedSquare.piece
-
-	// Mark enemy squares
-	chessBoard.markEnemySquares(whitePlayer, blackPlayer)
-
-	// Move piece
-	selectedPiece.movePiece(landingSquare, opponent)
-	chessBoard.displayPieces()
-
-	// Mark enemy squares
-	chessBoard.markEnemySquares(whitePlayer, blackPlayer)
-
-	currentPlayer.isKingInCheck(chessBoard)
-	opponent.isKingInCheck(chessBoard)
-
-	if (currentPlayer.inCheck || opponent.inCheck) {
-		check.innerHTML = 'CHECK!'
-	} else check.innerHTML = ''
-
-	if (currentPlayer.checkMate || opponent.checkMate) {
-		check.innerHTML = 'CHECKMATE!'
-	}
 })
 
 squares.addEventListener('click', (e) => {
 	const { turn } = currentPlayer
-	console.log(turn)
 
 	currentPlayer.chessBoard = chessBoard
+	console.log(chessBoard.board)
 
 	if (startGame && currentPlayer.color === turn) {
 		if (!selectedPiece) {
-			const { cellRow, cellCol } = identifyCell(e.path)
-			selectedCell = { cellRow, cellCol }
-			const selectedSquare = chessBoard.selectSquare(selectedCell)
+			const selectedSquare = chessBoard.selectSquare(e.path)
+			console.log('selected', selectedSquare)
 
 			// Check if a piece was selected and it's their turn
 			if (selectedSquare.color === turn) {
 				selectedPiece = selectedSquare.piece
+				console.log(selectedPiece)
 			}
-
-			// If piece is selected
 		} else if (!validMove) {
-			const { cellRow, cellCol } = identifyCell(e.path)
-			landingCell = { cellRow, cellCol }
-			landingSquare = chessBoard.selectSquare(landingCell)
+			landingSquare = chessBoard.selectSquare(e.path)
+
+			console.log('isValid', validMove)
 
 			// Check the timing on this code
 			validMove = selectedPiece.checkForValidMove(
@@ -122,35 +93,37 @@ squares.addEventListener('click', (e) => {
 				landingSquare
 			)
 			if (validMove) {
-				landingCell = e.path
-
-				const { cellRow, cellCol } = identifyCell(e.path)
-				landingCell = { cellRow, cellCol }
-
-				// Send move to server
-				socket.emit('move-piece', { room, turn, selectedCell, landingCell })
-				console.log(room, turn, selectedCell, landingCell)
+				// Check if king is in check
 
 				// Mark enemy squares
-				// chessBoard.markEnemySquares(whitePlayer, blackPlayer)
+				chessBoard.markEnemySquares(whitePlayer, blackPlayer)
 
-				// // Move piece
-				// selectedPiece.movePiece(landingSquare, opponent)
-				// chessBoard.displayPieces()
+				// Move piece
+				selectedPiece.movePiece(landingSquare, opponent)
+				chessBoard.displayPieces()
 
-				// // Mark enemy squares
-				// chessBoard.markEnemySquares(whitePlayer, blackPlayer)
+				// Mark enemy squares
+				chessBoard.markEnemySquares(whitePlayer, blackPlayer)
 
-				// currentPlayer.isKingInCheck(chessBoard)
-				// opponent.isKingInCheck(chessBoard)
+				currentPlayer.isKingInCheck(chessBoard)
+				opponent.isKingInCheck(chessBoard)
 
-				// if (currentPlayer.inCheck || opponent.inCheck) {
-				// 	check.innerHTML = 'CHECK!'
-				// } else check.innerHTML = ''
+				if (currentPlayer.inCheck || opponent.inCheck) {
+					check.innerHTML = 'CHECK!'
+				} else check.innerHTML = ''
 
-				// if (currentPlayer.checkMate || opponent.checkMate) {
-				// 	check.innerHTML = 'CHECKMATE!'
-				// }
+				if (currentPlayer.checkMate || opponent.checkMate) {
+					check.innerHTML = 'CHECKMATE!'
+				}
+
+				// Send game state to server
+				// socket.emit('updateBoard', {
+				// 	chessBoard,
+				// 	whitePlayer,
+				// 	blackPlayer,
+				// 	turn,
+				// 	room,
+				// })
 
 				///////////////////////////////////////////////////////////////////////////////
 				// Get available moves
@@ -160,7 +133,7 @@ squares.addEventListener('click', (e) => {
 				// Reset turn variables
 				selectedPiece = false
 				validMove = false
-				// turn = turn === 'white' ? 'black' : 'white'
+				turn = turn === 'white' ? 'black' : 'white'
 			} else selectedPiece = null
 		}
 	}

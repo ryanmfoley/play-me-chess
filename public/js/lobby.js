@@ -3,7 +3,27 @@ const createGameBtn = document.querySelector('#create-game-btn')
 // Get name from URL
 const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
+const clearTable = (table) => {
+	table.innerHTML = ''
+	for (var i = table.rows.length - 1; i > 0; i--) {
+		table.deleteRow(i)
+	}
+}
+
 const generateTable = (table, data) => {
+	// Create table head
+	const thead = table.createTHead()
+	const theadRow = thead.insertRow()
+	const th1 = document.createElement('th')
+	const th2 = document.createElement('th')
+	const playerText = document.createTextNode('Player')
+	const inviteText = document.createTextNode('Invite')
+	th1.appendChild(playerText)
+	theadRow.appendChild(th1)
+	th2.appendChild(inviteText)
+	theadRow.appendChild(th2)
+
+	// Create table body
 	data.forEach((elem) => {
 		const row = table.insertRow()
 		const nameCell = row.insertCell()
@@ -29,10 +49,9 @@ const socket = io()
 
 // Get list of players in lobby
 socket.on('playersInLobby', (players) => {
-	lobbyTable.innerHTML = ''
-	for (var i = lobbyTable.rows.length - 1; i > 0; i--) {
-		lobbyTable.deleteRow(i)
-	}
+	// Clear table
+	clearTable(lobbyTable)
+
 	// Generate a table or rooms
 	generateTable(lobbyTable, players)
 })

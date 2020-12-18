@@ -8,6 +8,7 @@ const io = require('socket.io')(server, { cors: true })
 const {
 	Player,
 	addPlayer,
+	addPlayerToRoom,
 	getCurrentPlayer,
 	getPlayers,
 	getPlayersInRoom,
@@ -16,8 +17,6 @@ const {
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))
-
-const connections = [null, null]
 
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
@@ -55,10 +54,11 @@ io.on('connection', (socket) => {
 		// Add player to list of players
 		addPlayer(player)
 
-		const players = getPlayers()
-
 		// Send currentPlayer to client
 		socket.emit('joinRoom', player)
+
+		// Get list of players
+		const players = getPlayers()
 
 		// Send list of players to client
 		io.emit('playersInLobby', players)
@@ -68,29 +68,35 @@ io.on('connection', (socket) => {
 		// Join socket to a given room
 		socket.join(room)
 
-		io.to(room).emit('test', `this is a test in room ${room}`)
+		addPlayerToRoom(socket.id, username, room)
+
+		const plyrs = getPlayersInRoom(room)
+
+		const turn = plyrs.length === 1 ? 'white' : 'black'
+
+		// Tell the client what player number they are
+		socket.emit('players-turn', turn)
+
+		// if (turn === 'black') io.to(room).emit('startGame')
 	})
 
-	let turn = -1
-	for (const i in connections) {
-		if (connections[i] === null) {
-			turn = i
-			break
-		}
-	}
+	socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
+		console.log(room, turn, selectedCell, landingCell)
 
-	// Tell the client what player number they are
-	socket.emit('players-turn', turn)
+		// Change turn
+		turn = turn === 'white' ? 'black' : 'white'
 
-	// console.log('from server', `Player ${turn} has connected`)
-
-	// Ignore player 3
-	if (turn === -1) return
-
-	connections[turn] = false
+		// Send game state to client
+		io.to(room).emit('move-piece', {
+			room,
+			turn,
+			selectedCell,
+			landingCell,
+		})
+	})
 
 	// Tell everyone what player number just connected
-	socket.broadcast.emit('player-connection', turn)
+	// socket.broadcast.emit('player-connection', turn)
 
 	// Runs when client disconnects
 	socket.on('player-disconnected', () => {
