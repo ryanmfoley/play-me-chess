@@ -8,24 +8,30 @@ body {
 	font-family: Helvetica;
 }
 
+.instructions {
+	font-size: 32px;
+	color: white;
+}
+
 .lobby-container {
 	display: grid;
 	margin: 40px auto;
-	width: 50%;
-	/* justify-content: center; */
-	/* border: 1px solid purple; */
-}
-
-.lobby {
-	width: 100%;
-	margin: 20px auto;
+	/* width: 50%; */
+	width: 400px;
+	height: 400px;
 	color: white;
 	border: 1px solid white;
+}
+
+.lobby-rooms {
+	width: 100%;
+	border: 1px solid blue;
 }
 
 #create-game-btn {
 	padding: 10px;
 	width: 100%;
+	height: 100px;
 }
 
 #create-game-btn:hover {

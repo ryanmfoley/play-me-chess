@@ -67,8 +67,8 @@ socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
 	opponent.isKingInCheck(chessBoard)
 
 	if (currentPlayer.inCheck || opponent.inCheck) {
-		check.innerHTML = 'CHECK!'
-	} else check.innerHTML = ''
+		check.style.display = 'block'
+	} else check.style.display = 'none'
 
 	if (currentPlayer.checkMate || opponent.checkMate) {
 		check.innerHTML = 'CHECKMATE!'

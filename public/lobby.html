@@ -3,6 +3,14 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="./css/lobby.css" />
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
 			integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4="
@@ -13,20 +21,19 @@
 		<title>Chess Lobby</title>
 	</head>
 	<body>
+		<div class="instructions">
+			<p>
+				Welcome to Play-Me-Chess. This game is still in development. Either
+				"create a game" or enter a game that's already opened by clicking on
+				"Play Me". To move the pieces, click on the piece that you want to move
+				then click on the square that you want to move the piece to.
+			</p>
+		</div>
 		<div class="lobby-container">
-			<div class="lobby">
-				<button id="create-game-btn" type="button">
-					<strong>CREATE A GAME</strong>
-				</button>
-				<table class="lobby-rooms">
-					<!-- <thead>
-						<tr>
-							<th>Player</th>
-							<th>Room</th>
-						</tr> -->
-					</thead>
-				</table>
-			</div>
+			<button id="create-game-btn" type="button">
+				<strong>CREATE A GAME</strong>
+			</button>
+			<table class="lobby-rooms"></table>
 		</div>
 	</body>
 </html>
