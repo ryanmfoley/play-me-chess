@@ -49,7 +49,6 @@ class Player {
 					chessBoard
 				)
 				playerCopy.copyPieces()
-				// if (piece.name === 'pawn') console.log(target)
 
 				chessBoardCopy.copyBoard(chessBoard)
 				// may not need

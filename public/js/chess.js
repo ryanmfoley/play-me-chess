@@ -46,6 +46,7 @@ startGameButton.addEventListener('click', () => {
 	chessBoard.displayPieces()
 
 	startGame = true
+	console.log(chessBoard.board)
 })
 
 //______________________________________________________________
@@ -130,7 +131,7 @@ squares.addEventListener('click', (e) => {
 
 leaveGameButton.addEventListener('click', () => {
 	socket.emit('player-disconnected')
-	window.location.href = 'index.html'
+	window.location.href = 'lobby.html'
 })
 
 // NOTES
