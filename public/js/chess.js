@@ -13,17 +13,9 @@ const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
 const squares = document.querySelector('.board')
 const check = document.querySelector('.check-text')
-const infoDisplay = document.querySelector('#info')
 let startGame = false
-
 let currentPlayer
 let opponent
-let playerNum = 0
-let ready = false
-let enemyReady = false
-let piecesPlaced = false
-
-let squareSelected = false
 let selectedCell
 let landingCell
 let selectedPiece
@@ -72,6 +64,7 @@ startGameButton.addEventListener('click', () => {
 // Listen for piece moves
 
 socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
+	currentPlayer.turn = turn
 	console.log(room, turn, selectedCell, landingCell)
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
@@ -101,6 +94,7 @@ socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
 
 squares.addEventListener('click', (e) => {
 	const { turn } = currentPlayer
+	console.log(turn)
 
 	currentPlayer.chessBoard = chessBoard
 
