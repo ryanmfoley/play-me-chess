@@ -27,7 +27,7 @@ body {
 
 .lobby-rooms {
 	width: 100%;
-	border: 1px solid blue;
+	justify-items: start;
 }
 
 #create-game-btn {
