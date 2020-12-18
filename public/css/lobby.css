@@ -9,6 +9,7 @@ body {
 }
 
 .instructions {
+	padding: 20px;
 	font-size: 32px;
 	color: white;
 }
@@ -20,7 +21,8 @@ body {
 	width: 400px;
 	height: 400px;
 	color: white;
-	border: 1px solid white;
+	border: 3px solid white;
+	border-radius: 10px;
 }
 
 .lobby-rooms {
