@@ -11,6 +11,7 @@ const { username, room } = Qs.parse(location.search, {
 
 const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
+const info = document.querySelector('#info')
 const squares = document.querySelector('.board')
 const check = document.querySelector('.check-text')
 let startGame = false
@@ -30,7 +31,10 @@ socket.emit('joinGame', { username, room })
 socket.on('players-turn', (turn) => {
 	currentPlayer = turn === 'white' ? whitePlayer : blackPlayer
 	opponent = turn === 'white' ? blackPlayer : whitePlayer
-	console.log('from chess', username, currentPlayer)
+})
+
+socket.on('info', () => {
+	info.innerHTML = `You are playing ${currentPlayer.color}`
 })
 
 //______________________________________________________________

@@ -85,3 +85,12 @@ header > h1 {
 	background-color: rgb(255, 160, 160);
 	border: 3px solid black;
 }
+
+#info {
+	text-align: center;
+	font-size: 32px;
+}
+
+.hide {
+	display: none;
+}

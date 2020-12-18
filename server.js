@@ -20,6 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
 
+const connections = [null, null]
+
 // Run when client connects
 io.on('connection', (socket) => {
 	// Listen for name and room sent by client through the 'join' event
@@ -75,6 +77,8 @@ io.on('connection', (socket) => {
 
 		// Tell the client what player number they are
 		socket.emit('players-turn', turn)
+
+		if (turn === 'black') io.to(room).emit('info')
 	})
 
 	socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
