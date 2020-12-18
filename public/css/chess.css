@@ -30,6 +30,12 @@ header > h1 {
 	background: url('../pieces/bp.svg') no-repeat;
 }
 
+.leave-game-header {
+	display: flex;
+	margin-right: 100px;
+	justify-content: flex-end;
+}
+
 .board {
 	display: grid;
 	width: 800px;
@@ -68,6 +74,7 @@ header > h1 {
 }
 
 .check-text {
+	display: none;
 	font-size: 38px;
 	text-align: center;
 	background-color: rgb(255, 160, 160);
