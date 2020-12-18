@@ -22,17 +22,27 @@ class Board {
 		Board.markEnemySquares = this.markEnemySquares
 	}
 
-	// copyBoard() {
-	// 	this.boardCopy = [...Board.board].map((row) =>
-	// 		[...row].map((cell) => ({ ...cell }))
-	// 	)
-	// }
-
 	copyBoard({ board }) {
-		this.boardCopy = [...board].map((row) =>
-			[...row].map((cell) => ({ ...cell }))
-		)
+		// this.boardCopy = [...board].map((row) =>
+		// 	[...row].map((cell) => ({ ...cell }))
+		// )
+		// return [...board].map((row) => [...row].map((cell) => ({ ...cell })))
+		// Board.board = [...board].map((row) =>
+		// 	[...row].map((cell) =>
+		// 		Object.assign(Object.create(Object.getPrototypeOf(cell)), cell)
+		// 	)
+		// )
+		// const boardCopy = [...board].map((row) =>
+		// 	[...row].map((cell) => ({ ...cell }))
+		// )
 	}
+
+	// updateBoard() {
+	// 	this.board = Board.board
+	// 		Board.board = [...this.board].map((piece) =>
+	// 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
+	// 		)
+	// }
 
 	// may not need
 	copyTargets({ whiteSquares, blackSquares }) {
@@ -40,13 +50,14 @@ class Board {
 		this.blackSquares = [...blackSquares].map((cell) => ({ ...cell }))
 	}
 
-	selectSquare(cell) {
-		const cellRow = !!cell[0].src
-			? cell[1].classList[0].match(/\d+/)
-			: cell[0].classList[0].match(/\d+/)
-		const cellCol = !!cell[0].src
-			? cell[1].classList[1].match(/\d+/)
-			: cell[0].classList[1].match(/\d+/)
+	selectSquare({ cellRow, cellCol }) {
+		// console.log(this.board[cellRow][cellCol])
+		// const cellRow = !!cell[0].src
+		// 	? cell[1].classList[0].match(/\d+/)
+		// 	: cell[0].classList[0].match(/\d+/)
+		// const cellCol = !!cell[0].src
+		// 	? cell[1].classList[1].match(/\d+/)
+		// 	: cell[0].classList[1].match(/\d+/)
 
 		return this.board[cellRow][cellCol]
 	}
@@ -128,8 +139,6 @@ class Board {
 		blackPlayer.pieces.forEach((piece) => piece.clearTargetSquares())
 
 		// Mark enemy squares
-		// whitePlayer.pieces.forEach((piece) => piece.markEnemySquares(this.board))
-		// blackPlayer.pieces.forEach((piece) => piece.markEnemySquares(this.board))
 		whitePlayer.pieces.forEach((piece) => piece.markEnemySquares(board))
 		blackPlayer.pieces.forEach((piece) => piece.markEnemySquares(board))
 

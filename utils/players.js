@@ -1,4 +1,5 @@
 let players = []
+let playersInRoom = []
 
 function Player(id, username, room = id) {
 	this.id = id
@@ -11,6 +12,11 @@ const addPlayer = (newPlayer) => {
 		players.push(newPlayer)
 	} else if (!players.some((player) => player.username === newPlayer.username))
 		players.push(newPlayer)
+}
+
+const addPlayerToRoom = (id, username, room) => {
+	const player = new Player(id, username, room)
+	playersInRoom.push(player)
 }
 
 // Get current player
@@ -34,6 +40,7 @@ const removePlayer = (id) => {
 module.exports = {
 	Player,
 	addPlayer,
+	addPlayerToRoom,
 	getCurrentPlayer,
 	getPlayers,
 	getPlayersInRoom,

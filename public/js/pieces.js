@@ -51,6 +51,7 @@ class Piece {
 class Pawn extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
+		this.checkForValidMove = this.checkForValidMove.bind(this)
 	}
 
 	checkForValidMove(player, { board }, landingSquare) {

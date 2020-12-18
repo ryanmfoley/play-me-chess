@@ -4,6 +4,7 @@ class Player {
 	constructor(color, pieces) {
 		this.color = color
 		this.pieces = pieces
+		this.turn = 'white'
 		this.inCheck = false
 		this.checkMate = false
 	}
