@@ -36,7 +36,7 @@ const generateTable = (table, data) => {
 		enterRoomBtn.onclick = function (e) {
 			const roomID = e.target.value
 			socket.emit('updatePlayersInLobby', roomID)
-			window.location.href = `/chess.html?username=${username}&room=${roomID}`
+			window.location.href = `/chess.html?username=${username}&room=${roomID}&color=black`
 		}
 		roomCell.appendChild(enterRoomBtn)
 	})
@@ -62,6 +62,6 @@ createGameBtn.addEventListener('click', () => {
 
 	socket.on('joinRoom', ({ username, room }) => {
 		// Send player to game room
-		window.location.href = `/chess.html?username=${username}&room=${room}`
+		window.location.href = `/chess.html?username=${username}&room=${room}&color=white`
 	})
 })

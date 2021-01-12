@@ -16,7 +16,8 @@ const addPlayer = (newPlayer) => {
 
 const addPlayerToRoom = (id, username, room) => {
 	const player = new Player(id, username, room)
-	playersInRoom.push(player)
+	if (!playersInRoom.find((player) => player.username === username))
+		playersInRoom.push(player)
 }
 
 // Get current player

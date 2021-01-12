@@ -1,4 +1,4 @@
-import { Board } from './board.js'
+// import { Board } from './board.js'
 import { whitePieces, blackPieces } from './pieces.js'
 class Player {
 	constructor(color, pieces) {
@@ -9,102 +9,102 @@ class Player {
 		this.checkMate = false
 	}
 
-	get player() {
-		return Board.player
-	}
-
-	get opponent() {
-		return Board.opponent
-	}
-
-	copyPieces() {
-		this.pieces = [...this.pieces].map((piece) =>
+	copyPlayer(player) {
+		const playerCopy = Object.assign(
+			Object.create(Object.getPrototypeOf(player)),
+			player
+		)
+		// may not need
+		playerCopy.pieces = [...player.pieces].map((piece) =>
 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
 		)
+
+		return playerCopy
 	}
 
-	getAvailableMoves(chessBoard) {
-		//////////// Copy chessBoard, players, and pieces ////////////
-		let playerCopy = Object.assign(
-			Object.create(Object.getPrototypeOf(this.player)),
-			this.player
-		)
+	// Do I need?
+	copyTargets({ whiteSquares, blackSquares }) {
+		const whiteSquaresCopy = [...whiteSquares].map((cell) => ({ ...cell }))
+		const blackSquaresCopy = [...blackSquares].map((cell) => ({ ...cell }))
 
-		let opponentCopy = Object.assign(
-			Object.create(Object.getPrototypeOf(this.opponent)),
-			this.opponent
-		)
+		return { whiteSquaresCopy, blackSquaresCopy }
+	}
 
-		playerCopy.copyPieces()
-		opponentCopy.copyPieces()
-
-		const whitePlayer = playerCopy.color === 'white' ? playerCopy : opponentCopy
-		const blackPlayer = playerCopy.color === 'black' ? playerCopy : opponentCopy
-
-		this.checkMate = true
-		opponentCopy.pieces.forEach((piece) => {
+	getAvailableMoves(chessBoard, opponent) {
+		this.pieces.forEach((piece) =>
 			piece.targets.forEach((target) => {
+				// Copy board, players, pieces, and targets
 				let chessBoardCopy = Object.assign(
 					Object.create(Object.getPrototypeOf(chessBoard)),
 					chessBoard
 				)
-				playerCopy.copyPieces()
-
 				chessBoardCopy.copyBoard(chessBoard)
-				// may not need
-				chessBoardCopy.copyTargets(chessBoard)
-				// console.log(piece.targets, target)
+				const playerCopy = this.copyPlayer(this)
+				const opponentCopy = this.copyPlayer(opponent)
+				const selectedPiece = playerCopy.pieces.find(
+					(pieceCopy) =>
+						pieceCopy.row === piece.row && pieceCopy.col === piece.col
+				)
+				const targetCopy = { ...target }
 
 				const validMove = piece.checkForValidMove(
 					opponentCopy,
 					chessBoardCopy,
-					target
+					targetCopy
 				)
 
-				///////////////// change movePiece to include board argument ////////////////////
-				if (validMove) {
-					piece.movePiece(target, playerCopy, chessBoardCopy.boardCopy)
-					// console.log('after move', chessBoardCopy.boardCopy)
-					// it's marking board and not boardCopy
-					chessBoardCopy.markEnemySquares(
-						whitePlayer,
-						blackPlayer,
-						chessBoardCopy.boardCopy
-					)
-					////////////////////////////////////////////////////////
-					// console.log(chessBoardCopy.whiteSquares)
+				debugger
 
-					////////////////////////////// nf3 triggers checkmate //////////////////////////////
+				if (validMove) {
+					console.log(
+						'before move',
+						chessBoardCopy,
+						playerCopy,
+						opponentCopy,
+						selectedPiece,
+						targetCopy
+					)
+
+					// pieceCopy may be a problem
+					chessBoardCopy.movePiece(selectedPiece, targetCopy, playerCopy)
+
+					// console.log(
+					// 	'after move',
+					// 	chessBoardCopy,
+					// 	playerCopy,
+					// 	opponentCopy,
+					// 	selectedPiece,
+					// 	targetCopy
+					// )
+
+					// it's marking board and not boardCopy
+					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+
 					// Check if player can escape check
 					if (!opponentCopy.isKingInCheck(chessBoardCopy)) {
-						// console.log('is escape', piece, target)
+						// console.log('can escape', pieceCopy, targetCopy)
 						this.checkMate = false
-						// console.log('found an escape')
 						// console.log('from player', playerCopy.isKingInCheck(chessBoardCopy))
 						// if (opponentCopy.inCheck) console.log('target', target)
-						if (playerCopy.inCheck) {
-							// console.log('check', piece.name, target)
-						}
-					} else console.log('check', piece.name, target)
-					// }
-
-					// playerCopy.copyPieces()
-					// opponentCopy.copyPieces()
+					} else {
+						// console.log("can't escape", pieceCopy.name, targetCopy)
+					}
 				}
 			})
-		})
-		// console.log(opponentCopy.pieces)
+		)
 	}
 
 	removePieceFromGame(enemyPiece) {
+		// this.lastPieceRemoved = enemyPiece
 		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
 	}
 
 	isKingInCheck({ whiteSquares, blackSquares }) {
+		const enemySquares =
+			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
+
 		// Get King's position
 		const { row, col } = this.pieces.find((piece) => piece.name === 'king')
-
-		const enemySquares = this.color === 'white' ? blackSquares : whiteSquares
 
 		if (
 			// this.kingsPosition &&
@@ -117,10 +117,6 @@ class Player {
 			return false
 		}
 	}
-
-	// escapeCheckMoves() {
-	// 	console.log(chessBoard)
-	// }
 }
 
 const whitePlayer = new Player('white', whitePieces)

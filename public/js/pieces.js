@@ -9,42 +9,14 @@ class Piece {
 		this.targets = []
 	}
 
-	changePosition(row, col) {
+	changePosition({ row, col }) {
+		// this.lastMove = { row: this.row, col: this.col }
 		this.row = row
 		this.col = col
 	}
 
-	removePieceFromSquare(board = Board.board) {
-		board[this.row][this.col].color = ''
-		board[this.row][this.col].piece = ''
-		board[this.row][this.col].empty = true
-	}
-
-	assignPieceToSquare(board = Board.board) {
-		board[this.row][this.col].color = this.color
-		board[this.row][this.col].piece = this
-		board[this.row][this.col].empty = false
-	}
-
-	movePiece(landingSquare, opponent, board = Board.board) {
-		// Remove piece from square
-		this.removePieceFromSquare(board)
-
-		// If capture, remove piece from game
-		if (landingSquare.piece && arguments.length === 2)
-			opponent.removePieceFromGame(landingSquare.piece)
-
-		// Move piece to new square
-		this.changePosition(landingSquare.row, landingSquare.col)
-		this.assignPieceToSquare(board)
-	}
-
 	clearTargetSquares() {
 		this.targets = []
-	}
-
-	printPiece() {
-		console.log(this.piece)
 	}
 }
 
@@ -133,6 +105,7 @@ class Knight extends Piece {
 				}
 			}
 		}
+		// console.log('from markSquares', this)
 	}
 }
 
@@ -565,15 +538,36 @@ class King extends Piece {
 
 	markEnemySquares(board) {
 		// Mark target squares
-		let row = this.row > 0 ? this.row - 1 : null
-		let col = this.col > 0 ? this.col - 1 : null
-		for (; row <= this.row + 1; row++) {
-			for (; col <= this.col + 1; col++) {
-				if (row && col) {
-					this.targets.push(board[row][col])
+		// let row = this.row > 0 ? this.row - 1 : null
+		// let col = this.col > 0 ? this.col - 1 : null
+		// for (; row <= this.row + 1; row++) {
+		// 	for (; col <= this.col + 1; col++) {
+		// 		if (row && col) {
+		// 			// console.log(board[row][col])
+		// 			this.targets.push(board[row][col])
+		// 		}
+		// 	}
+		// }
+		let minRow = this.row - 1 >= 0 ? this.row - 1 : 0
+		let maxRow = this.row + 1 <= 7 ? this.row + 1 : 7
+		let minCol = this.col - 1 >= 0 ? this.col - 1 : 0
+		let maxCol = this.col + 1 <= 7 ? this.col + 1 : 7
+
+		// Count adjacent cells that contain mines and update cell.adjacentMines
+		for (let x = minRow; x <= maxRow; x++) {
+			for (let y = minCol; y <= maxCol; y++) {
+				if (this.row === x && this.col === y) {
+					// console.log('hey', this.row, this.col, x, y)
+				} else {
+					this.targets.push(board[x][y])
 				}
+				// if (this.row !== x && this.col !== y) {
+				// 	console.log('hey', this.row, this.col, x, y)
+				// 	this.targets.push(board[x][y])
+				// }
 			}
 		}
+		// console.log(this.color, this.targets)
 	}
 }
 
@@ -608,13 +602,13 @@ blackPieces.push(new Queen('black', 'queen', 0, 3))
 blackPieces.push(new King('black', 'king', 0, 4))
 
 // Assign pieces to squares on board
-const placePiecesOnBoard = ({ board }) => {
+const placePiecesOnBoard = (chessBoard) => {
 	whitePieces.forEach((piece) => {
-		piece.assignPieceToSquare(board)
+		chessBoard.assignPieceToSquare(piece)
 	})
 
 	blackPieces.forEach((piece) => {
-		piece.assignPieceToSquare(board)
+		chessBoard.assignPieceToSquare(piece)
 	})
 }
 

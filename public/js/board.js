@@ -9,45 +9,24 @@ function Cell(row, col) {
 
 class Board {
 	constructor() {
-		Board.board = new Array(8)
+		this.board = new Array(8)
 		for (let i = 0; i < 8; i++) {
-			Board.board[i] = new Array(8)
+			this.board[i] = new Array(8)
 		}
 		for (let row = 0; row < 8; row++) {
 			for (let col = 0; col < 8; col++) {
-				Board.board[row][col] = new Cell(row, col)
+				this.board[row][col] = new Cell(row, col)
 			}
 		}
-		// may not need
-		Board.markEnemySquares = this.markEnemySquares
 	}
 
-	// copyBoard({ board }) {
-	// 	this.boardCopy = [...board].map((row) =>
-	// 		[...row].map((cell) => ({ ...cell }))
-	// 	)
-	// 	return [...board].map((row) => [...row].map((cell) => ({ ...cell })))
-	// 	Board.board = [...board].map((row) =>
-	// 		[...row].map((cell) =>
-	// 			Object.assign(Object.create(Object.getPrototypeOf(cell)), cell)
-	// 		)
-	// 	)
-	// 	const boardCopy = [...board].map((row) =>
-	// 		[...row].map((cell) => ({ ...cell }))
-	// 	)
-	// }
-
-	// updateBoard() {
-	// 	this.board = Board.board
-	// 		Board.board = [...this.board].map((piece) =>
-	// 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
-	// 		)
-	// }
-
-	// may not need
-	copyTargets({ whiteSquares, blackSquares }) {
-		this.whiteSquares = [...whiteSquares].map((cell) => ({ ...cell }))
-		this.blackSquares = [...blackSquares].map((cell) => ({ ...cell }))
+	copyBoard({ board }) {
+		// 	Board.board = [...board].map((row) =>
+		// 		[...row].map((cell) =>
+		// 			Object.assign(Object.create(Object.getPrototypeOf(cell)), cell)
+		// 		)
+		// 	)
+		this.board = [...board].map((row) => [...row].map((cell) => ({ ...cell })))
 	}
 
 	identifyCell(cell) {
@@ -65,8 +44,30 @@ class Board {
 		return this.board[cellRow][cellCol]
 	}
 
-	get board() {
-		return Board.board
+	removePieceFromSquare(piece) {
+		this.board[piece.row][piece.col].color = ''
+		this.board[piece.row][piece.col].piece = ''
+		this.board[piece.row][piece.col].empty = true
+	}
+
+	assignPieceToSquare(piece) {
+		this.board[piece.row][piece.col].color = piece.color
+		this.board[piece.row][piece.col].piece = piece
+		this.board[piece.row][piece.col].empty = false
+	}
+
+	movePiece(piece, landingSquare, opponent) {
+		// console.log('pieceMoving from board', Date.now(), piece, landingSquare)
+
+		// Remove piece from square
+		this.removePieceFromSquare(piece)
+
+		// If capture, remove piece from game
+		if (landingSquare.piece) opponent.removePieceFromGame(landingSquare.piece)
+
+		// piece.changePosition(landingSquare.row, landingSquare.col)
+		piece.changePosition(landingSquare)
+		this.assignPieceToSquare(piece)
 	}
 
 	displayPieces() {
@@ -136,32 +137,25 @@ class Board {
 		)
 	}
 
-	markEnemySquares(whitePlayer, blackPlayer, board = this.board) {
+	// markEnemySquares(whitePlayer, blackPlayer, board = this.board) {
+	markEnemySquares(player, opponent) {
 		// Clear enemy squares
-		whitePlayer.pieces.forEach((piece) => piece.clearTargetSquares())
-		blackPlayer.pieces.forEach((piece) => piece.clearTargetSquares())
+		player.pieces.forEach((piece) => piece.clearTargetSquares())
+		opponent.pieces.forEach((piece) => piece.clearTargetSquares())
 
 		// Mark enemy squares
-		whitePlayer.pieces.forEach((piece) => piece.markEnemySquares(board))
-		blackPlayer.pieces.forEach((piece) => piece.markEnemySquares(board))
+		player.pieces.forEach((piece) => piece.markEnemySquares(this.board))
+		opponent.pieces.forEach((piece) => piece.markEnemySquares(this.board))
 
 		// Assign marked squares to board
-		this.whiteSquares = whitePlayer.pieces.map((piece) => piece.targets).flat()
-		this.blackSquares = blackPlayer.pieces.map((piece) => piece.targets).flat()
-		Board.whiteSquares = whitePlayer.pieces.map((piece) => piece.targets).flat()
-		Board.blackSquares = blackPlayer.pieces.map((piece) => piece.targets).flat()
-	}
-
-	// get whiteSquares() {
-	// 	return Board.whiteSquares
-	// }
-
-	// get blackSquares() {
-	// 	return Board.blackSquares
-	// }
-
-	printBoard() {
-		console.log(this.board)
+		this.whiteSquares =
+			player.color === 'white'
+				? player.pieces.map((piece) => piece.targets)
+				: opponent.pieces.map((piece) => piece.targets)
+		this.blackSquares =
+			player.color === 'white'
+				? opponent.pieces.map((piece) => piece.targets)
+				: player.pieces.map((piece) => piece.targets)
 	}
 }
 

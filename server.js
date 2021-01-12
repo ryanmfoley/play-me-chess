@@ -20,7 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
 
-const connections = [null, null]
+// const connections = [null, null]
+let turn = 'white'
 
 // Run when client connects
 io.on('connection', (socket) => {
@@ -65,20 +66,15 @@ io.on('connection', (socket) => {
 		io.emit('playersInLobby', players)
 	})
 
-	socket.on('joinGame', ({ username, room }) => {
+	socket.on('joinGame', ({ username, room, color }) => {
 		// Join socket to a given room
 		socket.join(room)
 
+		// const plyrs = getPlayersInRoom(room)
+
 		addPlayerToRoom(socket.id, username, room)
 
-		const plyrs = getPlayersInRoom(room)
-
-		const turn = plyrs.length === 1 ? 'white' : 'black'
-
-		// Tell the client what player number they are
-		socket.emit('players-turn', turn)
-
-		if (turn === 'black') io.to(room).emit('info')
+		if (color === 'black') io.to(room).emit('info')
 	})
 
 	socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
