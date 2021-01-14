@@ -20,7 +20,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
 
-// const connections = [null, null]
 let turn = 'white'
 
 // Run when client connects
@@ -36,9 +35,6 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('updatePlayersInLobby', (roomID) => {
-		// Get list of players in lobby
-		const players2 = getPlayers()
-
 		// Remove player from lobby
 		removePlayer(roomID)
 
@@ -88,6 +84,11 @@ io.on('connection', (socket) => {
 			selectedCell,
 			landingCell,
 		})
+	})
+
+	socket.on('winStatus', () => {
+		// Join socket to a given room
+		socket.broadcast.emit('winStatus')
 	})
 
 	// Tell everyone what player number just connected

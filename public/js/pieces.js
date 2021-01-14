@@ -536,16 +536,6 @@ class King extends Piece {
 
 	markEnemySquares(board) {
 		// Mark target squares
-		// let row = this.row > 0 ? this.row - 1 : null
-		// let col = this.col > 0 ? this.col - 1 : null
-		// for (; row <= this.row + 1; row++) {
-		// 	for (; col <= this.col + 1; col++) {
-		// 		if (row && col) {
-		// 			// console.log(board[row][col])
-		// 			this.targets.push(board[row][col])
-		// 		}
-		// 	}
-		// }
 		let minRow = this.row - 1 >= 0 ? this.row - 1 : 0
 		let maxRow = this.row + 1 <= 7 ? this.row + 1 : 7
 		let minCol = this.col - 1 >= 0 ? this.col - 1 : 0
@@ -555,63 +545,45 @@ class King extends Piece {
 		for (let x = minRow; x <= maxRow; x++) {
 			for (let y = minCol; y <= maxCol; y++) {
 				if (this.row === x && this.col === y) {
-					// console.log('hey', this.row, this.col, x, y)
 				} else {
 					this.targets.push(board[x][y])
 				}
-				// if (this.row !== x && this.col !== y) {
-				// 	console.log('hey', this.row, this.col, x, y)
-				// 	this.targets.push(board[x][y])
-				// }
 			}
 		}
-		// console.log(this.color, this.targets)
 	}
 }
 
-const createPieces = (color) => {
-	const whitePieces = []
-	const blackPieces = []
-	// const whitePieceRow = color === 'white' ? 7 : 0
-	// const blackPieceRow = color === 'white' ? 0 : 7
-	// const whitePawnRow = color === 'white' ? 6 : 1
-	// const blackPawnRow = color === 'white' ? 1 : 6
-	const whitePieceRow = 7
-	const blackPieceRow = 0
-	const whitePawnRow = 6
-	const blackPawnRow = 1
+const whitePieces = []
+const blackPieces = []
 
-	// Add pieces to whitePieces and blackPieces array
-	for (let color of ['white', 'black']) {
-		for (let i = 0; i < 8; i++) {
-			color === 'white'
-				? whitePieces.push(new Pawn(color, 'pawn', whitePawnRow, i))
-				: blackPieces.push(new Pawn(color, 'pawn', blackPawnRow, i))
-		}
+// Add pieces to whitePieces and blackPieces array
+for (let color of ['white', 'black']) {
+	for (let i = 0; i < 8; i++) {
+		color === 'white'
+			? whitePieces.push(new Pawn('white', 'pawn', 6, i))
+			: blackPieces.push(new Pawn('black', 'pawn', 1, i))
 	}
-	whitePieces.push(new Knight('white', 'knight', whitePieceRow, 1))
-	whitePieces.push(new Knight('white', 'knight', whitePieceRow, 6))
-	whitePieces.push(new Bishop('white', 'bishop', whitePieceRow, 2))
-	whitePieces.push(new Bishop('white', 'bishop', whitePieceRow, 5))
-	whitePieces.push(new Rook('white', 'rook', whitePieceRow, 0))
-	whitePieces.push(new Rook('white', 'rook', whitePieceRow, 7))
-	whitePieces.push(new Queen('white', 'queen', whitePieceRow, 3))
-	whitePieces.push(new King('white', 'king', whitePieceRow, 4))
-
-	blackPieces.push(new Knight('black', 'knight', blackPieceRow, 1))
-	blackPieces.push(new Knight('black', 'knight', blackPieceRow, 6))
-	blackPieces.push(new Bishop('black', 'bishop', blackPieceRow, 2))
-	blackPieces.push(new Bishop('black', 'bishop', blackPieceRow, 5))
-	blackPieces.push(new Rook('black', 'rook', blackPieceRow, 0))
-	blackPieces.push(new Rook('black', 'rook', blackPieceRow, 7))
-	blackPieces.push(new Queen('black', 'queen', blackPieceRow, 3))
-	blackPieces.push(new King('black', 'king', blackPieceRow, 4))
-
-	return { whitePieces, blackPieces }
 }
+whitePieces.push(new Knight('white', 'knight', 7, 1))
+whitePieces.push(new Knight('white', 'knight', 7, 6))
+whitePieces.push(new Bishop('white', 'bishop', 7, 2))
+whitePieces.push(new Bishop('white', 'bishop', 7, 5))
+whitePieces.push(new Rook('white', 'rook', 7, 0))
+whitePieces.push(new Rook('white', 'rook', 7, 7))
+whitePieces.push(new Queen('white', 'queen', 7, 3))
+whitePieces.push(new King('white', 'king', 7, 4))
+
+blackPieces.push(new Knight('black', 'knight', 0, 1))
+blackPieces.push(new Knight('black', 'knight', 0, 6))
+blackPieces.push(new Bishop('black', 'bishop', 0, 2))
+blackPieces.push(new Bishop('black', 'bishop', 0, 5))
+blackPieces.push(new Rook('black', 'rook', 0, 0))
+blackPieces.push(new Rook('black', 'rook', 0, 7))
+blackPieces.push(new Queen('black', 'queen', 0, 3))
+blackPieces.push(new King('black', 'king', 0, 4))
 
 // Assign pieces to squares on board
-const placePiecesOnBoard = (chessBoard, whitePieces, blackPieces) => {
+const placePiecesOnBoard = (chessBoard) => {
 	whitePieces.forEach((piece) => {
 		chessBoard.assignPieceToSquare(piece)
 	})
@@ -621,4 +593,4 @@ const placePiecesOnBoard = (chessBoard, whitePieces, blackPieces) => {
 	})
 }
 
-export { createPieces, placePiecesOnBoard }
+export { placePiecesOnBoard, whitePieces, blackPieces }

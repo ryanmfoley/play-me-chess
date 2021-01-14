@@ -1,3 +1,5 @@
+import { whitePieces, blackPieces } from './pieces.js'
+
 class Player {
 	constructor(color, pieces) {
 		this.color = color
@@ -117,11 +119,7 @@ class Player {
 	}
 }
 
-const createPlayer = (whitePieces, blackPieces) => {
-	const whitePlayer = new Player('white', whitePieces)
-	const blackPlayer = new Player('black', blackPieces)
+const whitePlayer = new Player('white', whitePieces)
+const blackPlayer = new Player('black', blackPieces)
 
-	return { whitePlayer, blackPlayer }
-}
-
-export { createPlayer }
+export { whitePlayer, blackPlayer }

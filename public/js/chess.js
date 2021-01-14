@@ -1,6 +1,6 @@
 import { chessBoard } from './board.js'
-import { createPieces, placePiecesOnBoard } from './pieces.js'
-import { createPlayer } from './players.js'
+import { placePiecesOnBoard } from './pieces.js'
+import { whitePlayer, blackPlayer } from './players.js'
 
 // Get name and room from URL
 const { username, room, color } = Qs.parse(location.search, {
@@ -23,9 +23,6 @@ const socket = io()
 
 socket.emit('joinGame', { username, room, color })
 
-const { whitePieces, blackPieces } = createPieces(color)
-const { whitePlayer, blackPlayer } = createPlayer(whitePieces, blackPieces)
-
 const currentPlayer = color === 'white' ? whitePlayer : blackPlayer
 const opponent = color === 'white' ? blackPlayer : whitePlayer
 
@@ -40,7 +37,7 @@ startGameButton.addEventListener('click', () => {
 	if (color === 'black') squares.setAttribute('id', 'black-board')
 
 	chessBoard.clearBoard()
-	placePiecesOnBoard(chessBoard, whitePieces, blackPieces)
+	placePiecesOnBoard(chessBoard)
 	chessBoard.displayPieces()
 
 	startGame = true
@@ -80,7 +77,6 @@ squares.addEventListener('click', (e) => {
 
 				// Send move to server
 				socket.emit('move-piece', { room, turn, selectedCell, landingCell })
-				//////////////--------------------///----------------------///////////////
 
 				// Reset turn variables
 				selectedPiece = false
@@ -93,7 +89,7 @@ squares.addEventListener('click', (e) => {
 //______________________________________________________________
 // Listen for piece moves
 
-socket.on('move-piece', ({ turn, selectedCell, landingCell }) => {
+socket.on('move-piece', ({ turn, selectedCell, landingCell, checkStatus }) => {
 	currentPlayer.turn = turn
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
@@ -114,17 +110,11 @@ socket.on('move-piece', ({ turn, selectedCell, landingCell }) => {
 
 	currentPlayer.isKingInCheck(chessBoard)
 	opponent.isKingInCheck(chessBoard)
-	// console.log('currentPlayer and turn', currentPlayer, turn)
 
-	// console.log('player', currentPlayer.checkMate, 'opponent', opponent.checkMate)
-	// Possibly opponent.getAvailableMoves
 	// Get available moves
 	if (currentPlayer.color === turn) {
 		currentPlayer.getAvailableMoves(chessBoard, opponent)
 	}
-	// } else {
-	// 	currentPlayer.getAvailableMoves(chessBoard, opponent)
-	// }
 
 	if (currentPlayer.inCheck || opponent.inCheck) {
 		check.style.display = 'block'
@@ -132,7 +122,12 @@ socket.on('move-piece', ({ turn, selectedCell, landingCell }) => {
 
 	if (currentPlayer.checkMate || opponent.checkMate) {
 		check.innerHTML = 'CHECKMATE!'
+		socket.emit('winStatus')
 	}
+})
+
+socket.on('winStatus', () => {
+	check.innerHTML = 'CHECKMATE!'
 })
 
 leaveGameButton.addEventListener('click', () => {
