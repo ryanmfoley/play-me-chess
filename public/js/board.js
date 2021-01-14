@@ -21,11 +21,6 @@ class Board {
 	}
 
 	copyBoard({ board }) {
-		// 	Board.board = [...board].map((row) =>
-		// 		[...row].map((cell) =>
-		// 			Object.assign(Object.create(Object.getPrototypeOf(cell)), cell)
-		// 		)
-		// 	)
 		this.board = [...board].map((row) => [...row].map((cell) => ({ ...cell })))
 	}
 
@@ -57,8 +52,6 @@ class Board {
 	}
 
 	movePiece(piece, landingSquare, opponent) {
-		// console.log('pieceMoving from board', Date.now(), piece, landingSquare)
-
 		// Remove piece from square
 		this.removePieceFromSquare(piece)
 
@@ -77,46 +70,84 @@ class Board {
 				switch (square.piece.name) {
 					case 'pawn':
 						img = document.createElement('img')
-						img.src =
-							square.color === 'white' ? './pieces/wp.svg' : './pieces/bp.svg'
+						// img.src =
+						// 	square.color === 'white' ? './pieces/wp.svg' : './pieces/bp.svg'
+						if (square.color === 'white') {
+							img.src = './pieces/wp.svg'
+						} else {
+							img.src = './pieces/bp.svg'
+							img.classList.add('black-pieces')
+						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						square.empty = false
 						break
 					case 'knight':
 						img = document.createElement('img')
-						img.src =
-							square.color === 'white' ? './pieces/wn.svg' : './pieces/bn.svg'
+						// img.src =
+						// 	square.color === 'white' ? './pieces/wn.svg' : './pieces/bn.svg'
+						if (square.color === 'white') {
+							img.src = './pieces/wn.svg'
+						} else {
+							img.src = './pieces/bn.svg'
+							img.classList.add('black-pieces')
+						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						square.empty = false
 						break
 					case 'bishop':
 						img = document.createElement('img')
-						img.src =
-							square.color === 'white' ? './pieces/wb.svg' : './pieces/bb.svg'
+						// img.src =
+						// 	square.color === 'white' ? './pieces/wb.svg' : './pieces/bb.svg'
+						if (square.color === 'white') {
+							img.src = './pieces/wb.svg'
+						} else {
+							img.src = './pieces/bb.svg'
+							img.classList.add('black-pieces')
+						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						square.empty = false
 						break
 					case 'rook':
 						img = document.createElement('img')
-						img.src =
-							square.color === 'white' ? './pieces/wr.svg' : './pieces/br.svg'
+						// img.src =
+						// 	square.color === 'white' ? './pieces/wr.svg' : './pieces/br.svg'
+						if (square.color === 'white') {
+							img.src = './pieces/wr.svg'
+						} else {
+							img.src = './pieces/br.svg'
+							img.classList.add('black-pieces')
+						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						square.empty = false
 						break
 					case 'queen':
 						img = document.createElement('img')
-						img.src =
-							square.color === 'white' ? './pieces/wq.svg' : './pieces/bq.svg'
+						// img.src =
+						// 	square.color === 'white' ? './pieces/wq.svg' : './pieces/bq.svg'
+						if (square.color === 'white') {
+							img.src = './pieces/wq.svg'
+						} else {
+							img.src = './pieces/bq.svg'
+							img.classList.add('black-pieces')
+						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						square.empty = false
 						break
 					case 'king':
 						img = document.createElement('img')
+						// img.src =
+						// 	square.color === 'white' ? './pieces/wk.svg' : './pieces/bk.svg'
+						if (square.color === 'white') {
+							img.src = './pieces/wk.svg'
+						} else {
+							img.src = './pieces/bk.svg'
+							img.classList.add('black-pieces')
+						}
 						img.src =
 							square.color === 'white' ? './pieces/wk.svg' : './pieces/bk.svg'
 						square.cellBox.innerHTML = ''
@@ -137,7 +168,6 @@ class Board {
 		)
 	}
 
-	// markEnemySquares(whitePlayer, blackPlayer, board = this.board) {
 	markEnemySquares(player, opponent) {
 		// Clear enemy squares
 		player.pieces.forEach((piece) => piece.clearTargetSquares())

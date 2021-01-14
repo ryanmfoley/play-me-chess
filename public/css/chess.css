@@ -78,6 +78,14 @@ header > h1 {
 	height: 100px;
 }
 
+#black-board {
+	transform: rotate(180deg);
+}
+
+.black-pieces {
+	transform: rotate(180deg);
+}
+
 .check-text {
 	display: none;
 	font-size: 38px;

@@ -1,5 +1,3 @@
-// import { Board } from './board.js'
-import { whitePieces, blackPieces } from './pieces.js'
 class Player {
 	constructor(color, pieces) {
 		this.color = color
@@ -31,6 +29,8 @@ class Player {
 	}
 
 	getAvailableMoves(chessBoard, opponent) {
+		this.checkMate = true
+
 		this.pieces.forEach((piece) =>
 			piece.targets.forEach((target) => {
 				// Copy board, players, pieces, and targets
@@ -53,17 +53,15 @@ class Player {
 					targetCopy
 				)
 
-				debugger
-
 				if (validMove) {
-					console.log(
-						'before move',
-						chessBoardCopy,
-						playerCopy,
-						opponentCopy,
-						selectedPiece,
-						targetCopy
-					)
+					// console.log(
+					// 	'before move',
+					// 	chessBoardCopy,
+					// 	playerCopy,
+					// 	opponentCopy,
+					// 	selectedPiece,
+					// 	targetCopy
+					// )
 
 					// pieceCopy may be a problem
 					chessBoardCopy.movePiece(selectedPiece, targetCopy, playerCopy)
@@ -81,13 +79,13 @@ class Player {
 					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 
 					// Check if player can escape check
-					if (!opponentCopy.isKingInCheck(chessBoardCopy)) {
-						// console.log('can escape', pieceCopy, targetCopy)
+					if (!playerCopy.isKingInCheck(chessBoardCopy)) {
+						// console.log('can escape', selectedPiece, targetCopy)
 						this.checkMate = false
 						// console.log('from player', playerCopy.isKingInCheck(chessBoardCopy))
 						// if (opponentCopy.inCheck) console.log('target', target)
 					} else {
-						// console.log("can't escape", pieceCopy.name, targetCopy)
+						// console.log("can't escape", selectedPiece, targetCopy)
 					}
 				}
 			})
@@ -119,7 +117,11 @@ class Player {
 	}
 }
 
-const whitePlayer = new Player('white', whitePieces)
-const blackPlayer = new Player('black', blackPieces)
+const createPlayer = (whitePieces, blackPieces) => {
+	const whitePlayer = new Player('white', whitePieces)
+	const blackPlayer = new Player('black', blackPieces)
 
-export { whitePlayer, blackPlayer }
+	return { whitePlayer, blackPlayer }
+}
+
+export { createPlayer }

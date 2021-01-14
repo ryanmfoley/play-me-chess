@@ -1,8 +1,6 @@
 import { chessBoard } from './board.js'
-import { placePiecesOnBoard } from './pieces.js'
-import { whitePlayer, blackPlayer } from './players.js'
-
-/////////////////////// CHESS ///////////////////////
+import { createPieces, placePiecesOnBoard } from './pieces.js'
+import { createPlayer } from './players.js'
 
 // Get name and room from URL
 const { username, room, color } = Qs.parse(location.search, {
@@ -25,7 +23,9 @@ const socket = io()
 
 socket.emit('joinGame', { username, room, color })
 
-// Get your player number
+const { whitePieces, blackPieces } = createPieces(color)
+const { whitePlayer, blackPlayer } = createPlayer(whitePieces, blackPieces)
+
 const currentPlayer = color === 'white' ? whitePlayer : blackPlayer
 const opponent = color === 'white' ? blackPlayer : whitePlayer
 
@@ -37,8 +37,10 @@ socket.on('info', () => {
 // Listen for Start-Game event
 
 startGameButton.addEventListener('click', () => {
+	if (color === 'black') squares.setAttribute('id', 'black-board')
+
 	chessBoard.clearBoard()
-	placePiecesOnBoard(chessBoard)
+	placePiecesOnBoard(chessBoard, whitePieces, blackPieces)
 	chessBoard.displayPieces()
 
 	startGame = true
@@ -137,11 +139,6 @@ leaveGameButton.addEventListener('click', () => {
 	socket.emit('player-disconnected')
 	window.location.href = 'lobby.html'
 })
-
-// window.addEventListener('beforeunload', function (e) {
-// 	e.preventDefault()
-// 	console.log('unload event')
-// })
 
 // NOTES
 // getAvailableMoves Pawn targets need adjusting

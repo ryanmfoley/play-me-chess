@@ -1,5 +1,3 @@
-import { Board } from './board.js'
-
 class Piece {
 	constructor(color, name, row, col) {
 		this.color = color
@@ -571,38 +569,49 @@ class King extends Piece {
 	}
 }
 
-const whitePieces = []
-const blackPieces = []
+const createPieces = (color) => {
+	const whitePieces = []
+	const blackPieces = []
+	// const whitePieceRow = color === 'white' ? 7 : 0
+	// const blackPieceRow = color === 'white' ? 0 : 7
+	// const whitePawnRow = color === 'white' ? 6 : 1
+	// const blackPawnRow = color === 'white' ? 1 : 6
+	const whitePieceRow = 7
+	const blackPieceRow = 0
+	const whitePawnRow = 6
+	const blackPawnRow = 1
 
-// Add pieces to whitePieces and blackPieces array
-for (let color of ['white', 'black']) {
-	for (let i = 0; i < 8; i++) {
-		color === 'white'
-			? whitePieces.push(new Pawn(color, 'pawn', 6, i))
-			: blackPieces.push(new Pawn(color, 'pawn', 1, i))
+	// Add pieces to whitePieces and blackPieces array
+	for (let color of ['white', 'black']) {
+		for (let i = 0; i < 8; i++) {
+			color === 'white'
+				? whitePieces.push(new Pawn(color, 'pawn', whitePawnRow, i))
+				: blackPieces.push(new Pawn(color, 'pawn', blackPawnRow, i))
+		}
 	}
+	whitePieces.push(new Knight('white', 'knight', whitePieceRow, 1))
+	whitePieces.push(new Knight('white', 'knight', whitePieceRow, 6))
+	whitePieces.push(new Bishop('white', 'bishop', whitePieceRow, 2))
+	whitePieces.push(new Bishop('white', 'bishop', whitePieceRow, 5))
+	whitePieces.push(new Rook('white', 'rook', whitePieceRow, 0))
+	whitePieces.push(new Rook('white', 'rook', whitePieceRow, 7))
+	whitePieces.push(new Queen('white', 'queen', whitePieceRow, 3))
+	whitePieces.push(new King('white', 'king', whitePieceRow, 4))
+
+	blackPieces.push(new Knight('black', 'knight', blackPieceRow, 1))
+	blackPieces.push(new Knight('black', 'knight', blackPieceRow, 6))
+	blackPieces.push(new Bishop('black', 'bishop', blackPieceRow, 2))
+	blackPieces.push(new Bishop('black', 'bishop', blackPieceRow, 5))
+	blackPieces.push(new Rook('black', 'rook', blackPieceRow, 0))
+	blackPieces.push(new Rook('black', 'rook', blackPieceRow, 7))
+	blackPieces.push(new Queen('black', 'queen', blackPieceRow, 3))
+	blackPieces.push(new King('black', 'king', blackPieceRow, 4))
+
+	return { whitePieces, blackPieces }
 }
 
-whitePieces.push(new Knight('white', 'knight', 7, 1))
-whitePieces.push(new Knight('white', 'knight', 7, 6))
-whitePieces.push(new Bishop('white', 'bishop', 7, 2))
-whitePieces.push(new Bishop('white', 'bishop', 7, 5))
-whitePieces.push(new Rook('white', 'rook', 7, 0))
-whitePieces.push(new Rook('white', 'rook', 7, 7))
-whitePieces.push(new Queen('white', 'queen', 7, 3))
-whitePieces.push(new King('white', 'king', 7, 4))
-
-blackPieces.push(new Knight('black', 'knight', 0, 1))
-blackPieces.push(new Knight('black', 'knight', 0, 6))
-blackPieces.push(new Bishop('black', 'bishop', 0, 2))
-blackPieces.push(new Bishop('black', 'bishop', 0, 5))
-blackPieces.push(new Rook('black', 'rook', 0, 0))
-blackPieces.push(new Rook('black', 'rook', 0, 7))
-blackPieces.push(new Queen('black', 'queen', 0, 3))
-blackPieces.push(new King('black', 'king', 0, 4))
-
 // Assign pieces to squares on board
-const placePiecesOnBoard = (chessBoard) => {
+const placePiecesOnBoard = (chessBoard, whitePieces, blackPieces) => {
 	whitePieces.forEach((piece) => {
 		chessBoard.assignPieceToSquare(piece)
 	})
@@ -612,4 +621,4 @@ const placePiecesOnBoard = (chessBoard) => {
 	})
 }
 
-export { placePiecesOnBoard, whitePieces, blackPieces }
+export { createPieces, placePiecesOnBoard }
