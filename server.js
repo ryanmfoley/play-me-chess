@@ -31,7 +31,6 @@ io.on('connection', (socket) => {
 
 		// Send list of players to client
 		socket.emit('playersInLobby', players)
-		// console.log('server', players)
 	})
 
 	socket.on('updatePlayersInLobby', (roomID) => {
@@ -97,7 +96,6 @@ io.on('connection', (socket) => {
 	// Runs when client disconnects
 	socket.on('player-disconnected', () => {
 		const player = removePlayer(socket.id)
-		// console.log('from server', `${player} has left`)
 
 		// if (player) {
 		// 	const players = getPlayersInRoom(player.room)

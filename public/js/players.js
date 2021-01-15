@@ -14,7 +14,6 @@ class Player {
 			Object.create(Object.getPrototypeOf(player)),
 			player
 		)
-		// may not need
 		playerCopy.pieces = [...player.pieces].map((piece) =>
 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
 		)
@@ -23,12 +22,12 @@ class Player {
 	}
 
 	// Do I need?
-	copyTargets({ whiteSquares, blackSquares }) {
-		const whiteSquaresCopy = [...whiteSquares].map((cell) => ({ ...cell }))
-		const blackSquaresCopy = [...blackSquares].map((cell) => ({ ...cell }))
+	// copyTargets({ whiteSquares, blackSquares }) {
+	// 	const whiteSquaresCopy = [...whiteSquares].map((cell) => ({ ...cell }))
+	// 	const blackSquaresCopy = [...blackSquares].map((cell) => ({ ...cell }))
 
-		return { whiteSquaresCopy, blackSquaresCopy }
-	}
+	// 	return { whiteSquaresCopy, blackSquaresCopy }
+	// }
 
 	getAvailableMoves(chessBoard, opponent) {
 		this.checkMate = true
@@ -56,46 +55,17 @@ class Player {
 				)
 
 				if (validMove) {
-					// console.log(
-					// 	'before move',
-					// 	chessBoardCopy,
-					// 	playerCopy,
-					// 	opponentCopy,
-					// 	selectedPiece,
-					// 	targetCopy
-					// )
-
-					// pieceCopy may be a problem
 					chessBoardCopy.movePiece(selectedPiece, targetCopy, playerCopy)
-
-					// console.log(
-					// 	'after move',
-					// 	chessBoardCopy,
-					// 	playerCopy,
-					// 	opponentCopy,
-					// 	selectedPiece,
-					// 	targetCopy
-					// )
-
-					// it's marking board and not boardCopy
 					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 
 					// Check if player can escape check
-					if (!playerCopy.isKingInCheck(chessBoardCopy)) {
-						// console.log('can escape', selectedPiece, targetCopy)
-						this.checkMate = false
-						// console.log('from player', playerCopy.isKingInCheck(chessBoardCopy))
-						// if (opponentCopy.inCheck) console.log('target', target)
-					} else {
-						// console.log("can't escape", selectedPiece, targetCopy)
-					}
+					if (!playerCopy.isKingInCheck(chessBoardCopy)) this.checkMate = false
 				}
 			})
 		)
 	}
 
 	removePieceFromGame(enemyPiece) {
-		// this.lastPieceRemoved = enemyPiece
 		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
 	}
 
@@ -107,10 +77,10 @@ class Player {
 		const { row, col } = this.pieces.find((piece) => piece.name === 'king')
 
 		if (
-			// this.kingsPosition &&
 			enemySquares.find((square) => row === square.row && col === square.col)
 		) {
 			this.inCheck = true
+			////////////////// do I need to return anything? //////////////////
 			return true
 		} else {
 			this.inCheck = false
