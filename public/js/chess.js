@@ -137,14 +137,11 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// 1. don't allow moves that don't get king out of check
-// 2. getAvailableMoves Pawn targets need adjusting
-
 // rooms don't show up if created before other user joins lobby
 // wait for pieces to appear for both clients before allowing moves
 // after checkmate, smoothly send clients to lobby
 // maybe a while loop to wait for player to get out of check
-// still need to write code for "pawn en passant" and "pawn promotion"
+// still need to write code for "pawn en passant", "pawn promotion", and "castle"
 // possibly remove board.empty
 // 	this.board = Board.board
 // 		Board.board = [...this.board].map((piece) =>

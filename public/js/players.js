@@ -21,18 +21,15 @@ class Player {
 		return playerCopy
 	}
 
-	// Do I need?
-	// copyTargets({ whiteSquares, blackSquares }) {
-	// 	const whiteSquaresCopy = [...whiteSquares].map((cell) => ({ ...cell }))
-	// 	const blackSquaresCopy = [...blackSquares].map((cell) => ({ ...cell }))
-
-	// 	return { whiteSquaresCopy, blackSquaresCopy }
-	// }
-
 	getAvailableMoves(chessBoard, opponent) {
 		this.checkMate = true
 
-		this.pieces.forEach((piece) =>
+		const { pieces } = this.copyPlayer(this)
+
+		pieces.forEach((piece) => {
+			// Add forward pawn moves to targets
+			if (piece.name === 'pawn') piece.targets = chessBoard.board.flat()
+
 			piece.targets.forEach((target) => {
 				// Copy board, players, pieces, and targets
 				let chessBoardCopy = Object.assign(
@@ -57,12 +54,13 @@ class Player {
 				if (validMove) {
 					chessBoardCopy.movePiece(selectedPiece, targetCopy, playerCopy)
 					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+					playerCopy.isKingInCheck(chessBoardCopy)
 
 					// Check if player can escape check
-					if (!playerCopy.isKingInCheck(chessBoardCopy)) this.checkMate = false
+					if (!playerCopy.inCheck) this.checkMate = false
 				}
 			})
-		)
+		})
 	}
 
 	removePieceFromGame(enemyPiece) {
@@ -80,12 +78,7 @@ class Player {
 			enemySquares.find((square) => row === square.row && col === square.col)
 		) {
 			this.inCheck = true
-			////////////////// do I need to return anything? //////////////////
-			return true
-		} else {
-			this.inCheck = false
-			return false
-		}
+		} else this.inCheck = false
 	}
 }
 
