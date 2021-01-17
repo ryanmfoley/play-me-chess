@@ -78,7 +78,6 @@ io.on('connection', (socket) => {
 
 		// Send game state to client
 		io.to(room).emit('move-piece', {
-			room,
 			turn,
 			selectedCell,
 			landingCell,

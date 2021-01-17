@@ -12,9 +12,9 @@ class Piece {
 		this.col = col
 	}
 
-	checkMove(currentPlayer, opponent, chessBoard, landingSquare) {
-		const validMove = this.checkForValidMove(
-			currentPlayer,
+	checkMove(player, opponent, chessBoard, landingSquare) {
+		let { validMove, castle } = this.checkForValidMove(
+			player,
 			chessBoard,
 			landingSquare
 		)
@@ -25,16 +25,18 @@ class Piece {
 			chessBoard
 		)
 		chessBoardCopy.copyBoard(chessBoard)
-		const playerCopy = currentPlayer.copyPlayer(currentPlayer)
+		const playerCopy = player.copyPlayer(player)
 		const selectedPiece = playerCopy.pieces.find(
 			(pieceCopy) => pieceCopy.row === this.row && pieceCopy.col === this.col
 		)
 
+		// Check if player is in check after move
 		chessBoardCopy.movePiece(selectedPiece, landingSquare, playerCopy)
 		chessBoardCopy.markEnemySquares(playerCopy, opponent)
 		playerCopy.isKingInCheck(chessBoardCopy)
+		if (playerCopy.inCheck) validMove = false
 
-		return validMove && !playerCopy.inCheck
+		return { validMove, castle }
 	}
 
 	clearTargetSquares() {
@@ -48,10 +50,13 @@ class Pawn extends Piece {
 	}
 
 	checkForValidMove(player, chessBoard, landingSquare) {
+		const castle = { validCastle: false }
+
 		// Check if move puts their king in check
 		const startingSquare = this.color === 'white' ? 6 : 1
 		const oneSquareUp = this.color === 'white' ? this.row - 1 : this.row + 1
 		const twoSquaresUp = this.color === 'white' ? this.row - 2 : this.row + 2
+		let validMove
 
 		if (
 			// Check if landingSquare is a valid move
@@ -68,9 +73,10 @@ class Pawn extends Piece {
 				landingSquare.piece &&
 				this.color !== landingSquare.piece.color)
 		) {
-			return true
-		}
-		return false
+			validMove = true
+		} else validMove = false
+
+		return { validMove, castle }
 	}
 
 	markEnemySquares(board) {
@@ -99,6 +105,9 @@ class Knight extends Piece {
 	}
 
 	checkForValidMove(player, chessBoard, landingSquare) {
+		const castle = { validCastle: false }
+		let validMove
+
 		if (
 			(Math.abs(this.row - landingSquare.row) === 1 &&
 				Math.abs(this.col - landingSquare.col) === 2 &&
@@ -107,9 +116,10 @@ class Knight extends Piece {
 				Math.abs(this.col - landingSquare.col) === 1 &&
 				this.color !== landingSquare.piece.color)
 		) {
-			return true
-		}
-		return false
+			validMove = true
+		} else validMove = false
+
+		return { validMove, castle }
 	}
 
 	markEnemySquares(board) {
@@ -135,10 +145,14 @@ class Bishop extends Piece {
 	}
 
 	checkForValidMove(player, chessBoard, landingSquare) {
+		const castle = { validCastle: false }
+
 		// Check movement direction
 		const xDirection = landingSquare.col < this.col ? 'left' : 'right'
 		const yDirection = landingSquare.row < this.row ? 'up' : 'down'
 		let direction
+		let validMove
+
 		if (yDirection === 'up' && xDirection === 'left') direction = 'upLeft'
 		if (yDirection === 'up' && xDirection === 'right') direction = 'upRight'
 		if (yDirection === 'down' && xDirection === 'left') direction = 'downLeft'
@@ -184,9 +198,14 @@ class Bishop extends Piece {
 					}
 				}
 			}
-			if (!isPieceInWay && landingSquare.piece.color !== this.color) return true
+			if (!isPieceInWay && landingSquare.piece.color !== this.color) {
+				validMove = true
+			} else {
+				validMove = false
+			}
 		}
-		return false
+
+		return { validMove, castle }
 	}
 
 	markEnemySquares(board) {
@@ -240,8 +259,11 @@ class Rook extends Piece {
 	}
 
 	checkForValidMove(player, chessBoard, landingSquare) {
+		const castle = { validCastle: false }
+
 		// Check movement direction
 		let direction
+
 		if (landingSquare.col < this.col && landingSquare.row === this.row) {
 			direction = 'left'
 		} else if (landingSquare.col > this.col && landingSquare.row === this.row) {
@@ -251,6 +273,7 @@ class Rook extends Piece {
 		} else if (landingSquare.row > this.row && landingSquare.col === this.col)
 			direction = 'down'
 
+		let validMove
 		let isPieceInWay = false
 		if (direction === 'left') {
 			for (let i = this.col - 1; i > landingSquare.col; i--) {
@@ -277,9 +300,17 @@ class Rook extends Piece {
 				}
 			}
 		}
-		if (direction && !isPieceInWay && landingSquare.piece.color !== this.color)
-			return true
-		return false
+		if (
+			direction &&
+			!isPieceInWay &&
+			landingSquare.piece.color !== this.color
+		) {
+			this.moved = true
+			validMove = true
+		} else {
+			validMove = false
+		}
+		return { validMove, castle }
 	}
 
 	markEnemySquares(board) {
@@ -325,6 +356,8 @@ class Queen extends Piece {
 	}
 
 	checkForValidMove(player, chessBoard, landingSquare) {
+		const castle = { validCastle: false }
+
 		const checkBishopMove = () => {
 			// Check movement direction
 			const xDirection = landingSquare.col < this.col ? 'left' : 'right'
@@ -433,7 +466,9 @@ class Queen extends Piece {
 				return true
 			return false
 		}
-		return checkBishopMove() || checkRookMove()
+		const validMove = checkBishopMove() || checkRookMove()
+
+		return { validMove, castle }
 	}
 
 	markEnemySquares(board) {
@@ -518,15 +553,6 @@ class Queen extends Piece {
 
 		markBishopSquares()
 		markRookSquares()
-
-		// Check if king is threatened
-		// this.targets.forEach((target) => {
-		// 	if (target.piece.name === 'king' && target.piece.color != this.color) {
-		// 		this.color === 'white'
-		// 			? (whitePlayer.inCheck = true)
-		// 			: (blackPlayer.inCheck = true)
-		// 	}
-		// })
 	}
 }
 
@@ -534,7 +560,7 @@ class King extends Piece {
 	constructor(color, piece, row, col) {
 		super(color, piece, row, col)
 	}
-	// maybe remove player argument
+
 	checkForValidMove(player, chessBoard, landingSquare) {
 		const enemySquares =
 			this.color === 'white'
@@ -544,16 +570,125 @@ class King extends Piece {
 		const isEnemySquare = enemySquares.find(
 			(square) => square === landingSquare
 		)
+		let direction
+		if (this.color === 'white' && this.row === landingSquare.row) {
+			direction = this.col < landingSquare.col ? 'right' : 'left'
+		} else if (this.color === 'black' && this.row === landingSquare.row) {
+			direction = this.col < landingSquare.col ? 'left' : 'right'
+		}
 
+		let castle = { validCastle: false }
+		let isCastling
+		let castlingDirection
+		let isPieceInWay
+		let castlingThruCheck
+		let validMove
+
+		// Castling short
+		if (
+			(this.color === 'white' &&
+				direction === 'right' &&
+				Math.abs(this.col - landingSquare.col) === 2) ||
+			(this.color === 'black' &&
+				direction === 'left' &&
+				Math.abs(this.col - landingSquare.col) === 2)
+		) {
+			isCastling = true
+			castlingDirection = 'short'
+
+			const shortCastlingSquares = chessBoard.board[this.row].slice(
+				this.col + 1,
+				landingSquare.col + 1
+			)
+
+			const [, { piece: rook }] = chessBoard.board[this.row]
+				.slice(this.col)
+				.filter((square) => square.piece)
+			castle.rooksStartingSquare = { cellRow: rook.row, cellCol: rook.col }
+
+			shortCastlingSquares.forEach((square) => {
+				enemySquares.forEach((enemySquare) => {
+					if (
+						square.row === enemySquare.row &&
+						square.col === enemySquare.col
+					) {
+						castlingThruCheck = true
+					}
+				})
+			})
+
+			// Check if shortCastlingSquares are free of pieces
+			shortCastlingSquares.forEach((square) => {
+				if (square.piece) isPieceInWay = true
+			})
+
+			// Castling long
+		} else if (
+			(this.color === 'white' &&
+				direction === 'left' &&
+				Math.abs(this.col - landingSquare.col) === 2) ||
+			(this.color === 'black' &&
+				direction === 'right' &&
+				Math.abs(this.col - landingSquare.col) === 2)
+		) {
+			isCastling = true
+			castlingDirection = 'long'
+
+			const longCastlingSquares = chessBoard.board[this.row].slice(
+				landingSquare.col - 1,
+				this.col
+			)
+
+			const [{ piece: rook }] = chessBoard.board[this.row]
+				.slice(0, this.col + 1)
+				.filter((square) => square.piece)
+			castle.rooksStartingSquare = { cellRow: rook.row, cellCol: rook.col }
+
+			longCastlingSquares.forEach((square) => {
+				enemySquares.forEach((enemySquare) => {
+					if (
+						square.row === enemySquare.row &&
+						square.col === enemySquare.col
+					) {
+						castlingThruCheck = true
+					}
+				})
+			})
+
+			// Check if longCastlingSquares are free of pieces
+			longCastlingSquares.forEach((square) => {
+				if (square.piece) isPieceInWay = true
+			})
+		}
+
+		// Check for valid castle
+		if (
+			!player.inCheck &&
+			!this.moved &&
+			isCastling &&
+			!isPieceInWay &&
+			!castlingThruCheck
+		) {
+			castle.validCastle = true
+			validMove = true
+
+			const cellRow = this.color === 'white' ? 7 : 0
+			const cellCol = castlingDirection === 'short' ? 5 : 3
+			castle.rooksLandingSquare = { cellRow, cellCol }
+		}
+
+		// Check for valid move
 		if (
 			Math.abs(this.row - landingSquare.row) <= 1 &&
 			Math.abs(this.col - landingSquare.col) <= 1 &&
 			landingSquare.color !== this.color &&
 			!isEnemySquare
 		) {
-			return true
+			this.moved = true
+			validMove = true
 		}
-		return false
+
+		return { validMove, castle }
 	}
 
 	markEnemySquares(board) {
@@ -574,6 +709,9 @@ class King extends Piece {
 		}
 	}
 }
+
+//______________________________________________________________
+// Create Pieces
 
 const whitePieces = []
 const blackPieces = []

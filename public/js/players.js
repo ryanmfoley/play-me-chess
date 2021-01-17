@@ -45,7 +45,9 @@ class Player {
 				)
 				const targetCopy = { ...target }
 
-				const validMove = piece.checkForValidMove(
+				// I'm pretty sure I need castling here
+				const { validMove, castle } = piece.checkMove(
+					playerCopy,
 					opponentCopy,
 					chessBoardCopy,
 					targetCopy

@@ -17,7 +17,7 @@ let selectedCell
 let landingCell
 let selectedPiece
 let landingSquare
-let validMove
+let legalMove
 
 const socket = io()
 
@@ -48,8 +48,9 @@ squares.addEventListener('click', (e) => {
 
 	if (startGame && currentPlayer.color === turn) {
 		if (!selectedPiece) {
-			const { cellRow, cellCol } = chessBoard.identifyCell(e.target)
-			selectedCell = { cellRow, cellCol }
+			// const { cellRow, cellCol } = chessBoard.identifyCell(e.target)
+			// selectedCell = { cellRow, cellCol }
+			selectedCell = chessBoard.identifyCell(e.target)
 			const selectedSquare = chessBoard.selectSquare(selectedCell)
 
 			// Check if a piece was selected and it's their turn
@@ -58,29 +59,44 @@ squares.addEventListener('click', (e) => {
 			}
 
 			// If piece is selected
-		} else if (!validMove) {
-			const { cellRow, cellCol } = chessBoard.identifyCell(e.target)
-			landingCell = { cellRow, cellCol }
+		} else if (!legalMove) {
+			// const { cellRow, cellCol } = chessBoard.identifyCell(e.target)
+			// landingCell = { cellRow, cellCol }
+			landingCell = chessBoard.identifyCell(e.target)
 			landingSquare = chessBoard.selectSquare(landingCell)
 
-			validMove = selectedPiece.checkMove(
+			const { validMove, castle } = selectedPiece.checkMove(
 				currentPlayer,
 				opponent,
 				chessBoard,
 				landingSquare
 			)
+			legalMove = validMove
+
 			if (validMove) {
-				landingCell = e.target
+				// maybe remove player from checkForValidMove
 
-				const { cellRow, cellCol } = chessBoard.identifyCell(e.target)
-				landingCell = { cellRow, cellCol }
+				if (castle.validCastle) {
+					landingCell = chessBoard.identifyCell(e.target)
 
-				// Send move to server
-				socket.emit('move-piece', { room, turn, selectedCell, landingCell })
+					// Send king move to server
+					socket.emit('move-piece', { room, selectedCell, landingCell })
+
+					selectedCell = castle.rooksStartingSquare
+					landingCell = castle.rooksLandingSquare
+
+					// Send rook move to server
+					socket.emit('move-piece', { room, turn, selectedCell, landingCell })
+				} else {
+					landingCell = chessBoard.identifyCell(e.target)
+
+					// Send move to server
+					socket.emit('move-piece', { room, turn, selectedCell, landingCell })
+				}
 
 				// Reset turn variables
 				selectedPiece = false
-				validMove = false
+				legalMove = false
 			} else selectedPiece = null
 		}
 	}
@@ -89,7 +105,9 @@ squares.addEventListener('click', (e) => {
 //______________________________________________________________
 // Listen for piece moves
 
-socket.on('move-piece', ({ turn, selectedCell, landingCell, checkStatus }) => {
+socket.on('move-piece', ({ turn, selectedCell, landingCell }) => {
+	// problem is here
+
 	currentPlayer.turn = turn
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
@@ -108,14 +126,17 @@ socket.on('move-piece', ({ turn, selectedCell, landingCell, checkStatus }) => {
 	// Mark enemy squares
 	chessBoard.markEnemySquares(currentPlayer, opponent)
 
+	//////////////////////// Do I need both? ////////////////////////
 	currentPlayer.isKingInCheck(chessBoard)
 	opponent.isKingInCheck(chessBoard)
 
 	// Get available moves
 	if (currentPlayer.color === turn) {
-		currentPlayer.getAvailableMoves(chessBoard, opponent)
+		/////////////////////////// turn back on ///////////////////////////
+		// currentPlayer.getAvailableMoves(chessBoard, opponent)
 	}
 
+	//////////////////////// Do I need both? ////////////////////////
 	if (currentPlayer.inCheck || opponent.inCheck) {
 		check.style.display = 'block'
 	} else check.style.display = 'none'
@@ -137,13 +158,15 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// rooms don't show up if created before other user joins lobby
-// wait for pieces to appear for both clients before allowing moves
-// after checkmate, smoothly send clients to lobby
-// maybe a while loop to wait for player to get out of check
-// still need to write code for "pawn en passant", "pawn promotion", and "castle"
-// possibly remove board.empty
-// 	this.board = Board.board
-// 		Board.board = [...this.board].map((piece) =>
-// 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
-// 		)
+// 1. "castle"
+// 2. "pawn promotion"
+// 3. "pawn en passant"
+// 4. rooms don't show up if created before other user joins lobby
+// 5. wait for pieces to appear for both clients before allowing moves
+// 6. after checkmate, smoothly send clients to lobby
+// 7. send one or both clients back to lobby after a page reload
+
+// error when I try castling on move one
+// remove socket.emit('info') && socket.on('info')
+// may not need king variable in castling logic pieces.js
+// double check if isCastling is needed
