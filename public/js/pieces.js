@@ -92,7 +92,7 @@ class Pawn extends Piece {
 		const rightCol = this.col < 7 ? this.col + 1 : null
 
 		// Add squares to targets array
-		if (row) {
+		if (row !== null) {
 			if (leftCol !== null) this.targets.push(board[row][leftCol])
 			if (rightCol !== null) this.targets.push(board[row][rightCol])
 		}
@@ -724,6 +724,7 @@ for (let color of ['white', 'black']) {
 			: blackPieces.push(new Pawn('black', 'pawn', 1, i))
 	}
 }
+
 whitePieces.push(new Knight('white', 'knight', 7, 1))
 whitePieces.push(new Knight('white', 'knight', 7, 6))
 whitePieces.push(new Bishop('white', 'bishop', 7, 2))

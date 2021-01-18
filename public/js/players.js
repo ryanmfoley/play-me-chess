@@ -7,6 +7,13 @@ class Player {
 		this.turn = 'white'
 		this.inCheck = false
 		this.checkMate = false
+		this.copyPieces()
+	}
+
+	copyPieces() {
+		this.sparePieces = [...this.pieces].map((piece) =>
+			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
+		)
 	}
 
 	copyPlayer(player) {
@@ -67,6 +74,23 @@ class Player {
 
 	removePieceFromGame(enemyPiece) {
 		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
+	}
+
+	promotePawn(pawn, piece) {
+		const sparePiece = this.sparePieces.find(
+			(sparePiece) => sparePiece.name === piece
+		)
+		const newPiece = Object.assign(
+			Object.create(Object.getPrototypeOf(sparePiece)),
+			sparePiece
+		)
+		newPiece.row = pawn.row
+		newPiece.col = pawn.col
+
+		const index = this.pieces.indexOf(pawn)
+		this.pieces[index] = newPiece
+
+		return newPiece
 	}
 
 	isKingInCheck({ whiteSquares, blackSquares }) {
