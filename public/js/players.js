@@ -76,6 +76,69 @@ class Player {
 		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
 	}
 
+	async selectPieceModal() {
+		const knight = document.createElement('img')
+		if (this.color === 'white') {
+			knight.src = './pieces/wn.svg'
+			knight.setAttribute('data-piece', 'knight')
+		} else {
+			knight.src = './pieces/bn.svg'
+			knight.classList.add('black-pieces')
+			knight.setAttribute('data-piece', 'knight')
+		}
+		promoteModal.innerHTML = ''
+		promoteModal.append(knight)
+
+		const bishop = document.createElement('img')
+		if (this.color === 'white') {
+			bishop.src = './pieces/wb.svg'
+			bishop.setAttribute('data-piece', 'bishop')
+		} else {
+			bishop.src = './pieces/bb.svg'
+			bishop.classList.add('black-pieces')
+			bishop.setAttribute('data-piece', 'bishop')
+		}
+		promoteModal.append(bishop)
+
+		const rook = document.createElement('img')
+		if (this.color === 'white') {
+			rook.src = './pieces/wr.svg'
+			rook.setAttribute('data-piece', 'rook')
+		} else {
+			rook.src = './pieces/br.svg'
+			rook.classList.add('black-pieces')
+			rook.setAttribute('data-piece', 'rook')
+		}
+		promoteModal.append(rook)
+
+		const queen = document.createElement('img')
+		if (this.color === 'white') {
+			queen.src = './pieces/wq.svg'
+			queen.setAttribute('data-piece', 'queen')
+		} else {
+			queen.src = './pieces/bq.svg'
+			queen.classList.add('black-pieces')
+			queen.setAttribute('data-piece', 'queen')
+		}
+		promoteModal.append(queen)
+		setTimeout(function () {
+			promoteModal.style.visibility = 'visible'
+		}, 600)
+
+		let newPiece
+
+		promoteModal.addEventListener('click', async (e) => {
+			// while (!newPiece) {
+			newPiece = await {
+				piece: e.target.dataset.piece,
+				color: this.color,
+			}
+			// }
+			promoteModal.style.visibility = 'hidden'
+		})
+		return newPiece
+	}
+
 	promotePawn(pawn, piece) {
 		const sparePiece = this.sparePieces.find(
 			(sparePiece) => sparePiece.name === piece

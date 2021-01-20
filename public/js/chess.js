@@ -12,14 +12,39 @@ const leaveGameButton = document.querySelector('#leave-game')
 const info = document.querySelector('#info')
 const squares = document.querySelector('.board')
 const check = document.querySelector('.check-text')
+const promoteModal = document.querySelector('#promoteModal')
 let startGame = false
 let selectedCell
 let landingCell
 let selectedPiece
 let landingSquare
 let legalMove
+let newPiece
 
 const socket = io()
+
+// function asyncEmit(eventName, data) {
+// 	return new Promise(function (resolve, reject) {
+// 		socket.emit(eventName, data)
+// 		socket.on(eventName, (result) => {
+// 			socket.off(eventName)
+// 			resolve(result)
+// 		})
+// 		setTimeout(reject, 1000)
+// 	})
+// }
+
+// //Client
+// const exampleFunction = async (clientData) => {
+// 	try {
+// 		const result = await asyncEmit('exampleEvent', clientData)
+// 		console.log(result)
+// 	} catch (err) {
+// 		console.log(err)
+// 	}
+// }
+
+// exampleFunction('blah blah blah')
 
 socket.emit('joinGame', { username, room, color })
 
@@ -70,26 +95,29 @@ squares.addEventListener('click', (e) => {
 			legalMove = validMove
 
 			if (validMove) {
-				if (selectedPiece.promote) {
-					currentPlayer.promotePawn(selectedPiece, 'queen')
-				}
-
 				if (castle.validCastle) {
 					landingCell = chessBoard.identifyCell(e.target)
 
 					// Send king move to server
-					socket.emit('move-piece', { room, selectedCell, landingCell })
+					socket.emit('movePiece', { room, selectedCell, landingCell })
 
 					selectedCell = castle.rooksStartingSquare
 					landingCell = castle.rooksLandingSquare
 
 					// Send rook move to server
-					socket.emit('move-piece', { room, turn, selectedCell, landingCell })
+					socket.emit('movePiece', { room, turn, selectedCell, landingCell })
 				} else {
 					landingCell = chessBoard.identifyCell(e.target)
 
+					// const backRank = turn === 'white' ? 0 : 7
+					// const promotePawn =
+					// 	selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
+					// 		? true
+					// 		: false
+					// console.log('logging', backRank)
+
 					// Send move to server
-					socket.emit('move-piece', { room, turn, selectedCell, landingCell })
+					socket.emit('movePiece', { room, turn, selectedCell, landingCell })
 				}
 
 				// Reset turn variables
@@ -103,29 +131,41 @@ squares.addEventListener('click', (e) => {
 //______________________________________________________________
 // Listen for piece moves
 
-socket.on('move-piece', ({ turn, selectedCell, landingCell }) => {
+socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	currentPlayer.turn = turn
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
 	let selectedPiece = selectedSquare.piece
 	const backRank = turn === 'white' ? 7 : 0
-	const promotePawn =
-		selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
-			? true
-			: false
-
-	if (promotePawn) {
-		selectedPiece =
-			currentPlayer.color === turn
-				? opponent.promotePawn(selectedPiece, 'queen')
-				: currentPlayer.promotePawn(selectedPiece, 'queen')
-	}
+	// const promotePawn =
+	// 	selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
+	// 		? true
+	// 		: false
+	const promotePawn = true
+	// let newPiece
 
 	// Move piece
 	currentPlayer.color === turn
 		? chessBoard.movePiece(selectedPiece, landingSquare, currentPlayer)
 		: chessBoard.movePiece(selectedPiece, landingSquare, opponent)
 
+	// currentPlayer.promotePawn()
+	if (promotePawn) {
+		if (currentPlayer.color !== turn) {
+			const newPiece = await currentPlayer.selectPieceModal()
+			console.log('newPiece', newPiece)
+		}
+		// while (!newPiece) {
+		// newPiece = await currentPlayer.selectPieceModal()
+		// console.log('before newPiece', newPiece)
+		// }
+		console.log('after newPiece', newPiece)
+		// selectedPiece =
+		// 	currentPlayer.color === turn
+		// 		? opponent.promotePawn(selectedPiece, 'queen')
+		// 		: currentPlayer.promotePawn(selectedPiece, 'queen')
+	}
+	// read pick then promotPawn
 	chessBoard.displayPieces()
 
 	// Mark enemy squares
@@ -149,20 +189,31 @@ socket.on('move-piece', ({ turn, selectedCell, landingCell }) => {
 	}
 })
 
+// promoteModal.addEventListener('click', async (e) => {
+// 	console.log(currentPlayer.color)
+// 	newPiece = await {
+// 		piece: e.target.dataset.piece,
+// 		color: currentPlayer.color,
+// 	}
+// 	promoteModal.style.visibility = 'hidden'
+// })
+
 socket.on('winStatus', () => {
 	check.innerHTML = 'CHECKMATE!'
 })
 
 leaveGameButton.addEventListener('click', () => {
-	socket.emit('player-disconnected')
+	socket.emit('playerDisconnected')
 	window.location.href = 'lobby.html'
 })
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
 // 1. "pawn promotion"
-// 2. "pawn en passant"
-// 3. rooms don't show up if created before other user joins lobby
+// 2. red square around king if in check. maybe run it from chessBoard
+// or add chessBoard to function
+// 2. rooms don't show up if created before other user joins lobby
+// 3. "pawn en passant"
 // 4. wait for pieces to appear for both clients before allowing moves
 // 5. after checkmate, smoothly send clients to lobby
 // 6. send one or both clients back to lobby after a page reload
@@ -174,3 +225,5 @@ leaveGameButton.addEventListener('click', () => {
 // double check if isCastling is needed
 // need to allow castling in getAvailableMoves
 // need to add squares to kings targetSquares
+// getAvailableMoves needs to cycle through every piece when a pawn gets promoted
+// Do I need socket.off()?

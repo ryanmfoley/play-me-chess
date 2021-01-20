@@ -42,6 +42,12 @@ header > h1 {
 }
 
 .board {
+	position: relative;
+	border: 2px solid purple;
+}
+
+.board {
+	position: relative;
 	display: grid;
 	width: 800px;
 	height: 800px;
@@ -101,4 +107,19 @@ header > h1 {
 
 .hide {
 	display: none;
+}
+
+#promoteModal {
+	display: flex;
+	visibility: hidden;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 60%;
+	/* height: 20%; */
+	transform: translate(-50%, -50%);
+	background-color: rgba(0, 0, 0, 0.4);
+	border: 3px solid white;
+	border-radius: 15px;
+	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }

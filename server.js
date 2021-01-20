@@ -72,16 +72,26 @@ io.on('connection', (socket) => {
 		if (color === 'black') io.to(room).emit('info')
 	})
 
-	socket.on('move-piece', ({ room, turn, selectedCell, landingCell }) => {
+	//Server
+	// socket.on('exampleEvent', (data) => {
+	// 	console.log('blah bloop')
+	// 	io.emit('exampleEvent', 'hello from server')
+	// })
+
+	socket.on('movePiece', ({ room, turn, selectedCell, landingCell }) => {
 		// Change turn
 		turn = turn === 'white' ? 'black' : 'white'
 
 		// Send game state to client
-		io.to(room).emit('move-piece', {
+		io.to(room).emit('movePiece', {
 			turn,
 			selectedCell,
 			landingCell,
 		})
+	})
+
+	socket.on('promotePawn', (newPiece) => {
+		console.log(newPiece)
 	})
 
 	socket.on('winStatus', () => {
@@ -90,17 +100,17 @@ io.on('connection', (socket) => {
 	})
 
 	// Tell everyone what player number just connected
-	// socket.broadcast.emit('player-connection', turn)
+	// socket.broadcast.emit('playerConnection', turn)
 
 	// Runs when client disconnects
-	socket.on('player-disconnected', () => {
+	socket.on('playerDisconnected', () => {
 		const player = removePlayer(socket.id)
 
 		// if (player) {
 		// 	const players = getPlayersInRoom(player.room)
 
 		// 	// Send players and room info to client
-		// 	io.to(player.room).emit('player-disconnected', players)
+		// 	io.to(player.room).emit('playerDisconnected', players)
 		// }
 	})
 })
