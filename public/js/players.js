@@ -72,6 +72,12 @@ class Player {
 		})
 	}
 
+	get kingSquare() {
+		const kingSquare = this.pieces.find((piece) => piece.name === 'king')
+
+		return kingSquare
+	}
+
 	removePieceFromGame(enemyPiece) {
 		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
 	}
@@ -168,7 +174,7 @@ class Player {
 			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
 
 		// Get King's position
-		const { row, col } = this.pieces.find((piece) => piece.name === 'king')
+		const { row, col } = this.kingSquare
 
 		if (
 			enemySquares.find((square) => row === square.row && col === square.col)

@@ -110,7 +110,6 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
 			? true
 			: false
-	// const promotePawn = true
 
 	// Move piece
 	currentPlayer.color === turn
@@ -150,11 +149,27 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	// Get available moves
 	if (currentPlayer.color === turn) {
 		currentPlayer.getAvailableMoves(chessBoard, opponent)
+		// }
+	} else {
+		var { row, col } = currentPlayer.kingSquare
+		chessBoard.board[row][col].cellBox.removeAttribute('id')
 	}
 
+	// If king is in check set square to red
 	if (currentPlayer.inCheck || opponent.inCheck) {
-		check.style.display = 'block'
-	} else check.style.display = 'none'
+		const { row, col } = currentPlayer.inCheck
+			? currentPlayer.kingSquare
+			: opponent.kingSquare
+
+		chessBoard.board[row][col].cellBox.id = 'checkSquare'
+		// check.style.display = 'block'
+	} else {
+		// Reset check square and display
+		chessBoard.board.forEach((row) =>
+			row.forEach((square) => square.cellBox.removeAttribute('id'))
+		)
+		// check.style.display = 'none'
+	}
 
 	if (currentPlayer.checkMate || opponent.checkMate) {
 		check.innerHTML = 'CHECKMATE!'
@@ -173,8 +188,7 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// 1. "pawn promotion"
-// 2. red square around king if in check. maybe run it from chessBoard
+// 1. red square around king if in check. maybe run it from chessBoard
 // or add chessBoard to function
 // 2. rooms don't show up if created before other user joins lobby
 // 3. "pawn en passant"
@@ -191,3 +205,4 @@ leaveGameButton.addEventListener('click', () => {
 // need to add squares to kings targetSquares
 // getAvailableMoves needs to cycle through every piece when a pawn gets promoted
 // Do I need socket.off()?
+// Double check all async/await to see if they're needed

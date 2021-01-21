@@ -109,6 +109,10 @@ header > h1 {
 	display: none;
 }
 
+#checkSquare {
+	background-color: rgb(255, 160, 160);
+}
+
 #promoteModal {
 	display: flex;
 	visibility: hidden;
