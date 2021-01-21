@@ -90,8 +90,9 @@ io.on('connection', (socket) => {
 		})
 	})
 
-	socket.on('promotePawn', (newPiece) => {
-		console.log(newPiece)
+	// Send promoted piece
+	socket.on('promotePawn', (room, newPiece) => {
+		io.to(room).emit('promotePawn', newPiece)
 	})
 
 	socket.on('winStatus', () => {

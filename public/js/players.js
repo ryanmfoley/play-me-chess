@@ -76,7 +76,7 @@ class Player {
 		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
 	}
 
-	async selectPieceModal() {
+	selectPieceModal() {
 		const knight = document.createElement('img')
 		if (this.color === 'white') {
 			knight.src = './pieces/wn.svg'
@@ -123,23 +123,30 @@ class Player {
 		promoteModal.append(queen)
 		setTimeout(function () {
 			promoteModal.style.visibility = 'visible'
-		}, 600)
+		}, 300)
 
-		let newPiece
-
-		promoteModal.addEventListener('click', async (e) => {
-			// while (!newPiece) {
-			newPiece = await {
-				piece: e.target.dataset.piece,
-				color: this.color,
-			}
-			// }
-			promoteModal.style.visibility = 'hidden'
+		return new Promise((resolve) => {
+			promoteModal.addEventListener('click', (e) => {
+				const newPiece = {
+					color: this.color,
+					piece: e.target.dataset.piece,
+				}
+				promoteModal.style.visibility = 'hidden'
+				resolve(newPiece)
+			})
 		})
-		return newPiece
 	}
 
-	promotePawn(pawn, piece) {
+	getPromotedPiece(socket) {
+		return new Promise((resolve) => {
+			socket.on('promotePawn', (result) => {
+				socket.off('promotePawn')
+				resolve(result)
+			})
+		})
+	}
+
+	promotePawn(pawn, { color, piece }) {
 		const sparePiece = this.sparePieces.find(
 			(sparePiece) => sparePiece.name === piece
 		)

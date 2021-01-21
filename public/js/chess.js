@@ -19,32 +19,8 @@ let landingCell
 let selectedPiece
 let landingSquare
 let legalMove
-let newPiece
 
 const socket = io()
-
-// function asyncEmit(eventName, data) {
-// 	return new Promise(function (resolve, reject) {
-// 		socket.emit(eventName, data)
-// 		socket.on(eventName, (result) => {
-// 			socket.off(eventName)
-// 			resolve(result)
-// 		})
-// 		setTimeout(reject, 1000)
-// 	})
-// }
-
-// //Client
-// const exampleFunction = async (clientData) => {
-// 	try {
-// 		const result = await asyncEmit('exampleEvent', clientData)
-// 		console.log(result)
-// 	} catch (err) {
-// 		console.log(err)
-// 	}
-// }
-
-// exampleFunction('blah blah blah')
 
 socket.emit('joinGame', { username, room, color })
 
@@ -109,13 +85,6 @@ squares.addEventListener('click', (e) => {
 				} else {
 					landingCell = chessBoard.identifyCell(e.target)
 
-					// const backRank = turn === 'white' ? 0 : 7
-					// const promotePawn =
-					// 	selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
-					// 		? true
-					// 		: false
-					// console.log('logging', backRank)
-
 					// Send move to server
 					socket.emit('movePiece', { room, turn, selectedCell, landingCell })
 				}
@@ -137,35 +106,39 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	const landingSquare = chessBoard.selectSquare(landingCell)
 	let selectedPiece = selectedSquare.piece
 	const backRank = turn === 'white' ? 7 : 0
-	// const promotePawn =
-	// 	selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
-	// 		? true
-	// 		: false
-	const promotePawn = true
-	// let newPiece
+	const promotePawn =
+		selectedPiece.name === 'pawn' && backRank == landingCell.cellRow
+			? true
+			: false
+	// const promotePawn = true
 
 	// Move piece
 	currentPlayer.color === turn
 		? chessBoard.movePiece(selectedPiece, landingSquare, currentPlayer)
 		: chessBoard.movePiece(selectedPiece, landingSquare, opponent)
 
-	// currentPlayer.promotePawn()
+	chessBoard.displayPieces()
+
 	if (promotePawn) {
+		let newPiece
+
 		if (currentPlayer.color !== turn) {
-			const newPiece = await currentPlayer.selectPieceModal()
-			console.log('newPiece', newPiece)
+			newPiece = await currentPlayer.selectPieceModal()
+			socket.emit('promotePawn', room, newPiece)
+		} else {
+			newPiece = await opponent.getPromotedPiece(socket)
 		}
-		// while (!newPiece) {
-		// newPiece = await currentPlayer.selectPieceModal()
-		// console.log('before newPiece', newPiece)
-		// }
-		console.log('after newPiece', newPiece)
-		// selectedPiece =
-		// 	currentPlayer.color === turn
-		// 		? opponent.promotePawn(selectedPiece, 'queen')
-		// 		: currentPlayer.promotePawn(selectedPiece, 'queen')
+
+		selectedPiece =
+			currentPlayer.color === turn
+				? opponent.promotePawn(selectedPiece, newPiece)
+				: currentPlayer.promotePawn(selectedPiece, newPiece)
 	}
-	// read pick then promotPawn
+
+	currentPlayer.color === turn
+		? chessBoard.movePiece(selectedPiece, landingSquare, currentPlayer)
+		: chessBoard.movePiece(selectedPiece, landingSquare, opponent)
+
 	chessBoard.displayPieces()
 
 	// Mark enemy squares
@@ -188,15 +161,6 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		socket.emit('winStatus')
 	}
 })
-
-// promoteModal.addEventListener('click', async (e) => {
-// 	console.log(currentPlayer.color)
-// 	newPiece = await {
-// 		piece: e.target.dataset.piece,
-// 		color: currentPlayer.color,
-// 	}
-// 	promoteModal.style.visibility = 'hidden'
-// })
 
 socket.on('winStatus', () => {
 	check.innerHTML = 'CHECKMATE!'
