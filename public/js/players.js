@@ -79,16 +79,18 @@ class Player {
 	}
 
 	removePieceFromGame(enemyPiece) {
-		this.pieces = this.pieces.filter((piece) => piece !== enemyPiece)
+		this.pieces = this.pieces.filter(
+			(piece) => piece.row !== enemyPiece.row || piece.col !== enemyPiece.col
+		)
 	}
 
 	selectPieceModal() {
 		const knight = document.createElement('img')
 		if (this.color === 'white') {
-			knight.src = './pieces/wn.svg'
+			knight.src = './images/wn.svg'
 			knight.setAttribute('data-piece', 'knight')
 		} else {
-			knight.src = './pieces/bn.svg'
+			knight.src = './images/bn.svg'
 			knight.classList.add('black-pieces')
 			knight.setAttribute('data-piece', 'knight')
 		}
@@ -97,10 +99,10 @@ class Player {
 
 		const bishop = document.createElement('img')
 		if (this.color === 'white') {
-			bishop.src = './pieces/wb.svg'
+			bishop.src = './images/wb.svg'
 			bishop.setAttribute('data-piece', 'bishop')
 		} else {
-			bishop.src = './pieces/bb.svg'
+			bishop.src = './images/bb.svg'
 			bishop.classList.add('black-pieces')
 			bishop.setAttribute('data-piece', 'bishop')
 		}
@@ -108,10 +110,10 @@ class Player {
 
 		const rook = document.createElement('img')
 		if (this.color === 'white') {
-			rook.src = './pieces/wr.svg'
+			rook.src = './images/wr.svg'
 			rook.setAttribute('data-piece', 'rook')
 		} else {
-			rook.src = './pieces/br.svg'
+			rook.src = './images/br.svg'
 			rook.classList.add('black-pieces')
 			rook.setAttribute('data-piece', 'rook')
 		}
@@ -119,10 +121,10 @@ class Player {
 
 		const queen = document.createElement('img')
 		if (this.color === 'white') {
-			queen.src = './pieces/wq.svg'
+			queen.src = './images/wq.svg'
 			queen.setAttribute('data-piece', 'queen')
 		} else {
-			queen.src = './pieces/bq.svg'
+			queen.src = './images/bq.svg'
 			queen.classList.add('black-pieces')
 			queen.setAttribute('data-piece', 'queen')
 		}

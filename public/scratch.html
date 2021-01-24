@@ -11,7 +11,7 @@
 
 			function drag(ev) {
 				const dt = ev.dataTransfer
-				dt.mozSetDataAt('./pieces/wp.svg', stream, 0)
+				dt.mozSetDataAt('./images/wp.svg', stream, 0)
 				// dt.mozSetDataAt('application/x-moz-file', file, 0)
 				dt.setData('text/uri-list', ev.target.src)
 			}
@@ -52,7 +52,7 @@
 		<div id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 
 		<div id="drag1" draggable="true" ondragstart="drag(event)">
-			<img src="./pieces/wp.svg" />
+			<img src="./images/wp.svg" />
 		</div>
 	</body>
 </html>

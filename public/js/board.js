@@ -67,9 +67,9 @@ class Board {
 					case 'pawn':
 						img = document.createElement('img')
 						if (square.color === 'white') {
-							img.src = './pieces/wp.svg'
+							img.src = './images/wp.svg'
 						} else {
-							img.src = './pieces/bp.svg'
+							img.src = './images/bp.svg'
 							img.classList.add('black-pieces')
 						}
 						square.cellBox.innerHTML = ''
@@ -78,9 +78,9 @@ class Board {
 					case 'knight':
 						img = document.createElement('img')
 						if (square.color === 'white') {
-							img.src = './pieces/wn.svg'
+							img.src = './images/wn.svg'
 						} else {
-							img.src = './pieces/bn.svg'
+							img.src = './images/bn.svg'
 							img.classList.add('black-pieces')
 						}
 						square.cellBox.innerHTML = ''
@@ -89,9 +89,9 @@ class Board {
 					case 'bishop':
 						img = document.createElement('img')
 						if (square.color === 'white') {
-							img.src = './pieces/wb.svg'
+							img.src = './images/wb.svg'
 						} else {
-							img.src = './pieces/bb.svg'
+							img.src = './images/bb.svg'
 							img.classList.add('black-pieces')
 						}
 						square.cellBox.innerHTML = ''
@@ -100,9 +100,9 @@ class Board {
 					case 'rook':
 						img = document.createElement('img')
 						if (square.color === 'white') {
-							img.src = './pieces/wr.svg'
+							img.src = './images/wr.svg'
 						} else {
-							img.src = './pieces/br.svg'
+							img.src = './images/br.svg'
 							img.classList.add('black-pieces')
 						}
 						square.cellBox.innerHTML = ''
@@ -111,9 +111,9 @@ class Board {
 					case 'queen':
 						img = document.createElement('img')
 						if (square.color === 'white') {
-							img.src = './pieces/wq.svg'
+							img.src = './images/wq.svg'
 						} else {
-							img.src = './pieces/bq.svg'
+							img.src = './images/bq.svg'
 							img.classList.add('black-pieces')
 						}
 						square.cellBox.innerHTML = ''
@@ -122,13 +122,13 @@ class Board {
 					case 'king':
 						img = document.createElement('img')
 						if (square.color === 'white') {
-							img.src = './pieces/wk.svg'
+							img.src = './images/wk.svg'
 						} else {
-							img.src = './pieces/bk.svg'
+							img.src = './images/bk.svg'
 							img.classList.add('black-pieces')
 						}
 						img.src =
-							square.color === 'white' ? './pieces/wk.svg' : './pieces/bk.svg'
+							square.color === 'white' ? './images/wk.svg' : './images/bk.svg'
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						break

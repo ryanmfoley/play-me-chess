@@ -26,14 +26,17 @@ class Piece {
 		)
 		chessBoardCopy.copyBoard(chessBoard)
 		const playerCopy = player.copyPlayer(player)
+		const opponentCopy = opponent.copyPlayer(opponent)
 		const selectedPiece = playerCopy.pieces.find(
 			(pieceCopy) => pieceCopy.row === this.row && pieceCopy.col === this.col
 		)
 
 		// Check if player is in check after move
-		chessBoardCopy.movePiece(selectedPiece, landingSquare, playerCopy)
-		chessBoardCopy.markEnemySquares(playerCopy, opponent)
+		chessBoardCopy.movePiece(selectedPiece, landingSquare, opponentCopy)
+		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+
 		playerCopy.isKingInCheck(chessBoardCopy)
+
 		if (playerCopy.inCheck) validMove = false
 
 		return { validMove, castle }

@@ -12,6 +12,7 @@ const leaveGameButton = document.querySelector('#leave-game')
 const info = document.querySelector('#info')
 const squares = document.querySelector('.board')
 const check = document.querySelector('.check-text')
+const audio = document.querySelector('audio')
 const promoteModal = document.querySelector('#promoteModal')
 let startGame = false
 let selectedCell
@@ -147,13 +148,9 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	opponent.isKingInCheck(chessBoard)
 
 	// Get available moves
-	if (currentPlayer.color === turn) {
-		currentPlayer.getAvailableMoves(chessBoard, opponent)
-		// }
-	} else {
-		var { row, col } = currentPlayer.kingSquare
-		chessBoard.board[row][col].cellBox.removeAttribute('id')
-	}
+	// if (currentPlayer.color === turn) {
+	// 	currentPlayer.getAvailableMoves(chessBoard, opponent)
+	// }
 
 	// If king is in check set square to red
 	if (currentPlayer.inCheck || opponent.inCheck) {
@@ -162,6 +159,7 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 			: opponent.kingSquare
 
 		chessBoard.board[row][col].cellBox.id = 'checkSquare'
+		audio.play()
 		// check.style.display = 'block'
 	} else {
 		// Reset check square and display
@@ -188,8 +186,6 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// 1. red square around king if in check. maybe run it from chessBoard
-// or add chessBoard to function
 // 2. rooms don't show up if created before other user joins lobby
 // 3. "pawn en passant"
 // 4. wait for pieces to appear for both clients before allowing moves

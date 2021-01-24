@@ -72,12 +72,6 @@ io.on('connection', (socket) => {
 		if (color === 'black') io.to(room).emit('info')
 	})
 
-	//Server
-	// socket.on('exampleEvent', (data) => {
-	// 	console.log('blah bloop')
-	// 	io.emit('exampleEvent', 'hello from server')
-	// })
-
 	socket.on('movePiece', ({ room, turn, selectedCell, landingCell }) => {
 		// Change turn
 		turn = turn === 'white' ? 'black' : 'white'
