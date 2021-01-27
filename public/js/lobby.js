@@ -33,7 +33,7 @@ const generateTable = (table, data) => {
 		const enterRoomBtn = document.createElement('button')
 		enterRoomBtn.innerText = 'Play Me'
 		enterRoomBtn.value = elem.id
-		enterRoomBtn.onclick = function (e) {
+		enterRoomBtn.onclick = (e) => {
 			const roomID = e.target.value
 			socket.emit('updatePlayersInLobby', roomID)
 			window.location.href = `/chess.html?username=${username}&room=${roomID}&color=black`

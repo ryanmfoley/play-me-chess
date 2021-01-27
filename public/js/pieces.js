@@ -4,6 +4,7 @@ class Piece {
 		this.name = name
 		this.row = row
 		this.col = col
+		this.enPassant = false
 		this.targets = []
 	}
 
@@ -15,6 +16,7 @@ class Piece {
 	checkMove(player, opponent, chessBoard, landingSquare) {
 		let { validMove, castle } = this.checkForValidMove(
 			player,
+			opponent,
 			chessBoard,
 			landingSquare
 		)
@@ -32,9 +34,15 @@ class Piece {
 		)
 
 		// Check if player is in check after move
-		chessBoardCopy.movePiece(selectedPiece, landingSquare, opponentCopy)
+		chessBoardCopy.movePiece(
+			playerCopy,
+			opponentCopy,
+			selectedPiece,
+			landingSquare
+		)
 		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 
+		// Evaluate check
 		playerCopy.isKingInCheck(chessBoardCopy)
 
 		if (playerCopy.inCheck) validMove = false
@@ -52,31 +60,49 @@ class Pawn extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
+	checkForValidMove(player, opponent, chessBoard, landingSquare) {
 		const castle = { validCastle: false }
 
-		// Check if move puts their king in check
 		const startingSquare = this.color === 'white' ? 6 : 1
 		const oneSquareUp = this.color === 'white' ? this.row - 1 : this.row + 1
 		const twoSquaresUp = this.color === 'white' ? this.row - 2 : this.row + 2
 		let validMove
 
 		if (
-			// Check if landingSquare is a valid move
-			(this.col === landingSquare.col &&
-				!landingSquare.piece &&
-				landingSquare.row === oneSquareUp) ||
-			(this.col === landingSquare.col &&
-				this.row === startingSquare &&
-				landingSquare.row === twoSquaresUp &&
-				!landingSquare.piece) ||
-			// Check for capture of opponents piece
-			(Math.abs(this.row - landingSquare.row) === 1 &&
-				Math.abs(this.col - landingSquare.col) === 1 &&
-				landingSquare.piece &&
-				this.color !== landingSquare.piece.color)
+			///////////////// Pawn advances one square forward /////////////////
+			this.col === landingSquare.col &&
+			!landingSquare.piece &&
+			landingSquare.row === oneSquareUp
 		) {
 			validMove = true
+		} else if (
+			///////////////// Pawn advances two squares forward /////////////////
+			this.col === landingSquare.col &&
+			this.row === startingSquare &&
+			landingSquare.row === twoSquaresUp &&
+			!landingSquare.piece
+		) {
+			validMove = true
+		} else if (
+			///////////////// Pawn captures opponents piece /////////////////
+			Math.abs(this.row - landingSquare.row) === 1 &&
+			Math.abs(this.col - landingSquare.col) === 1 &&
+			landingSquare.piece &&
+			this.color !== landingSquare.piece.color
+		) {
+			validMove = true
+		} else if (this.enPassant) {
+			///////////////// Pawn makes an en passant capture /////////////////
+			const enPassantPawn = opponent.pieces.find((piece) => piece.enPassant)
+			const oneSquareDown =
+				this.color === 'white' ? enPassantPawn.row - 1 : enPassantPawn.row + 1
+
+			if (
+				landingSquare.row === oneSquareDown &&
+				landingSquare.col === enPassantPawn.col
+			) {
+				validMove = true
+			}
 		} else validMove = false
 
 		return { validMove, castle }
@@ -107,7 +133,7 @@ class Knight extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
+	checkForValidMove(player, opponent, chessBoard, landingSquare) {
 		const castle = { validCastle: false }
 		let validMove
 
@@ -147,7 +173,7 @@ class Bishop extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
+	checkForValidMove(player, opponent, chessBoard, landingSquare) {
 		const castle = { validCastle: false }
 
 		// Check movement direction
@@ -261,7 +287,7 @@ class Rook extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
+	checkForValidMove(player, opponent, chessBoard, landingSquare) {
 		const castle = { validCastle: false }
 
 		// Check movement direction
@@ -358,7 +384,7 @@ class Queen extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
+	checkForValidMove(player, opponent, chessBoard, landingSquare) {
 		const castle = { validCastle: false }
 
 		const checkBishopMove = () => {
@@ -564,7 +590,7 @@ class King extends Piece {
 		super(color, piece, row, col)
 	}
 
-	checkForValidMove(player, chessBoard, landingSquare) {
+	checkForValidMove(player, opponent, chessBoard, landingSquare) {
 		const enemySquares =
 			this.color === 'white'
 				? chessBoard.blackSquares.flat()

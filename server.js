@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
 		socket.broadcast.emit('winStatus')
 	})
 
-	// Tell everyone what player number just connected
+	// Tell everyone what player just connected
 	// socket.broadcast.emit('playerConnection', turn)
 
 	// Runs when client disconnects

@@ -10,6 +10,14 @@ class Player {
 		this.copyPieces()
 	}
 
+	get kingSquare() {
+		return this.pieces.find((piece) => piece.name === 'king')
+	}
+
+	get pawns() {
+		return this.pieces.filter((piece) => piece.name === 'pawn')
+	}
+
 	copyPieces() {
 		this.sparePieces = [...this.pieces].map((piece) =>
 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
@@ -61,7 +69,12 @@ class Player {
 				)
 
 				if (validMove) {
-					chessBoardCopy.movePiece(selectedPiece, targetCopy, playerCopy)
+					chessBoardCopy.movePiece(
+						playerCopy,
+						opponentCopy,
+						selectedPiece,
+						targetCopy
+					)
 					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 					playerCopy.isKingInCheck(chessBoardCopy)
 
@@ -72,16 +85,44 @@ class Player {
 		})
 	}
 
-	get kingSquare() {
-		const kingSquare = this.pieces.find((piece) => piece.name === 'king')
-
-		return kingSquare
+	getPromotedPiece(socket) {
+		return new Promise((resolve) => {
+			socket.on('promotePawn', (result) => {
+				socket.off('promotePawn')
+				resolve(result)
+			})
+		})
 	}
 
-	removePieceFromGame(enemyPiece) {
-		this.pieces = this.pieces.filter(
-			(piece) => piece.row !== enemyPiece.row || piece.col !== enemyPiece.col
+	isKingInCheck({ whiteSquares, blackSquares }) {
+		const enemySquares =
+			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
+
+		// Get King's position
+		const { row, col } = this.kingSquare
+
+		if (
+			enemySquares.find((square) => row === square.row && col === square.col)
+		) {
+			this.inCheck = true
+		} else this.inCheck = false
+	}
+
+	promotePawn(pawn, { color, piece }) {
+		const sparePiece = this.sparePieces.find(
+			(sparePiece) => sparePiece.name === piece
 		)
+		const newPiece = Object.assign(
+			Object.create(Object.getPrototypeOf(sparePiece)),
+			sparePiece
+		)
+		newPiece.row = pawn.row
+		newPiece.col = pawn.col
+
+		const index = this.pieces.indexOf(pawn)
+		this.pieces[index] = newPiece
+
+		return newPiece
 	}
 
 	selectPieceModal() {
@@ -143,46 +184,6 @@ class Player {
 				resolve(newPiece)
 			})
 		})
-	}
-
-	getPromotedPiece(socket) {
-		return new Promise((resolve) => {
-			socket.on('promotePawn', (result) => {
-				socket.off('promotePawn')
-				resolve(result)
-			})
-		})
-	}
-
-	promotePawn(pawn, { color, piece }) {
-		const sparePiece = this.sparePieces.find(
-			(sparePiece) => sparePiece.name === piece
-		)
-		const newPiece = Object.assign(
-			Object.create(Object.getPrototypeOf(sparePiece)),
-			sparePiece
-		)
-		newPiece.row = pawn.row
-		newPiece.col = pawn.col
-
-		const index = this.pieces.indexOf(pawn)
-		this.pieces[index] = newPiece
-
-		return newPiece
-	}
-
-	isKingInCheck({ whiteSquares, blackSquares }) {
-		const enemySquares =
-			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
-
-		// Get King's position
-		const { row, col } = this.kingSquare
-
-		if (
-			enemySquares.find((square) => row === square.row && col === square.col)
-		) {
-			this.inCheck = true
-		} else this.inCheck = false
 	}
 }
 

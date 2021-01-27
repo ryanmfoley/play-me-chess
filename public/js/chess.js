@@ -9,15 +9,15 @@ const { username, room, color } = Qs.parse(location.search, {
 
 const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
+const audio = document.querySelector('audio')
 const info = document.querySelector('#info')
 const squares = document.querySelector('.board')
 const check = document.querySelector('.check-text')
-const audio = document.querySelector('audio')
 const promoteModal = document.querySelector('#promoteModal')
 let startGame = false
 let selectedCell
-let landingCell
 let selectedPiece
+let landingCell
 let landingSquare
 let legalMove
 
@@ -103,6 +103,7 @@ squares.addEventListener('click', (e) => {
 
 socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	currentPlayer.turn = turn
+
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
 	let selectedPiece = selectedSquare.piece
@@ -112,13 +113,19 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 			? true
 			: false
 
-	// Move piece
-	currentPlayer.color === turn
-		? chessBoard.movePiece(selectedPiece, landingSquare, currentPlayer)
-		: chessBoard.movePiece(selectedPiece, landingSquare, opponent)
+	chessBoard.movePiece(currentPlayer, opponent, selectedPiece, landingSquare)
 
 	chessBoard.displayPieces()
 
+	//////////////////// Check for en passant ////////////////////
+	if (
+		selectedPiece.name === 'pawn' &&
+		Math.abs(selectedCell.cellRow - landingCell.cellRow) == 2
+	) {
+		chessBoard.markEnPassantPawns(selectedPiece)
+	}
+
+	//////////////////// Check for pawn promotion ////////////////////
 	if (promotePawn) {
 		let newPiece
 
@@ -129,28 +136,29 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 			newPiece = await opponent.getPromotedPiece(socket)
 		}
 
-		selectedPiece =
-			currentPlayer.color === turn
-				? opponent.promotePawn(selectedPiece, newPiece)
-				: currentPlayer.promotePawn(selectedPiece, newPiece)
+		selectedPiece
+		currentPlayer.color === turn
+			? opponent.promotePawn(selectedPiece, newPiece)
+			: currentPlayer.promotePawn(selectedPiece, newPiece)
+
+		currentPlayer.color === turn
+			? chessBoard.movePiece(currentPlayer, selectedPiece, landingSquare)
+			: chessBoard.movePiece(opponent, selectedPiece, landingSquare)
+
+		chessBoard.displayPieces()
 	}
-
-	currentPlayer.color === turn
-		? chessBoard.movePiece(selectedPiece, landingSquare, currentPlayer)
-		: chessBoard.movePiece(selectedPiece, landingSquare, opponent)
-
-	chessBoard.displayPieces()
 
 	// Mark enemy squares
 	chessBoard.markEnemySquares(currentPlayer, opponent)
 
+	// Evaluate check
 	currentPlayer.isKingInCheck(chessBoard)
 	opponent.isKingInCheck(chessBoard)
 
 	// Get available moves
-	// if (currentPlayer.color === turn) {
-	// 	currentPlayer.getAvailableMoves(chessBoard, opponent)
-	// }
+	if (currentPlayer.color === turn) {
+		currentPlayer.getAvailableMoves(chessBoard, opponent)
+	}
 
 	// If king is in check set square to red
 	if (currentPlayer.inCheck || opponent.inCheck) {
@@ -186,11 +194,15 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// 2. rooms don't show up if created before other user joins lobby
-// 3. "pawn en passant"
-// 4. wait for pieces to appear for both clients before allowing moves
-// 5. after checkmate, smoothly send clients to lobby
-// 6. send one or both clients back to lobby after a page reload
+// 1. rooms don't show up if created before other user joins lobby
+// 2. wait for pieces to appear for both clients before allowing moves
+// 3. after checkmate, smoothly send clients to lobby
+// 4. send one or both clients back to lobby after a page reload
+// 5. create game sends user chess.js with a "waiting for opponent..." modal
+// 6. username displayed along with captured pieces
+
+// code will say if enPassant, then resets switch
+// if no en passant, turn option off from pieces
 
 // pawns aren't putting king in check
 // error when I try castling on move one
@@ -202,3 +214,4 @@ leaveGameButton.addEventListener('click', () => {
 // getAvailableMoves needs to cycle through every piece when a pawn gets promoted
 // Do I need socket.off()?
 // Double check all async/await to see if they're needed
+// maybe remove this.enPassant = false - is there a benefit?
