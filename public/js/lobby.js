@@ -1,6 +1,6 @@
 const createGameBtn = document.querySelector('#create-game-btn')
 
-// Get name from URL
+// Get name from URL //
 const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 const clearTable = (table) => {
@@ -23,7 +23,7 @@ const generateTable = (table, data) => {
 	th2.appendChild(inviteText)
 	theadRow.appendChild(th2)
 
-	// Create table body
+	// Create table body //
 	data.forEach((elem) => {
 		const row = table.insertRow()
 		const nameCell = row.insertCell()
@@ -42,26 +42,26 @@ const generateTable = (table, data) => {
 	})
 }
 
-// Add rooms to DOM
+// Add rooms to DOM //
 const lobbyTable = document.querySelector('.lobby-rooms')
 
 const socket = io()
 
-// Get list of players in lobby
+// Get list of players in lobby //
 socket.on('playersInLobby', (players) => {
 	// Clear table
 	clearTable(lobbyTable)
 
-	// Generate a table or rooms
+	// Generate a table or rooms //
 	generateTable(lobbyTable, players)
 })
 
 createGameBtn.addEventListener('click', () => {
-	// Join lobby
+	// Join lobby //
 	socket.emit('joinRoom', { username })
 
 	socket.on('joinRoom', ({ username, room }) => {
-		// Send player to game room
+		// Send player to game room //
 		window.location.href = `/chess.html?username=${username}&room=${room}&color=white`
 	})
 })

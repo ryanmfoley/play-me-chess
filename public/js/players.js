@@ -14,10 +14,6 @@ class Player {
 		return this.pieces.find((piece) => piece.name === 'king')
 	}
 
-	get pawns() {
-		return this.pieces.filter((piece) => piece.name === 'pawn')
-	}
-
 	copyPieces() {
 		this.sparePieces = [...this.pieces].map((piece) =>
 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
@@ -38,15 +34,23 @@ class Player {
 
 	getAvailableMoves(chessBoard, opponent) {
 		this.checkMate = true
-
 		const { pieces } = this.copyPlayer(this)
+		const promotionPieces = ['knight', 'bishop', 'rook', 'queen']
 
+		// Evaluate check after every possible move
 		pieces.forEach((piece) => {
-			// Add forward pawn moves to targets
+			// Add all squares for possible pawn moves //
 			if (piece.name === 'pawn') piece.targets = chessBoard.board.flat()
 
+			// Add castling squares for king //
+			// do I need !piece.moved //
+			if (piece.name === 'king' && !piece.moved) {
+				piece.targets.push(chessBoard.board[piece.row][piece.col - 2])
+				piece.targets.push(chessBoard.board[piece.row][piece.col + 2])
+			}
+
 			piece.targets.forEach((target) => {
-				// Copy board, players, pieces, and targets
+				// Copy board, players, pieces, and targets //
 				let chessBoardCopy = Object.assign(
 					Object.create(Object.getPrototypeOf(chessBoard)),
 					chessBoard
@@ -59,8 +63,12 @@ class Player {
 						pieceCopy.row === piece.row && pieceCopy.col === piece.col
 				)
 				const targetCopy = { ...target }
+				const backRank = this.color === 'white' ? 7 : 0
+				const promotePawn =
+					selectedPiece.name === 'pawn' && backRank == targetCopy.row
+						? true
+						: false
 
-				// I'm pretty sure I need castling here
 				const { validMove, castle } = piece.checkMove(
 					playerCopy,
 					opponentCopy,
@@ -68,17 +76,71 @@ class Player {
 					targetCopy
 				)
 
+				/////////////// Move piece if move is valid ///////////////
 				if (validMove) {
-					chessBoardCopy.movePiece(
-						playerCopy,
-						opponentCopy,
-						selectedPiece,
-						targetCopy
-					)
-					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
-					playerCopy.isKingInCheck(chessBoardCopy)
+					if (castle.validCastle) {
+						chessBoardCopy.movePiece(
+							playerCopy,
+							opponentCopy,
+							selectedPiece,
+							targetCopy
+						)
+						chessBoardCopy.movePiece(
+							playerCopy,
+							opponentCopy,
+							castle.rook,
+							castle.rooksLandingSquare
+						)
+					} else {
+						chessBoardCopy.movePiece(
+							playerCopy,
+							opponentCopy,
+							selectedPiece,
+							targetCopy
+						)
+					}
 
-					// Check if player can escape check
+					//////////////////// Check for pawn promotion ////////////////////
+					if (promotePawn) {
+						promotionPieces.forEach((promotionPiece) => {
+							////////////// something wrong ///////////////
+							const newPiece = playerCopy.promotePawn(selectedPiece, {
+								color: this.color,
+								piece: promotionPiece,
+							})
+
+							chessBoard.movePiece(
+								playerCopy,
+								opponentCopy,
+								selectedPiece,
+								targetCopy
+							)
+
+							// currentPlayer.color === turn
+							// 	? chessBoard.movePiece(
+							// 			playerCopy,
+							// 			opponentCopy,
+							// 			selectedPiece,
+							// 			landingSquare
+							// 	  )
+							// 	: chessBoard.movePiece(
+							// 			opponentCopy,
+							// 			playerCopy,
+							// 			selectedPiece,
+							// 			landingSquare
+							// 	  )
+
+							chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+							playerCopy.isKingInCheck(chessBoardCopy)
+
+							if (!playerCopy.inCheck) this.checkMate = false
+						})
+					} else {
+						chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+						playerCopy.isKingInCheck(chessBoardCopy)
+					}
+
+					// Check if player can escape check //
 					if (!playerCopy.inCheck) this.checkMate = false
 				}
 			})
@@ -98,7 +160,7 @@ class Player {
 		const enemySquares =
 			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
 
-		// Get King's position
+		// Get King's position //
 		const { row, col } = this.kingSquare
 
 		if (

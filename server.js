@@ -14,7 +14,7 @@ const {
 	removePlayer,
 } = require('./utils/players')
 
-// Set static folder
+// Set static folder //
 app.use(express.static(path.join(__dirname, 'public')))
 
 //______________________________________________________________
@@ -22,47 +22,47 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 let turn = 'white'
 
-// Run when client connects
+// Run when client connects //
 io.on('connection', (socket) => {
-	// Listen for name and room sent by client through the 'join' event
+	// Listen for name and room sent by client through the 'join' event //
 	socket.on('playersInLobby', () => {
-		// Get list of players in lobby
+		// Get list of players in lobby //
 		const players = getPlayers()
 
-		// Send list of players to client
+		// Send list of players to client //
 		socket.emit('playersInLobby', players)
 	})
 
 	socket.on('updatePlayersInLobby', (roomID) => {
-		// Remove player from lobby
+		// Remove player from lobby //
 		removePlayer(roomID)
 
-		// Get list of players in lobby
+		// Get list of players in lobby //
 		const players = getPlayers()
 
-		// Send list of players to client
+		// Send list of players to client //
 		io.emit('playersInLobby', players)
 	})
 
 	socket.on('joinRoom', async ({ username, room }) => {
-		// Create player
+		// Create player //
 		const player = await new Player(socket.id, username, room)
 
-		// Add player to list of players
+		// Add player to list of players //
 		addPlayer(player)
 
-		// Send currentPlayer to client
+		// Send currentPlayer to client //
 		socket.emit('joinRoom', player)
 
-		// Get list of players
+		// Get list of players //
 		const players = getPlayers()
 
-		// Send list of players to client
+		// Send list of players to client //
 		io.emit('playersInLobby', players)
 	})
 
 	socket.on('joinGame', ({ username, room, color }) => {
-		// Join socket to a given room
+		// Join socket to a given room //
 		socket.join(room)
 
 		// const plyrs = getPlayersInRoom(room)
@@ -73,10 +73,10 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('movePiece', ({ room, turn, selectedCell, landingCell }) => {
-		// Change turn
+		// Change turn //
 		turn = turn === 'white' ? 'black' : 'white'
 
-		// Send game state to client
+		// Send game state to client //
 		io.to(room).emit('movePiece', {
 			turn,
 			selectedCell,
@@ -84,17 +84,17 @@ io.on('connection', (socket) => {
 		})
 	})
 
-	// Send promoted piece
+	// Send promoted piece //
 	socket.on('promotePawn', (room, newPiece) => {
 		io.to(room).emit('promotePawn', newPiece)
 	})
 
 	socket.on('winStatus', () => {
-		// Join socket to a given room
+		// Join socket to a given room //
 		socket.broadcast.emit('winStatus')
 	})
 
-	// Tell everyone what player just connected
+	// Tell everyone what player just connected //
 	// socket.broadcast.emit('playerConnection', turn)
 
 	// Runs when client disconnects
@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
 		// if (player) {
 		// 	const players = getPlayersInRoom(player.room)
 
-		// 	// Send players and room info to client
+		// 	// Send players and room info to client //
 		// 	io.to(player.room).emit('playerDisconnected', players)
 		// }
 	})
@@ -115,5 +115,3 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 3000
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-
-////////////////////////// NOTES //////////////////////////

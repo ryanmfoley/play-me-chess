@@ -6,7 +6,7 @@ const signInBtn = document.querySelector('button')
 
 const socket = io()
 
-// Handle form submit
+// Handle form submit //
 form.addEventListener('submit', (e) => {
 	e.preventDefault()
 
@@ -14,10 +14,10 @@ form.addEventListener('submit', (e) => {
 
 	socket.emit('playersInLobby')
 
-	// Check if username already exist
+	// Check if username already exist //
 	socket.on('playersInLobby', (players) => {
 		if (!players.find((player) => player.username === username)) {
-			// Send player to lobby
+			// Send player to lobby //
 			window.location.href = '/lobby.html?username=' + username
 		} else setError(usernameInput)
 	})

@@ -119,10 +119,10 @@ class Board {
 			cell.parentElement.classList.value === 'board'
 				? cell.classList
 				: cell.parentElement.classList
-		const [cellRow] = square[0].match(/\d+/)
-		const [cellCol] = square[1].match(/\d+/)
+		const [row] = square[0].match(/\d+/)
+		const [col] = square[1].match(/\d+/)
 
-		return { cellRow, cellCol }
+		return { row, col }
 	}
 
 	markEnemySquares(player, opponent) {
@@ -175,18 +175,18 @@ class Board {
 		}
 	}
 
-	// movePiece(player, piece, landingSquare) {
 	movePiece(currentPlayer, opponent, piece, landingSquare) {
 		const activePlayer =
 			currentPlayer.color === currentPlayer.turn ? currentPlayer : opponent
 		const inActivePlayer =
 			currentPlayer.color === currentPlayer.turn ? opponent : currentPlayer
 
-		// Remove piece from square
+		// Remove piece from square //
 		this.removePieceFromSquare(piece)
 
-		// If capture, remove piece from game
-		if (landingSquare.piece) {
+		////////////// Capture //////////////
+		// if (landingSquare.piece) {
+		if (landingSquare && landingSquare.piece) {
 			this.removePieceFromGame(inActivePlayer, landingSquare.piece)
 		} else if (piece.enPassant) {
 			const enPassantPiece =
@@ -203,7 +203,7 @@ class Board {
 		piece.changePosition(landingSquare)
 		this.assignPieceToSquare(piece)
 
-		// Reset enPassant
+		// Reset enPassant //
 		activePlayer.pieces.forEach((piece) => (piece.enPassant = false))
 		inActivePlayer.pieces.forEach((piece) => (piece.enPassant = false))
 	}
@@ -220,8 +220,8 @@ class Board {
 		this.board[piece.row][piece.col].piece = ''
 	}
 
-	selectSquare({ cellRow, cellCol }) {
-		return this.board[cellRow][cellCol]
+	selectSquare({ row, col }) {
+		return this.board[row][col]
 	}
 }
 
