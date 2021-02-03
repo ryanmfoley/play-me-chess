@@ -7,6 +7,7 @@ class Player {
 		this.turn = 'white'
 		this.inCheck = false
 		this.checkMate = false
+		this.staleMate = false
 		this.copyPieces()
 	}
 
@@ -20,33 +21,42 @@ class Player {
 		)
 	}
 
-	copyPlayer(player) {
+	copyPlayer() {
 		const playerCopy = Object.assign(
-			Object.create(Object.getPrototypeOf(player)),
-			player
+			Object.create(Object.getPrototypeOf(this)),
+			this
 		)
-		playerCopy.pieces = [...player.pieces].map((piece) =>
+		playerCopy.pieces = [...this.pieces].map((piece) =>
 			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
 		)
 
 		return playerCopy
 	}
 
-	getAvailableMoves(chessBoard, opponent) {
-		this.checkMate = true
-		const { pieces } = this.copyPlayer(this)
-		const promotionPieces = ['knight', 'bishop', 'rook', 'queen']
+	getAvailableMoves(chessBoard, activePlayer) {
+		this.escapeCheck = false
+		const { pieces } = this.copyPlayer()
+		const promotionPieces = ['knight', 'queen']
 
 		// Evaluate check after every possible move
 		pieces.forEach((piece) => {
-			// Add all squares for possible pawn moves //
-			if (piece.name === 'pawn') piece.targets = chessBoard.board.flat()
+			if (piece.name === 'pawn') {
+				const oneSquareUp =
+					piece.color === 'white' ? piece.row - 1 : piece.row + 1
+				const twoSquareUp =
+					piece.color === 'white' ? piece.row - 2 : piece.row + 2
 
-			// Add castling squares for king //
-			// do I need !piece.moved //
+				// Add forward movement squares to possible pawn moves //
+				if (twoSquareUp >= 0 && twoSquareUp <= 7) {
+					piece.targets.push({ row: oneSquareUp, col: piece.col })
+					piece.targets.push({ row: twoSquareUp, col: piece.col })
+				}
+			}
+
+			// // Add castling squares for king //
 			if (piece.name === 'king' && !piece.moved) {
-				piece.targets.push(chessBoard.board[piece.row][piece.col - 2])
-				piece.targets.push(chessBoard.board[piece.row][piece.col + 2])
+				piece.targets.push({ row: piece.row, col: piece.col - 2 })
+				piece.targets.push({ row: piece.row, col: piece.col + 2 })
 			}
 
 			piece.targets.forEach((target) => {
@@ -56,95 +66,101 @@ class Player {
 					chessBoard
 				)
 				chessBoardCopy.copyBoard(chessBoard)
-				const playerCopy = this.copyPlayer(this)
-				const opponentCopy = this.copyPlayer(opponent)
+				const playerCopy = this.copyPlayer()
+				const opponentCopy = activePlayer.copyPlayer()
 				const selectedPiece = playerCopy.pieces.find(
 					(pieceCopy) =>
 						pieceCopy.row === piece.row && pieceCopy.col === piece.col
 				)
-				const targetCopy = { ...target }
-				const backRank = this.color === 'white' ? 7 : 0
-				const promotePawn =
-					selectedPiece.name === 'pawn' && backRank == targetCopy.row
-						? true
-						: false
+				const landingSquare = chessBoardCopy.selectSquare(target)
+				const backRank = this.color === 'white' ? 0 : 7
 
-				const { validMove, castle } = piece.checkMove(
+				const { validMove, castle } = selectedPiece.checkMove(
 					playerCopy,
 					opponentCopy,
 					chessBoardCopy,
-					targetCopy
+					landingSquare
 				)
 
 				/////////////// Move piece if move is valid ///////////////
 				if (validMove) {
+					const promotePawn =
+						selectedPiece.name === 'pawn' && backRank == target.row
+							? true
+							: false
+
 					if (castle.validCastle) {
+						const rooksLandingSquare = chessBoardCopy.selectSquare(
+							castle.rooksLandingSquare
+						)
+
+						// Move king //
 						chessBoardCopy.movePiece(
 							playerCopy,
 							opponentCopy,
 							selectedPiece,
-							targetCopy
+							landingSquare
 						)
+
+						// Move rook //
 						chessBoardCopy.movePiece(
 							playerCopy,
 							opponentCopy,
 							castle.rook,
-							castle.rooksLandingSquare
+							rooksLandingSquare
 						)
-					} else {
-						chessBoardCopy.movePiece(
-							playerCopy,
-							opponentCopy,
-							selectedPiece,
-							targetCopy
-						)
-					}
-
-					//////////////////// Check for pawn promotion ////////////////////
-					if (promotePawn) {
+					} else if (promotePawn) {
+						//////////////////// Check for pawn promotion ////////////////////
 						promotionPieces.forEach((promotionPiece) => {
-							////////////// something wrong ///////////////
 							const newPiece = playerCopy.promotePawn(selectedPiece, {
 								color: this.color,
 								piece: promotionPiece,
 							})
 
-							chessBoard.movePiece(
+							chessBoardCopy.movePiece(
 								playerCopy,
 								opponentCopy,
-								selectedPiece,
-								targetCopy
+								newPiece,
+								landingSquare
 							)
-
-							// currentPlayer.color === turn
-							// 	? chessBoard.movePiece(
-							// 			playerCopy,
-							// 			opponentCopy,
-							// 			selectedPiece,
-							// 			landingSquare
-							// 	  )
-							// 	: chessBoard.movePiece(
-							// 			opponentCopy,
-							// 			playerCopy,
-							// 			selectedPiece,
-							// 			landingSquare
-							// 	  )
 
 							chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 							playerCopy.isKingInCheck(chessBoardCopy)
 
-							if (!playerCopy.inCheck) this.checkMate = false
+							if (!playerCopy.inCheck) {
+								// this.checkMate = false
+								this.escapeCheck = true
+								// this.staleMate = false
+							}
 						})
 					} else {
-						chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
-						playerCopy.isKingInCheck(chessBoardCopy)
+						// If validMove and not validCastle or promotePawn //
+						chessBoardCopy.movePiece(
+							playerCopy,
+							opponentCopy,
+							selectedPiece,
+							landingSquare
+						)
 					}
 
+					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+					playerCopy.isKingInCheck(chessBoardCopy)
+
 					// Check if player can escape check //
-					if (!playerCopy.inCheck) this.checkMate = false
+					if (!playerCopy.inCheck) {
+						// this.checkMate = false
+						this.escapeCheck = true
+						// this.staleMate = false
+					}
 				}
 			})
 		})
+
+		if (!this.escapeCheck) {
+			if (this.inCheck) {
+				this.checkMate = true
+			} else this.staleMate = true
+		}
 	}
 
 	getPromotedPiece(socket) {

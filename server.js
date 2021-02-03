@@ -89,11 +89,6 @@ io.on('connection', (socket) => {
 		io.to(room).emit('promotePawn', newPiece)
 	})
 
-	socket.on('winStatus', () => {
-		// Join socket to a given room //
-		socket.broadcast.emit('winStatus')
-	})
-
 	// Tell everyone what player just connected //
 	// socket.broadcast.emit('playerConnection', turn)
 

@@ -28,22 +28,21 @@ class Piece {
 			chessBoard
 		)
 		chessBoardCopy.copyBoard(chessBoard)
-		const playerCopy = player.copyPlayer(player)
-		const opponentCopy = opponent.copyPlayer(opponent)
+		const playerCopy = player.copyPlayer()
+		const opponentCopy = opponent.copyPlayer()
 		const selectedPiece = playerCopy.pieces.find(
 			(pieceCopy) => pieceCopy.row === this.row && pieceCopy.col === this.col
 		)
 
 		// Check if player is in check after move //
-		// chessBoardCopy.movePiece(
-		// 	playerCopy,
-		// 	opponentCopy,
-		// 	selectedPiece,
-		// 	landingSquare
-		// )
-		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+		chessBoardCopy.movePiece(
+			playerCopy,
+			opponentCopy,
+			selectedPiece,
+			landingSquare
+		)
 
-		// Evaluate check //
+		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 		playerCopy.isKingInCheck(chessBoardCopy)
 
 		if (playerCopy.inCheck) validMove = false
@@ -123,8 +122,8 @@ class Pawn extends Piece {
 
 		// Add squares to targets array //
 		if (row !== null) {
-			if (leftCol !== null) this.targets.push(board[row][leftCol])
-			if (rightCol !== null) this.targets.push(board[row][rightCol])
+			if (leftCol !== null) this.targets.push({ row, col: leftCol })
+			if (rightCol !== null) this.targets.push({ row, col: rightCol })
 		}
 	}
 }
@@ -161,7 +160,7 @@ class Knight extends Piece {
 					(Math.abs(this.row - row) === 1 && Math.abs(this.col - col) === 2)
 				) {
 					if (row >= 0 && row <= 7 && col >= 0 && col <= 7) {
-						this.targets.push(board[row][col])
+						this.targets.push({ row, col })
 					}
 				}
 			}
@@ -251,7 +250,7 @@ class Bishop extends Piece {
 		let row = this.row - 1
 		let col = this.col - 1
 		for (; row >= 0 && col >= 0; row--, col--) {
-			this.targets.push(board[row][col])
+			this.targets.push({ row, col })
 			if (board[row][col].piece) {
 				break
 			}
@@ -261,7 +260,7 @@ class Bishop extends Piece {
 		row = this.row - 1
 		col = this.col + 1
 		for (; row >= 0 && col <= 7; row--, col++) {
-			this.targets.push(board[row][col])
+			this.targets.push({ row, col })
 			if (board[row][col].piece) {
 				break
 			}
@@ -271,7 +270,7 @@ class Bishop extends Piece {
 		row = this.row + 1
 		col = this.col - 1
 		for (; row <= 7 && col >= 0; row++, col--) {
-			this.targets.push(board[row][col])
+			this.targets.push({ row, col })
 			if (board[row][col].piece) {
 				break
 			}
@@ -281,7 +280,7 @@ class Bishop extends Piece {
 		row = this.row + 1
 		col = this.col + 1
 		for (; row <= 7 && col <= 7; row++, col++) {
-			this.targets.push(board[row][col])
+			this.targets.push({ row, col })
 			if (board[row][col].piece) {
 				break
 			}
@@ -347,7 +346,7 @@ class Rook extends Piece {
 
 		// Check left direction //
 		for (let col = this.col - 1; col >= 0; col--) {
-			this.targets.push(board[this.row][col])
+			this.targets.push({ row: this.row, col })
 			if (board[this.row][col].piece) {
 				break
 			}
@@ -355,7 +354,7 @@ class Rook extends Piece {
 
 		// Check right direction //
 		for (let col = this.col + 1; col <= 7; col++) {
-			this.targets.push(board[this.row][col])
+			this.targets.push({ row: this.row, col })
 			if (board[this.row][col].piece) {
 				break
 			}
@@ -363,7 +362,7 @@ class Rook extends Piece {
 
 		// Check up direction //
 		for (let row = this.row - 1; row >= 0; row--) {
-			this.targets.push(board[row][this.col])
+			this.targets.push({ row, col: this.col })
 			if (board[row][this.col].piece) {
 				break
 			}
@@ -371,7 +370,7 @@ class Rook extends Piece {
 
 		// Check down direction //
 		for (let row = this.row + 1; row <= 7; row++) {
-			this.targets.push(board[row][this.col])
+			this.targets.push({ row, col: this.col })
 			if (board[row][this.col].piece) {
 				break
 			}
@@ -526,7 +525,7 @@ class Queen extends Piece {
 			let row = this.row - 1
 			let col = this.col - 1
 			for (; row >= 0 && col >= 0; row--, col--) {
-				this.targets.push(board[row][col])
+				this.targets.push({ row, col })
 				if (board[row][col].piece) {
 					break
 				}
@@ -536,7 +535,7 @@ class Queen extends Piece {
 			row = this.row - 1
 			col = this.col + 1
 			for (; row >= 0 && col <= 7; row--, col++) {
-				this.targets.push(board[row][col])
+				this.targets.push({ row, col })
 				if (board[row][col].piece) {
 					break
 				}
@@ -546,7 +545,7 @@ class Queen extends Piece {
 			row = this.row + 1
 			col = this.col - 1
 			for (; row <= 7 && col >= 0; row++, col--) {
-				this.targets.push(board[row][col])
+				this.targets.push({ row, col })
 				if (board[row][col].piece) {
 					break
 				}
@@ -556,7 +555,7 @@ class Queen extends Piece {
 			row = this.row + 1
 			col = this.col + 1
 			for (; row <= 7 && col <= 7; row++, col++) {
-				this.targets.push(board[row][col])
+				this.targets.push({ row, col })
 				if (board[row][col].piece) {
 					break
 				}
@@ -568,7 +567,7 @@ class Queen extends Piece {
 
 			// Check left direction //
 			for (let col = this.col - 1; col >= 0; col--) {
-				this.targets.push(board[this.row][col])
+				this.targets.push({ row: this.row, col })
 				if (board[this.row][col].piece) {
 					break
 				}
@@ -576,7 +575,7 @@ class Queen extends Piece {
 
 			// Check right direction //
 			for (let col = this.col + 1; col <= 7; col++) {
-				this.targets.push(board[this.row][col])
+				this.targets.push({ row: this.row, col })
 				if (board[this.row][col].piece) {
 					break
 				}
@@ -584,7 +583,7 @@ class Queen extends Piece {
 
 			// Check up direction //
 			for (let row = this.row - 1; row >= 0; row--) {
-				this.targets.push(board[row][this.col])
+				this.targets.push({ row, col: this.col })
 				if (board[row][this.col].piece) {
 					break
 				}
@@ -592,7 +591,7 @@ class Queen extends Piece {
 
 			// Check down direction //
 			for (let row = this.row + 1; row <= 7; row++) {
-				this.targets.push(board[row][this.col])
+				this.targets.push({ row, col: this.col })
 				if (board[row][this.col].piece) {
 					break
 				}
@@ -610,11 +609,16 @@ class King extends Piece {
 	}
 
 	checkForValidMove(player, opponent, chessBoard, landingSquare) {
+		// const enemySquares =
+		// 	this.color === 'white'
+		// 		? chessBoard.blackSquares.flat()
+		// 		: chessBoard.whiteSquares.flat()
 		const enemySquares =
-			this.color === 'white'
-				? chessBoard.blackSquares.flat()
-				: chessBoard.whiteSquares.flat()
+			this.color === 'white' ? chessBoard.blackSquares : chessBoard.whiteSquares
 
+		// const isEnemySquare = enemySquares.find(
+		// 	(square) => square === landingSquare
+		// )
 		const isEnemySquare = enemySquares.find(
 			(square) => square === landingSquare
 		)
@@ -648,10 +652,11 @@ class King extends Piece {
 				landingSquare.col + 1
 			)
 
-			const [, { piece: rook }] = chessBoard.board[this.row]
-				.slice(this.col)
-				.filter((square) => square.piece)
-			castle.rooksStartingSquare = { row: rook.row, col: rook.col }
+			// const [, { piece: rook }] = chessBoard.board[this.row]
+			// 	.slice(this.col)
+			// 	.filter((square) => square.piece)
+			const rook = chessBoard.board[this.row][7].piece
+			castle.rooksStartingSquare = { row: rook.row, col: 7 }
 			castle.rooksLandingSquare = { row: rook.row, col: this.col + 1 }
 			castle.rook = rook
 			rookMoved = rook.moved
@@ -689,10 +694,11 @@ class King extends Piece {
 				this.col
 			)
 
-			const [{ piece: rook }] = chessBoard.board[this.row]
-				.slice(0, this.col + 1)
-				.filter((square) => square.piece)
-			castle.rooksStartingSquare = { row: rook.row, col: rook.col }
+			// const [{ piece: rook }] = chessBoard.board[this.row]
+			// 	.slice(0, this.col + 1)
+			// 	.filter((square) => square.piece)
+			const rook = chessBoard.board[this.row][0].piece
+			castle.rooksStartingSquare = { row: rook.row, col: 0 }
 			castle.rooksLandingSquare = { row: rook.row, col: this.col - 1 }
 			castle.rook = rook
 			rookMoved = rook.moved
@@ -720,6 +726,9 @@ class King extends Piece {
 			!player.inCheck &&
 			!this.moved &&
 			!rookMoved &&
+			castle.rook &&
+			castle.rook.row === castle.rooksStartingSquare.row &&
+			castle.rook.col === castle.rooksStartingSquare.col &&
 			isCastling &&
 			!isPieceInWay &&
 			!castlingThruCheck
@@ -728,6 +737,7 @@ class King extends Piece {
 			validMove = true
 		}
 
+		//////////////////////////////////////
 		// Check for valid move //
 		if (
 			Math.abs(this.row - landingSquare.row) <= 1 &&
@@ -752,7 +762,7 @@ class King extends Piece {
 			for (let y = minCol; y <= maxCol; y++) {
 				if (this.row === x && this.col === y) {
 				} else {
-					this.targets.push(board[x][y])
+					this.targets.push({ row: x, col: y })
 				}
 			}
 		}

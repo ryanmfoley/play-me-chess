@@ -40,6 +40,7 @@ startGameButton.addEventListener('click', () => {
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
 	chessBoard.displayPieces()
+	chessBoard.markEnemySquares(currentPlayer, opponent)
 
 	startGame = true
 })
@@ -102,7 +103,12 @@ squares.addEventListener('click', (e) => {
 
 socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	currentPlayer.turn = turn
+	opponent.turn = turn
 
+	const activePlayer =
+		currentPlayer.color === currentPlayer.turn ? opponent : currentPlayer
+	const inActivePlayer =
+		currentPlayer.color === currentPlayer.turn ? currentPlayer : opponent
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
 	let selectedPiece = selectedSquare.piece
@@ -110,15 +116,18 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	const promotePawn =
 		selectedPiece.name === 'pawn' && backRank == landingCell.row ? true : false
 
-	chessBoard.movePiece(currentPlayer, opponent, selectedPiece, landingSquare)
+	chessBoard.movePiece(
+		activePlayer,
+		inActivePlayer,
+		selectedPiece,
+		landingSquare
+	)
 	chessBoard.displayPieces()
+
 	if (selectedPiece.name === 'king' || selectedPiece.name === 'rook') {
 		selectedPiece.moved = true
 	}
-	// console.log(chessBoard.board, currentPlayer, opponent)
-	// currentPlayer.pieces.forEach((piece) => {
-	// 	if (piece.moved) console.log(piece)
-	// })
+
 	//////////////////// Check for en passant ////////////////////
 	if (
 		selectedPiece.name === 'pawn' &&
@@ -132,30 +141,21 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		let newPiece
 
 		if (currentPlayer.color !== turn) {
+			// do I need await??????????????????????????
 			newPiece = await currentPlayer.selectPieceModal()
 			socket.emit('promotePawn', room, newPiece)
 		} else {
 			newPiece = await opponent.getPromotedPiece(socket)
 		}
 
-		selectedPiece =
-			currentPlayer.color === turn
-				? opponent.promotePawn(selectedPiece, newPiece)
-				: currentPlayer.promotePawn(selectedPiece, newPiece)
+		selectedPiece = activePlayer.promotePawn(selectedPiece, newPiece)
 
-		currentPlayer.color === turn
-			? chessBoard.movePiece(
-					currentPlayer,
-					opponent,
-					selectedPiece,
-					landingSquare
-			  )
-			: chessBoard.movePiece(
-					opponent,
-					currentPlayer,
-					selectedPiece,
-					landingSquare
-			  )
+		chessBoard.movePiece(
+			activePlayer,
+			inActivePlayer,
+			selectedPiece,
+			landingSquare
+		)
 		chessBoard.displayPieces()
 	}
 
@@ -163,41 +163,32 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	chessBoard.markEnemySquares(currentPlayer, opponent)
 
 	// Evaluate check //
-	currentPlayer.isKingInCheck(chessBoard)
-	opponent.isKingInCheck(chessBoard)
+	inActivePlayer.isKingInCheck(chessBoard)
 
 	// Get available moves //
-	if (currentPlayer.color === turn) {
-		// currentPlayer.getAvailableMoves(chessBoard, opponent)
-	}
-	// console.log(chessBoard, currentPlayer, opponent)
-	// If king is in check set square to red //
-	if (currentPlayer.inCheck || opponent.inCheck) {
-		const { row, col } = currentPlayer.inCheck
-			? currentPlayer.kingSquare
-			: opponent.kingSquare
+	inActivePlayer.getAvailableMoves(chessBoard, activePlayer)
 
+	// If king is in check set square to red //
+	if (inActivePlayer.inCheck) {
+		const { row, col } = inActivePlayer.kingSquare
 		chessBoard.board[row][col].cellBox.id = 'checkSquare'
 		audio.play()
-		// check.style.display = 'block'
 	} else {
 		// Reset check square and display //
 		chessBoard.board.forEach((row) =>
 			row.forEach((square) => square.cellBox.removeAttribute('id'))
 		)
-		// check.style.display = 'none'
 	}
 
-	if (currentPlayer.checkMate || opponent.checkMate) {
+	if (inActivePlayer.checkMate) {
 		check.style.display = 'block'
 		check.innerHTML = 'CHECKMATE!'
-		socket.emit('winStatus')
 	}
-})
 
-socket.on('winStatus', () => {
-	check.style.display = 'block'
-	check.innerHTML = 'CHECKMATE!'
+	if (inActivePlayer.staleMate) {
+		check.style.display = 'block'
+		check.innerHTML = 'STALEMATE'
+	}
 })
 
 leaveGameButton.addEventListener('click', () => {
@@ -207,13 +198,13 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// may not need validMove in queen code - I could just check if it's a rook movement similarly to checking if it's a diagonal movement
-// flipping blacks board messed up checkForValidMove() ??????????
+//////////// use a for loop in getAvailableMoves ////////////
+// error when I try castling on move one
+// maybe use reduce in getAvailableMoves - use break
 // check queen.markEnemySquares ???
-// black queen is jumping over pawns ??????????
-// uncomment pieces #38 ??????????
 // make sure availableMoves doesn't set piece.moved
-// use index for comparing enPassant
+// look for areas where I can add break
+
 // 1. rooms don't show up if created before other user joins lobby
 // 2. create game sends user chess.js with a "waiting for opponent..." modal
 // 3. wait for pieces to appear for both clients before allowing moves
@@ -227,12 +218,8 @@ leaveGameButton.addEventListener('click', () => {
 // availableMoves may not accept en passant
 
 // insufficient material
-// error when I try castling on move one
 // remove socket.emit('info') && socket.on('info')
-// may not need king variable in castling logic pieces.js
+// may not need king variable in castling logic - pieces.js
 // double check if isCastling is needed
-// need to allow castling in getAvailableMoves
-// need to add squares to kings targetSquares
-// getAvailableMoves needs to cycle through every piece when a pawn gets promoted
 // Do I need socket.off()?
 // Double check all async/await to see if they're needed

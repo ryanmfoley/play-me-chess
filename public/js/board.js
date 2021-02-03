@@ -175,18 +175,12 @@ class Board {
 		}
 	}
 
-	movePiece(currentPlayer, opponent, piece, landingSquare) {
-		const activePlayer =
-			currentPlayer.color === currentPlayer.turn ? currentPlayer : opponent
-		const inActivePlayer =
-			currentPlayer.color === currentPlayer.turn ? opponent : currentPlayer
-
+	movePiece(activePlayer, inActivePlayer, piece, landingSquare) {
 		// Remove piece from square //
 		this.removePieceFromSquare(piece)
 
 		////////////// Capture //////////////
-		// if (landingSquare.piece) {
-		if (landingSquare && landingSquare.piece) {
+		if (landingSquare.piece) {
 			this.removePieceFromGame(inActivePlayer, landingSquare.piece)
 		} else if (piece.enPassant) {
 			const enPassantPiece =
@@ -202,6 +196,9 @@ class Board {
 
 		piece.changePosition(landingSquare)
 		this.assignPieceToSquare(piece)
+
+		// Mark enemyEnemySquares //
+		this.markEnemySquares(activePlayer, inActivePlayer)
 
 		// Reset enPassant //
 		activePlayer.pieces.forEach((piece) => (piece.enPassant = false))
