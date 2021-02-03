@@ -198,7 +198,6 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-//////////// use a for loop in getAvailableMoves ////////////
 // error when I try castling on move one
 // maybe use reduce in getAvailableMoves - use break
 // check queen.markEnemySquares ???

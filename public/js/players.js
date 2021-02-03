@@ -38,8 +38,8 @@ class Player {
 		const { pieces } = this.copyPlayer()
 		const promotionPieces = ['knight', 'queen']
 
-		// Evaluate check after every possible move
-		pieces.forEach((piece) => {
+		// Evaluate if player can escape check //
+		piecesLoop: for (const piece of pieces) {
 			if (piece.name === 'pawn') {
 				const oneSquareUp =
 					piece.color === 'white' ? piece.row - 1 : piece.row + 1
@@ -59,7 +59,10 @@ class Player {
 				piece.targets.push({ row: piece.row, col: piece.col + 2 })
 			}
 
-			piece.targets.forEach((target) => {
+			// piece.targets.forEach((target) => {
+			for (const target of piece.targets) {
+				let breakLoop = false
+
 				// Copy board, players, pieces, and targets //
 				let chessBoardCopy = Object.assign(
 					Object.create(Object.getPrototypeOf(chessBoard)),
@@ -117,6 +120,7 @@ class Player {
 								piece: promotionPiece,
 							})
 
+							// Promote pawn //
 							chessBoardCopy.movePiece(
 								playerCopy,
 								opponentCopy,
@@ -128,9 +132,8 @@ class Player {
 							playerCopy.isKingInCheck(chessBoardCopy)
 
 							if (!playerCopy.inCheck) {
-								// this.checkMate = false
 								this.escapeCheck = true
-								// this.staleMate = false
+								breakLoop = true
 							}
 						})
 					} else {
@@ -148,13 +151,14 @@ class Player {
 
 					// Check if player can escape check //
 					if (!playerCopy.inCheck) {
-						// this.checkMate = false
 						this.escapeCheck = true
-						// this.staleMate = false
+						breakLoop = true
 					}
 				}
-			})
-		})
+
+				if (breakLoop) break piecesLoop
+			}
+		}
 
 		if (!this.escapeCheck) {
 			if (this.inCheck) {
