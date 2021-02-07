@@ -88,8 +88,12 @@ header > h1 {
 	transform: rotate(180deg);
 }
 
-.black-pieces {
+.black-piece {
 	transform: rotate(180deg);
+}
+
+.hold {
+	display: none;
 }
 
 .check-text {

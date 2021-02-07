@@ -61,15 +61,13 @@ io.on('connection', (socket) => {
 		io.emit('playersInLobby', players)
 	})
 
-	socket.on('joinGame', ({ username, room, color }) => {
+	socket.on('joinGame', ({ username, room }) => {
 		// Join socket to a given room //
 		socket.join(room)
 
 		// const plyrs = getPlayersInRoom(room)
 
 		addPlayerToRoom(socket.id, username, room)
-
-		if (color === 'black') io.to(room).emit('info')
 	})
 
 	socket.on('movePiece', ({ room, turn, selectedCell, landingCell }) => {

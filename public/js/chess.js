@@ -10,9 +10,12 @@ const { username, room, color } = Qs.parse(location.search, {
 const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
 const audio = document.querySelector('audio')
-const info = document.querySelector('#info')
-const squares = document.querySelector('.board')
+const pieces = document.querySelectorAll('.piece')
+// const squares = document.querySelector('.board')
+const board = document.querySelector('.board')
+const squares = document.querySelectorAll('.square')
 const check = document.querySelector('.check-text')
+
 let startGame = false
 let selectedCell
 let selectedPiece
@@ -22,20 +25,16 @@ let legalMove
 
 const socket = io()
 
-socket.emit('joinGame', { username, room, color })
+socket.emit('joinGame', { username, room })
 
 const currentPlayer = color === 'white' ? whitePlayer : blackPlayer
 const opponent = color === 'white' ? blackPlayer : whitePlayer
-
-socket.on('info', () => {
-	info.innerHTML = `You are playing ${color}`
-})
 
 //______________________________________________________________
 // Listen for Start-Game event
 
 startGameButton.addEventListener('click', () => {
-	if (color === 'black') squares.setAttribute('id', 'black-board')
+	if (color === 'black') board.setAttribute('id', 'black-board')
 
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
@@ -45,58 +44,86 @@ startGameButton.addEventListener('click', () => {
 	startGame = true
 })
 
-squares.addEventListener('click', (e) => {
-	const { turn } = currentPlayer
+for (const piece of pieces) {
+	piece.addEventListener('dragstart', function (e) {
+		setTimeout(() => {
+			this.classList.add('hold')
+		}, 0)
+	})
+}
 
-	if (startGame && currentPlayer.color === turn) {
-		if (!selectedPiece) {
+for (const square of squares) {
+	square.addEventListener('dragstart', function (e) {
+		const { turn } = currentPlayer
+
+		if (startGame && currentPlayer.color === turn) {
 			selectedCell = chessBoard.identifyCell(e.target)
 			const selectedSquare = chessBoard.selectSquare(selectedCell)
 
-			// Check if a piece was selected and it's their turn //
 			if (selectedSquare.color === turn) {
 				selectedPiece = selectedSquare.piece
 			}
-
-			// If piece is selected //
-		} else if (!legalMove) {
-			landingCell = chessBoard.identifyCell(e.target)
-			landingSquare = chessBoard.selectSquare(landingCell)
-
-			const { validMove, castle } = selectedPiece.checkMove(
-				currentPlayer,
-				opponent,
-				chessBoard,
-				landingSquare
-			)
-			legalMove = validMove
-
-			if (validMove) {
-				if (castle.validCastle) {
-					landingCell = chessBoard.identifyCell(e.target)
-
-					// Send king move to server //
-					socket.emit('movePiece', { room, selectedCell, landingCell })
-
-					selectedCell = castle.rooksStartingSquare
-					landingCell = castle.rooksLandingSquare
-
-					// Send rook move to server //
-					socket.emit('movePiece', { room, turn, selectedCell, landingCell })
-				} else {
-					landingCell = chessBoard.identifyCell(e.target)
-
-					// Send move to server //
-					socket.emit('movePiece', { room, turn, selectedCell, landingCell })
-				}
-
-				// Reset turn variables //
-				selectedPiece = false
-				legalMove = false
-			} else selectedPiece = null
 		}
+	})
+	square.addEventListener('dragenter', function (e) {
+		e.preventDefault()
+	})
+	square.addEventListener('dragover', (e) => e.preventDefault())
+	square.addEventListener('drop', movePiece)
+}
+
+function movePiece(e) {
+	e.preventDefault()
+
+	const { turn } = currentPlayer
+
+	if (!selectedPiece) {
+		selectedCell = chessBoard.identifyCell(e.target)
+		const selectedSquare = chessBoard.selectSquare(selectedCell)
+
+		// Check if a piece was selected and it's their turn //
+		if (selectedSquare.color === turn) {
+			selectedPiece = selectedSquare.piece
+		}
+
+		// If piece is selected //
+	} else if (!legalMove) {
+		landingCell = chessBoard.identifyCell(e.target)
+		landingSquare = chessBoard.selectSquare(landingCell)
+
+		const { validMove, castle } = selectedPiece.checkMove(
+			currentPlayer,
+			opponent,
+			chessBoard,
+			landingSquare
+		)
+		legalMove = validMove
+
+		if (validMove) {
+			if (castle.validCastle) {
+				landingCell = chessBoard.identifyCell(e.target)
+
+				// Send king move to server //
+				socket.emit('movePiece', { room, selectedCell, landingCell })
+
+				selectedCell = castle.rooksStartingSquare
+				landingCell = castle.rooksLandingSquare
+
+				// Send rook move to server //
+				socket.emit('movePiece', { room, turn, selectedCell, landingCell })
+			} else {
+				landingCell = chessBoard.identifyCell(e.target)
+
+				// Send move to server //
+				socket.emit('movePiece', { room, turn, selectedCell, landingCell })
+			}
+
+			// Reset turn variables //
+			selectedPiece = false
+			legalMove = false
+		} else selectedPiece = null
 	}
-})
+}
 
 //______________________________________________________________
 // Listen for piece moves
@@ -141,7 +168,6 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		let newPiece
 
 		if (currentPlayer.color !== turn) {
-			// do I need await??????????????????????????
 			newPiece = await currentPlayer.selectPieceModal()
 			socket.emit('promotePawn', room, newPiece)
 		} else {
@@ -182,7 +208,6 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 
 	if (inActivePlayer.checkMate) {
 		check.style.display = 'block'
-		check.innerHTML = 'CHECKMATE!'
 	}
 
 	if (inActivePlayer.staleMate) {
@@ -198,27 +223,17 @@ leaveGameButton.addEventListener('click', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// error when I try castling on move one
-// maybe use reduce in getAvailableMoves - use break
-// check queen.markEnemySquares ???
-// make sure availableMoves doesn't set piece.moved
-// look for areas where I can add break
-
 // 1. rooms don't show up if created before other user joins lobby
 // 2. create game sends user chess.js with a "waiting for opponent..." modal
 // 3. wait for pieces to appear for both clients before allowing moves
 // 4. after checkmate, smoothly send clients to lobby
 // 5. send one or both clients back to lobby after a page reload
 // 6. username displayed along with captured pieces
-// 7. draws and stalemates
+// 7. draws - insufficient material
 
-// code will say if enPassant, then resets switch
-// if no en passant, turn option off from pieces
-// availableMoves may not accept en passant
-
-// insufficient material
+// combine identifyCell and selectSquare
+// maybe remove img pieces from chess.html
 // remove socket.emit('info') && socket.on('info')
 // may not need king variable in castling logic - pieces.js
 // double check if isCastling is needed
 // Do I need socket.off()?
-// Double check all async/await to see if they're needed

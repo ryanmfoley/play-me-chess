@@ -43,9 +43,10 @@ class Board {
 						img = document.createElement('img')
 						if (square.color === 'white') {
 							img.src = './images/wp.svg'
+							img.classList.add('piece')
 						} else {
 							img.src = './images/bp.svg'
-							img.classList.add('black-pieces')
+							img.classList.add('piece', 'black-piece')
 						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
@@ -54,9 +55,10 @@ class Board {
 						img = document.createElement('img')
 						if (square.color === 'white') {
 							img.src = './images/wn.svg'
+							img.classList.add('piece')
 						} else {
 							img.src = './images/bn.svg'
-							img.classList.add('black-pieces')
+							img.classList.add('piece', 'black-piece')
 						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
@@ -65,9 +67,10 @@ class Board {
 						img = document.createElement('img')
 						if (square.color === 'white') {
 							img.src = './images/wb.svg'
+							img.classList.add('piece')
 						} else {
 							img.src = './images/bb.svg'
-							img.classList.add('black-pieces')
+							img.classList.add('piece', 'black-piece')
 						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
@@ -76,9 +79,10 @@ class Board {
 						img = document.createElement('img')
 						if (square.color === 'white') {
 							img.src = './images/wr.svg'
+							img.classList.add('piece')
 						} else {
 							img.src = './images/br.svg'
-							img.classList.add('black-pieces')
+							img.classList.add('piece', 'black-piece')
 						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
@@ -87,9 +91,10 @@ class Board {
 						img = document.createElement('img')
 						if (square.color === 'white') {
 							img.src = './images/wq.svg'
+							img.classList.add('piece')
 						} else {
 							img.src = './images/bq.svg'
-							img.classList.add('black-pieces')
+							img.classList.add('piece', 'black-piece')
 						}
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
@@ -98,12 +103,13 @@ class Board {
 						img = document.createElement('img')
 						if (square.color === 'white') {
 							img.src = './images/wk.svg'
+							img.classList.add('piece')
 						} else {
 							img.src = './images/bk.svg'
-							img.classList.add('black-pieces')
+							img.classList.add('piece', 'black-piece')
 						}
-						img.src =
-							square.color === 'white' ? './images/wk.svg' : './images/bk.svg'
+						// img.src =
+						// 	square.color === 'white' ? './images/wk.svg' : './images/bk.svg'
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						break

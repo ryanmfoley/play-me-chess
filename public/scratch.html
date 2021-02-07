@@ -4,55 +4,209 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Scratch Pad</title>
-		<script>
-			function allowDrop(ev) {
-				ev.preventDefault()
-			}
-
-			function drag(ev) {
-				const dt = ev.dataTransfer
-				dt.mozSetDataAt('./images/wp.svg', stream, 0)
-				// dt.mozSetDataAt('application/x-moz-file', file, 0)
-				dt.setData('text/uri-list', ev.target.src)
-			}
-
-			function drop(ev) {
-				ev.preventDefault()
-				var data = ev.dataTransfer.getData('text/uri-list')
-				// ev.target.appendChild(document.getElementById(data))
-				ev.target.appendChild(data)
-			}
-		</script>
-		<style>
-			#drag1 {
-				width: 60px;
-				height: 60px;
-				border: 1px solid green;
-			}
-			#div1 {
-				width: 60px;
-				height: 60px;
-				border: 1px solid red;
-			}
-			#div2 {
-				width: 60px;
-				height: 60px;
-				border: 1px solid blue;
-			}
-			#div3 {
-				width: 60px;
-				height: 60px;
-				border: 1px solid purple;
-			}
-		</style>
 	</head>
 	<body>
-		<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-		<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-		<div id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+		<div class="board">
+			<div class="row-0 col-0 square">
+				<img
+					class="piece black-piece"
+					src="./images/br.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-1 square">
+				<img
+					class="piece black-piece"
+					src="./images/bn.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-2 square">
+				<img
+					class="piece black-piece"
+					src="./images/bb.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-3 square">
+				<img
+					class="piece black-piece"
+					src="./images/bq.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-4 square">
+				<img
+					class="piece black-piece"
+					src="./images/bk.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-5 square">
+				<img
+					class="piece black-piece"
+					src="./images/bb.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-6 square">
+				<img
+					class="piece black-piece"
+					src="./images/bn.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-0 col-7 square">
+				<img
+					class="piece black-piece"
+					src="./images/br.svg"
+					alt="chess piece"
+				/>
+			</div>
 
-		<div id="drag1" draggable="true" ondragstart="drag(event)">
-			<img src="./images/wp.svg" />
+			<div class="row-1 col-0 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-1 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-2 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-3 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-4 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-5 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-6 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+			<div class="row-1 col-7 square">
+				<img
+					class="piece black-piece"
+					src="./images/bp.svg"
+					alt="chess piece"
+				/>
+			</div>
+
+			<div class="row-2 col-0 square"></div>
+			<div class="row-2 col-1 square"></div>
+			<div class="row-2 col-2 square"></div>
+			<div class="row-2 col-3 square"></div>
+			<div class="row-2 col-4 square"></div>
+			<div class="row-2 col-5 square"></div>
+			<div class="row-2 col-6 square"></div>
+			<div class="row-2 col-7 square"></div>
+
+			<div class="row-3 col-0 square"></div>
+			<div class="row-3 col-1 square"></div>
+			<div class="row-3 col-2 square"></div>
+			<div class="row-3 col-3 square"></div>
+			<div class="row-3 col-4 square"></div>
+			<div class="row-3 col-5 square"></div>
+			<div class="row-3 col-6 square"></div>
+			<div class="row-3 col-7 square"></div>
+
+			<div class="row-4 col-0 square"></div>
+			<div class="row-4 col-1 square"></div>
+			<div class="row-4 col-2 square"></div>
+			<div class="row-4 col-3 square"></div>
+			<div class="row-4 col-4 square"></div>
+			<div class="row-4 col-5 square"></div>
+			<div class="row-4 col-6 square"></div>
+			<div class="row-4 col-7 square"></div>
+
+			<div class="row-5 col-0 square"></div>
+			<div class="row-5 col-1 square"></div>
+			<div class="row-5 col-2 square"></div>
+			<div class="row-5 col-3 square"></div>
+			<div class="row-5 col-4 square"></div>
+			<div class="row-5 col-5 square"></div>
+			<div class="row-5 col-6 square"></div>
+			<div class="row-5 col-7 square"></div>
+
+			<div class="row-6 col-0 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-1 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-2 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-3 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-4 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-5 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-6 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+			<div class="row-6 col-7 square">
+				<img class="piece" src="./images/wp.svg" alt="chess piece" />
+			</div>
+
+			<div class="row-7 col-0 square">
+				<img class="piece" src="./images/wr.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-1 square">
+				<img class="piece" src="./images/wn.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-2 square">
+				<img class="piece" src="./images/wb.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-3 square">
+				<img class="piece" src="./images/wq.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-4 square">
+				<img class="piece" src="./images/wk.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-5 square">
+				<img class="piece" src="./images/wb.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-6 square">
+				<img class="piece" src="./images/wn.svg" alt="chess piece" />
+			</div>
+			<div class="row-7 col-7 square">
+				<img class="piece" src="./images/wr.svg" alt="chess piece" />
+			</div>
+			<div id="promoteModal"></div>
 		</div>
 	</body>
 </html>

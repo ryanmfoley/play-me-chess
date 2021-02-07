@@ -59,7 +59,6 @@ class Player {
 				piece.targets.push({ row: piece.row, col: piece.col + 2 })
 			}
 
-			// piece.targets.forEach((target) => {
 			for (const target of piece.targets) {
 				let breakLoop = false
 
