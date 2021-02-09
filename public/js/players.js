@@ -208,49 +208,46 @@ class Player {
 
 	selectPieceModal() {
 		const knight = document.createElement('img')
+		const bishop = document.createElement('img')
+		const rook = document.createElement('img')
+		const queen = document.createElement('img')
+
 		if (this.color === 'white') {
 			knight.src = './images/wn.svg'
 			knight.setAttribute('data-piece', 'knight')
+
+			bishop.src = './images/wb.svg'
+			bishop.setAttribute('data-piece', 'bishop')
+
+			rook.src = './images/wr.svg'
+			rook.setAttribute('data-piece', 'rook')
+
+			queen.src = './images/wq.svg'
+			queen.setAttribute('data-piece', 'queen')
 		} else {
 			knight.src = './images/bn.svg'
 			knight.classList.add('black-pieces')
 			knight.setAttribute('data-piece', 'knight')
-		}
-		promoteModal.innerHTML = ''
-		promoteModal.append(knight)
 
-		const bishop = document.createElement('img')
-		if (this.color === 'white') {
-			bishop.src = './images/wb.svg'
-			bishop.setAttribute('data-piece', 'bishop')
-		} else {
 			bishop.src = './images/bb.svg'
 			bishop.classList.add('black-pieces')
 			bishop.setAttribute('data-piece', 'bishop')
-		}
-		promoteModal.append(bishop)
 
-		const rook = document.createElement('img')
-		if (this.color === 'white') {
-			rook.src = './images/wr.svg'
-			rook.setAttribute('data-piece', 'rook')
-		} else {
 			rook.src = './images/br.svg'
 			rook.classList.add('black-pieces')
 			rook.setAttribute('data-piece', 'rook')
-		}
-		promoteModal.append(rook)
 
-		const queen = document.createElement('img')
-		if (this.color === 'white') {
-			queen.src = './images/wq.svg'
-			queen.setAttribute('data-piece', 'queen')
-		} else {
 			queen.src = './images/bq.svg'
 			queen.classList.add('black-pieces')
 			queen.setAttribute('data-piece', 'queen')
 		}
+
+		promoteModal.innerHTML = ''
+		promoteModal.append(knight)
+		promoteModal.append(bishop)
+		promoteModal.append(rook)
 		promoteModal.append(queen)
+
 		setTimeout(function () {
 			promoteModal.style.visibility = 'visible'
 		}, 300)

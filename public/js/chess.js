@@ -7,16 +7,12 @@ const { username, room, color } = Qs.parse(location.search, {
 	ignoreQueryPrefix: true,
 })
 
-const startGameButton = document.querySelector('#start-game')
 const leaveGameButton = document.querySelector('#leave-game')
 const audio = document.querySelector('audio')
-const pieces = document.querySelectorAll('.piece')
-// const squares = document.querySelector('.board')
 const board = document.querySelector('.board')
 const squares = document.querySelectorAll('.square')
 const check = document.querySelector('.check-text')
 
-let startGame = false
 let selectedCell
 let selectedPiece
 let landingCell
@@ -29,52 +25,40 @@ socket.emit('joinGame', { username, room })
 
 const currentPlayer = color === 'white' ? whitePlayer : blackPlayer
 const opponent = color === 'white' ? blackPlayer : whitePlayer
+if (color === 'black') board.setAttribute('id', 'black-board')
 
 //______________________________________________________________
-// Listen for Start-Game event
+// Start-Game
 
-startGameButton.addEventListener('click', () => {
-	if (color === 'black') board.setAttribute('id', 'black-board')
-
-	chessBoard.clearBoard()
-	placePiecesOnBoard(chessBoard)
-	chessBoard.displayPieces()
-	chessBoard.markEnemySquares(currentPlayer, opponent)
-
-	startGame = true
-})
-
-for (const piece of pieces) {
-	piece.addEventListener('dragstart', function (e) {
-		setTimeout(() => {
-			this.classList.add('hold')
-		}, 0)
-	})
-}
+chessBoard.clearBoard()
+placePiecesOnBoard(chessBoard)
+chessBoard.displayPieces()
+chessBoard.markEnemySquares(currentPlayer, opponent)
 
 for (const square of squares) {
 	square.addEventListener('dragstart', function (e) {
 		const { turn } = currentPlayer
 
-		if (startGame && currentPlayer.color === turn) {
+		if (currentPlayer.color === turn) {
 			selectedCell = chessBoard.identifyCell(e.target)
 			const selectedSquare = chessBoard.selectSquare(selectedCell)
 
 			if (selectedSquare.color === turn) {
 				selectedPiece = selectedSquare.piece
+				setTimeout(() => (e.target.style.display = 'none'), 0)
 			}
 		}
 	})
-	square.addEventListener('dragenter', function (e) {
-		e.preventDefault()
-	})
+
+	square.addEventListener('dragenter', (e) => e.preventDefault())
 	square.addEventListener('dragover', (e) => e.preventDefault())
 	square.addEventListener('drop', movePiece)
+	square.addEventListener('dragend', (e) =>
+		setTimeout(() => (e.target.style.display = 'block'), 0)
+	)
 }
 
 function movePiece(e) {
-	e.preventDefault()
-
 	const { turn } = currentPlayer
 
 	if (!selectedPiece) {
@@ -231,6 +215,7 @@ leaveGameButton.addEventListener('click', () => {
 // 6. username displayed along with captured pieces
 // 7. draws - insufficient material
 
+// probably don't need the piece class
 // combine identifyCell and selectSquare
 // maybe remove img pieces from chess.html
 // remove socket.emit('info') && socket.on('info')
