@@ -92,10 +92,6 @@ header > h1 {
 	transform: rotate(180deg);
 }
 
-.hold {
-	display: none;
-}
-
 .check-text {
 	display: none;
 	font-size: 38px;
@@ -124,7 +120,6 @@ header > h1 {
 	top: 50%;
 	left: 50%;
 	width: 60%;
-	/* height: 20%; */
 	transform: translate(-50%, -50%);
 	background-color: rgba(0, 0, 0, 0.4);
 	border: 3px solid white;
