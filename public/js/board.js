@@ -17,11 +17,49 @@ class Board {
 				this.board[row][col] = new Cell(row, col)
 			}
 		}
+		this.turn = 'white'
+		this.boardPosition = []
+		this.draw = false
+		this.drawByRepetition = false
+		this.staleMate = false
 	}
 
 	assignPieceToSquare(piece) {
 		this.board[piece.row][piece.col].color = piece.color
 		this.board[piece.row][piece.col].piece = piece
+	}
+
+	checkThreefoldRepitition() {
+		const currentPosition =
+			JSON.stringify(
+				this.board.map((row) =>
+					row.map((square) => {
+						const {
+							piece: { name, color, row, col, enPassant, moved },
+						} = square
+
+						return {
+							name,
+							color,
+							row,
+							col,
+							enPassant,
+							moved,
+						}
+					})
+				)
+			) + this.turn
+
+		this.boardPosition.push(currentPosition)
+
+		const positionCount = this.boardPosition.reduce(
+			(acc, val) => acc + (val === currentPosition),
+			0
+		)
+
+		if (positionCount === 3) {
+			this.drawByRepetition = true
+		}
 	}
 
 	clearBoard() {
@@ -108,8 +146,6 @@ class Board {
 							img.src = './images/bk.svg'
 							img.classList.add('piece', 'black-piece')
 						}
-						// img.src =
-						// 	square.color === 'white' ? './images/wk.svg' : './images/bk.svg'
 						square.cellBox.innerHTML = ''
 						square.cellBox.append(img)
 						break
@@ -118,6 +154,8 @@ class Board {
 				}
 			})
 		)
+
+		return this
 	}
 
 	identifyCell(cell) {
@@ -161,27 +199,36 @@ class Board {
 				? selectedPiece.col + 1
 				: selectedPiece.col - 1
 
-		selectedPiece.enPassant = true
-
 		if (
-			chessBoard.board[selectedPiece.row][leftSquare] &&
-			chessBoard.board[selectedPiece.row][leftSquare].piece &&
-			chessBoard.board[selectedPiece.row][leftSquare].piece.color !==
+			this.board[selectedPiece.row][leftSquare] &&
+			this.board[selectedPiece.row][leftSquare].piece &&
+			this.board[selectedPiece.row][leftSquare].piece.color !==
 				selectedPiece.color
 		) {
-			chessBoard.board[selectedPiece.row][leftSquare].piece.enPassant = true
+			selectedPiece.enPassant = true
+			this.board[selectedPiece.row][leftSquare].piece.enPassant = true
 		}
 		if (
-			chessBoard.board[selectedPiece.row][rightSquare] &&
-			chessBoard.board[selectedPiece.row][rightSquare].piece &&
-			chessBoard.board[selectedPiece.row][rightSquare].piece.color !==
+			this.board[selectedPiece.row][rightSquare] &&
+			this.board[selectedPiece.row][rightSquare].piece &&
+			this.board[selectedPiece.row][rightSquare].piece.color !==
 				selectedPiece.color
 		) {
-			chessBoard.board[selectedPiece.row][rightSquare].piece.enPassant = true
+			selectedPiece.enPassant = true
+			this.board[selectedPiece.row][rightSquare].piece.enPassant = true
 		}
 	}
 
-	movePiece(activePlayer, inActivePlayer, piece, landingSquare) {
+	async movePiece(currentPlayer, opponent, piece, landingSquare) {
+		const activePlayer =
+			currentPlayer.color === this.turn ? opponent : currentPlayer
+		const inActivePlayer =
+			currentPlayer.color === this.turn ? currentPlayer : opponent
+		const startingSquare = piece.row
+		const backRank = this.turn === 'white' ? 7 : 0
+		const promotePawn =
+			piece.name === 'pawn' && backRank == landingSquare.row ? true : false
+
 		// Remove piece from square //
 		this.removePieceFromSquare(piece)
 
@@ -206,9 +253,21 @@ class Board {
 		// Mark enemyEnemySquares //
 		this.markEnemySquares(activePlayer, inActivePlayer)
 
+		if (piece.name === 'king' || piece.name === 'rook') {
+			piece.moved = true
+		}
+
 		// Reset enPassant //
 		activePlayer.pieces.forEach((piece) => (piece.enPassant = false))
 		inActivePlayer.pieces.forEach((piece) => (piece.enPassant = false))
+
+		//////////////////// Check for en passant ////////////////////
+		if (
+			piece.name === 'pawn' &&
+			Math.abs(startingSquare - landingSquare.row) === 2
+		) {
+			this.markEnPassantPawns(piece)
+		}
 	}
 
 	removePieceFromGame(player, pieceToRemove) {

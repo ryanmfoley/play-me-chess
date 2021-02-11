@@ -76,7 +76,8 @@ header > h1 {
 .row-5:nth-child(odd),
 .row-6:nth-child(even),
 .row-7:nth-child(odd) {
-	background: rgb(120, 181, 120);
+	background: rgb(106, 168, 212);
+	/* background: rgb(120, 181, 120); */
 }
 
 .board div > img {
@@ -86,10 +87,16 @@ header > h1 {
 
 #black-board {
 	transform: rotate(180deg);
+	-moz-transform: rotate(0.5turn);
+	-webkit-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
 }
 
 .black-piece {
 	transform: rotate(180deg);
+	-moz-transform: rotate(0.5turn);
+	-webkit-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
 }
 
 .check-text {

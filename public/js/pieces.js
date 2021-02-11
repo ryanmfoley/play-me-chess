@@ -4,7 +4,6 @@ class Piece {
 		this.name = name
 		this.row = row
 		this.col = col
-		this.moved = false
 		this.enPassant = false
 		this.targets = []
 	}
@@ -609,16 +608,9 @@ class King extends Piece {
 	}
 
 	checkForValidMove(player, opponent, chessBoard, landingSquare) {
-		// const enemySquares =
-		// 	this.color === 'white'
-		// 		? chessBoard.blackSquares.flat()
-		// 		: chessBoard.whiteSquares.flat()
 		const enemySquares =
 			this.color === 'white' ? chessBoard.blackSquares : chessBoard.whiteSquares
 
-		// const isEnemySquare = enemySquares.find(
-		// 	(square) => square === landingSquare
-		// )
 		const isEnemySquare = enemySquares.find(
 			(square) => square === landingSquare
 		)

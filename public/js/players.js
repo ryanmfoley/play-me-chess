@@ -4,7 +4,6 @@ class Player {
 	constructor(color, pieces) {
 		this.color = color
 		this.pieces = pieces
-		this.turn = 'white'
 		this.inCheck = false
 		this.checkMate = false
 		this.staleMate = false
@@ -33,7 +32,7 @@ class Player {
 		return playerCopy
 	}
 
-	getAvailableMoves(chessBoard, activePlayer) {
+	checkEscapeMoves(chessBoard, activePlayer) {
 		this.escapeCheck = false
 		const { pieces } = this.copyPlayer()
 		const promotionPieces = ['knight', 'queen']
@@ -68,6 +67,7 @@ class Player {
 					chessBoard
 				)
 				chessBoardCopy.copyBoard(chessBoard)
+
 				const playerCopy = this.copyPlayer()
 				const opponentCopy = activePlayer.copyPlayer()
 				const selectedPiece = playerCopy.pieces.find(
@@ -162,7 +162,7 @@ class Player {
 		if (!this.escapeCheck) {
 			if (this.inCheck) {
 				this.checkMate = true
-			} else this.staleMate = true
+			} else chessBoard.staleMate = true
 		}
 	}
 
@@ -180,13 +180,16 @@ class Player {
 			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
 
 		// Get King's position //
-		const { row, col } = this.kingSquare
-
-		if (
-			enemySquares.find((square) => row === square.row && col === square.col)
-		) {
-			this.inCheck = true
-		} else this.inCheck = false
+		try {
+			const { row, col } = this.kingSquare
+			if (
+				enemySquares.find((square) => row === square.row && col === square.col)
+			) {
+				this.inCheck = true
+			} else this.inCheck = false
+		} catch (err) {
+			console.error(err)
+		}
 	}
 
 	promotePawn(pawn, { color, piece }) {

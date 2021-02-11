@@ -11,7 +11,7 @@ const leaveGameButton = document.querySelector('#leave-game')
 const audio = document.querySelector('audio')
 const board = document.querySelector('.board')
 const squares = document.querySelectorAll('.square')
-const check = document.querySelector('.check-text')
+const gameResult = document.querySelector('.game-result')
 
 let selectedCell
 let selectedPiece
@@ -24,7 +24,12 @@ const socket = io()
 socket.emit('joinGame', { username, room })
 
 const currentPlayer = color === 'white' ? whitePlayer : blackPlayer
+currentPlayer.room = room
+
 const opponent = color === 'white' ? blackPlayer : whitePlayer
+opponent.room = room
+
+// Flip board for black //
 if (color === 'black') board.setAttribute('id', 'black-board')
 
 //______________________________________________________________
@@ -33,11 +38,12 @@ if (color === 'black') board.setAttribute('id', 'black-board')
 chessBoard.clearBoard()
 placePiecesOnBoard(chessBoard)
 chessBoard.displayPieces()
+chessBoard.checkThreefoldRepitition()
 chessBoard.markEnemySquares(currentPlayer, opponent)
 
 for (const square of squares) {
 	square.addEventListener('dragstart', function (e) {
-		const { turn } = currentPlayer
+		const { turn } = chessBoard
 
 		if (currentPlayer.color === turn) {
 			selectedCell = chessBoard.identifyCell(e.target)
@@ -53,7 +59,7 @@ for (const square of squares) {
 	square.addEventListener('dragenter', (e) => {
 		e.preventDefault()
 
-		square.style.border = '3px dashed red'
+		square.style.border = '4px dashed rgb(235, 27, 12)'
 	})
 	square.addEventListener('dragleave', () => {
 		square.style.border = '1px solid black'
@@ -68,7 +74,7 @@ for (const square of squares) {
 function movePiece(e) {
 	this.style.border = '1px solid black'
 
-	const { turn } = currentPlayer
+	const { turn } = chessBoard
 
 	if (!selectedPiece) {
 		selectedCell = chessBoard.identifyCell(e.target)
@@ -122,13 +128,12 @@ function movePiece(e) {
 // Listen for piece moves
 
 socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
-	currentPlayer.turn = turn
-	opponent.turn = turn
+	chessBoard.turn = turn
 
 	const activePlayer =
-		currentPlayer.color === currentPlayer.turn ? opponent : currentPlayer
+		currentPlayer.color === chessBoard.turn ? opponent : currentPlayer
 	const inActivePlayer =
-		currentPlayer.color === currentPlayer.turn ? currentPlayer : opponent
+		currentPlayer.color === chessBoard.turn ? currentPlayer : opponent
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
 	let selectedPiece = selectedSquare.piece
@@ -137,24 +142,13 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		selectedPiece.name === 'pawn' && backRank == landingCell.row ? true : false
 
 	chessBoard.movePiece(
-		activePlayer,
-		inActivePlayer,
+		currentPlayer,
+		opponent,
 		selectedPiece,
-		landingSquare
+		landingSquare,
+		socket
 	)
 	chessBoard.displayPieces()
-
-	if (selectedPiece.name === 'king' || selectedPiece.name === 'rook') {
-		selectedPiece.moved = true
-	}
-
-	//////////////////// Check for en passant ////////////////////
-	if (
-		selectedPiece.name === 'pawn' &&
-		Math.abs(selectedCell.row - landingCell.row) == 2
-	) {
-		chessBoard.markEnPassantPawns(selectedPiece)
-	}
 
 	//////////////////// Check for pawn promotion ////////////////////
 	if (promotePawn) {
@@ -167,12 +161,12 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 			newPiece = await opponent.getPromotedPiece(socket)
 		}
 
-		selectedPiece = activePlayer.promotePawn(selectedPiece, newPiece)
+		const promotedPiece = activePlayer.promotePawn(selectedPiece, newPiece)
 
 		chessBoard.movePiece(
 			activePlayer,
 			inActivePlayer,
-			selectedPiece,
+			promotedPiece,
 			landingSquare
 		)
 		chessBoard.displayPieces()
@@ -181,11 +175,14 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	// Mark enemy squares //
 	chessBoard.markEnemySquares(currentPlayer, opponent)
 
+	// Check for threefold repitition
+	chessBoard.checkThreefoldRepitition()
+
 	// Evaluate check //
 	inActivePlayer.isKingInCheck(chessBoard)
 
-	// Get available moves //
-	inActivePlayer.getAvailableMoves(chessBoard, activePlayer)
+	// Check escape moves //
+	inActivePlayer.checkEscapeMoves(chessBoard, activePlayer)
 
 	// If king is in check set square to red //
 	if (inActivePlayer.inCheck) {
@@ -200,12 +197,17 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	}
 
 	if (inActivePlayer.checkMate) {
-		check.style.display = 'block'
-	}
-
-	if (inActivePlayer.staleMate) {
-		check.style.display = 'block'
-		check.innerHTML = 'STALEMATE'
+		gameResult.style.display = 'block'
+		gameResult.innerHTML = 'Checkmate'
+	} else if (chessBoard.draw) {
+		gameResult.style.display = 'block'
+		gameResult.innerHTML = 'Draw'
+	} else if (chessBoard.drawByRepetition) {
+		gameResult.style.display = 'block'
+		gameResult.innerHTML = 'Draw by repetition'
+	} else if (chessBoard.staleMate) {
+		gameResult.style.display = 'block'
+		gameResult.innerHTML = 'Stalemate'
 	}
 })
 
