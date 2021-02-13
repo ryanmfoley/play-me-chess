@@ -29,6 +29,55 @@ class Board {
 		this.board[piece.row][piece.col].piece = piece
 	}
 
+	checkDraw() {
+		const squares = this.board
+			.map((row) => row.filter((square) => square.piece))
+			.flat()
+
+		this.draw = true
+		let pawnCount = 0
+		let whiteKnightCount = 0
+		let blackKnightCount = 0
+		let whiteBishopCount = 0
+		let blackBishopCount = 0
+		let rookCount = 0
+		let queenCount = 0
+
+		// Count pieces left on board //
+		squares.forEach(({ piece }) => {
+			switch (piece.name) {
+				case 'pawn':
+					pawnCount++
+					break
+				case 'knight':
+					piece.color === 'white' ? whiteKnightCount++ : blackKnightCount++
+					break
+				case 'bishop':
+					piece.color === 'white' ? whiteBishopCount++ : blackBishopCount++
+					break
+				case 'rook':
+					rookCount++
+					break
+				case 'queen':
+					queenCount++
+					break
+			}
+		})
+
+		if (
+			// Check for insufficient material draw //
+			pawnCount ||
+			rookCount ||
+			queenCount ||
+			whiteBishopCount === 2 ||
+			blackBishopCount === 2 ||
+			(whiteKnightCount && whiteBishopCount) ||
+			(blackKnightCount && blackBishopCount)
+		) {
+			this.draw = false
+		}
+	}
+
 	checkThreefoldRepitition() {
 		const currentPosition =
 			JSON.stringify(

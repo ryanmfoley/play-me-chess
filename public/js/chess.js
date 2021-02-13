@@ -175,6 +175,9 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	// Mark enemy squares //
 	chessBoard.markEnemySquares(currentPlayer, opponent)
 
+	// Check for draw //
+	chessBoard.checkDraw()
+
 	// Check for threefold repitition
 	chessBoard.checkThreefoldRepitition()
 
@@ -224,11 +227,6 @@ leaveGameButton.addEventListener('click', () => {
 // 4. after checkmate, smoothly send clients to lobby
 // 5. send one or both clients back to lobby after a page reload
 // 6. username displayed along with captured pieces
-// 7. draws - insufficient material, threefold repitition
-
-// JSON.stringify(chessBoard.board)
-// for it to be a threefold repitition the available moves has to be the same and the player whose turn it is has to be the same.
-// check for en passant
 
 // probably don't need the piece class
 // combine identifyCell and selectSquare
