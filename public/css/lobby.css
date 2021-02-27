@@ -30,6 +30,10 @@ body {
 	justify-items: start;
 }
 
+button {
+	cursor: pointer;
+}
+
 #create-game-btn {
 	font-size: 24px;
 	padding: 10px;

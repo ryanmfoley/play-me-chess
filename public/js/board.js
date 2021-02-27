@@ -20,7 +20,6 @@ class Board {
 		this.turn = 'white'
 		this.boardPosition = []
 		this.draw = false
-		this.drawByRepetition = false
 		this.staleMate = false
 	}
 
@@ -65,20 +64,21 @@ class Board {
 		})
 
 		if (
-			// Check for insufficient material draw //
-			pawnCount ||
-			rookCount ||
-			queenCount ||
-			whiteBishopCount === 2 ||
-			blackBishopCount === 2 ||
-			(whiteKnightCount && whiteBishopCount) ||
-			(blackKnightCount && blackBishopCount)
+			// Check for Draw //
+			!this.checkThreefoldRepetition() &&
+			(pawnCount ||
+				rookCount ||
+				queenCount ||
+				whiteBishopCount === 2 ||
+				blackBishopCount === 2 ||
+				(whiteKnightCount && whiteBishopCount) ||
+				(blackKnightCount && blackBishopCount))
 		) {
 			this.draw = false
 		}
 	}
 
-	checkThreefoldRepitition() {
+	checkThreefoldRepetition() {
 		const currentPosition =
 			JSON.stringify(
 				this.board.map((row) =>
@@ -106,9 +106,7 @@ class Board {
 			0
 		)
 
-		if (positionCount === 3) {
-			this.drawByRepetition = true
-		}
+		if (positionCount === 3) return true
 	}
 
 	clearBoard() {
@@ -268,22 +266,17 @@ class Board {
 		}
 	}
 
-	async movePiece(currentPlayer, opponent, piece, landingSquare) {
-		const activePlayer =
-			currentPlayer.color === this.turn ? opponent : currentPlayer
-		const inActivePlayer =
-			currentPlayer.color === this.turn ? currentPlayer : opponent
+	async movePiece(player, opponent, piece, landingSquare) {
+		const activePlayer = player.color === this.turn ? opponent : player
+		const inActivePlayer = player.color === this.turn ? player : opponent
 		const startingSquare = piece.row
-		const backRank = this.turn === 'white' ? 7 : 0
-		const promotePawn =
-			piece.name === 'pawn' && backRank == landingSquare.row ? true : false
 
 		// Remove piece from square //
 		this.removePieceFromSquare(piece)
 
 		////////////// Capture //////////////
 		if (landingSquare.piece) {
-			this.removePieceFromGame(inActivePlayer, landingSquare.piece)
+			this.removePieceFromGame(activePlayer, landingSquare.piece)
 		} else if (piece.enPassant) {
 			const enPassantPiece =
 				piece.color === 'white'
@@ -319,16 +312,16 @@ class Board {
 		}
 	}
 
-	removePieceFromGame(player, pieceToRemove) {
-		player.pieces = player.pieces.filter(
+	removePieceFromGame({ pieces }, pieceToRemove) {
+		pieces = pieces.filter(
 			(piece) =>
 				piece.row !== pieceToRemove.row || piece.col !== pieceToRemove.col
 		)
 	}
 
-	removePieceFromSquare(piece) {
-		this.board[piece.row][piece.col].color = ''
-		this.board[piece.row][piece.col].piece = ''
+	removePieceFromSquare({ row, col }) {
+		this.board[row][col].color = ''
+		this.board[row][col].piece = ''
 	}
 
 	selectSquare({ row, col }) {

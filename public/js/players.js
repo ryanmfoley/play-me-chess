@@ -136,7 +136,7 @@ class Player {
 							}
 						})
 					} else {
-						// If validMove and not validCastle or promotePawn //
+						// If validMove and not castling or promoting pawn //
 						chessBoardCopy.movePiece(
 							playerCopy,
 							opponentCopy,
@@ -210,6 +210,7 @@ class Player {
 	}
 
 	selectPieceModal() {
+		const promoteModal = document.querySelector('#promote-modal')
 		const knight = document.createElement('img')
 		const bishop = document.createElement('img')
 		const rook = document.createElement('img')
@@ -229,19 +230,19 @@ class Player {
 			queen.setAttribute('data-piece', 'queen')
 		} else {
 			knight.src = './images/bn.svg'
-			knight.classList.add('black-pieces')
+			knight.classList.add('black-piece')
 			knight.setAttribute('data-piece', 'knight')
 
 			bishop.src = './images/bb.svg'
-			bishop.classList.add('black-pieces')
+			bishop.classList.add('black-piece')
 			bishop.setAttribute('data-piece', 'bishop')
 
 			rook.src = './images/br.svg'
-			rook.classList.add('black-pieces')
+			rook.classList.add('black-piece')
 			rook.setAttribute('data-piece', 'rook')
 
 			queen.src = './images/bq.svg'
-			queen.classList.add('black-pieces')
+			queen.classList.add('black-piece')
 			queen.setAttribute('data-piece', 'queen')
 		}
 

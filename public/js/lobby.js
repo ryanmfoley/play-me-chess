@@ -1,67 +1,61 @@
-const createGameBtn = document.querySelector('#create-game-btn')
-
-// Get name from URL //
 const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const createGameBtn = document.querySelector('#create-game-btn')
+const lobbyTable = document.querySelector('.lobby-rooms')
+const socket = io()
 
-const clearTable = (table) => {
-	table.innerHTML = ''
-	for (var i = table.rows.length - 1; i > 0; i--) {
-		table.deleteRow(i)
+function clearTable() {
+	lobbyTable.innerHTML = ''
+	for (var i = lobbyTable.rows.length - 1; i > 0; i--) {
+		lobbyTable.deleteRow(i)
 	}
 }
 
-const generateTable = (table, data) => {
-	// Create table head
-	const thead = table.createTHead()
+function generateTable(players) {
+	// Create table head //
+	const inviteText = document.createTextNode('Invite')
+	const playerText = document.createTextNode('Player')
+	const thead = lobbyTable.createTHead()
 	const theadRow = thead.insertRow()
 	const th1 = document.createElement('th')
 	const th2 = document.createElement('th')
-	const playerText = document.createTextNode('Player')
-	const inviteText = document.createTextNode('Invite')
+
 	th1.appendChild(playerText)
 	theadRow.appendChild(th1)
 	th2.appendChild(inviteText)
 	theadRow.appendChild(th2)
 
 	// Create table body //
-	data.forEach((elem) => {
-		const row = table.insertRow()
+	players.forEach(({ username, id }) => {
+		const row = lobbyTable.insertRow()
+		const name = document.createTextNode(username)
 		const nameCell = row.insertCell()
-		const name = document.createTextNode(elem.username)
-		nameCell.appendChild(name)
 		const roomCell = row.insertCell()
-		const enterRoomBtn = document.createElement('button')
-		enterRoomBtn.innerText = 'Play Me'
-		enterRoomBtn.value = elem.id
-		enterRoomBtn.onclick = (e) => {
-			const roomID = e.target.value
-			socket.emit('updatePlayersInLobby', roomID)
-			window.location.href = `/chess.html?username=${username}&room=${roomID}&color=black`
+		const joinGameBtn = document.createElement('button')
+
+		joinGameBtn.innerText = 'Play Me'
+		joinGameBtn.onclick = () => {
+			socket.emit('updatePlayersWaiting', id)
+			window.location.href = `/chess.html?username=${username}&room=${id}&color=black`
 		}
-		roomCell.appendChild(enterRoomBtn)
+
+		nameCell.appendChild(name)
+		roomCell.appendChild(joinGameBtn)
 	})
 }
 
-// Add rooms to DOM //
-const lobbyTable = document.querySelector('.lobby-rooms')
-
-const socket = io()
-
-// Get list of players in lobby //
-socket.on('playersInLobby', (players) => {
-	// Clear table
-	clearTable(lobbyTable)
-
-	// Generate a table or rooms //
-	generateTable(lobbyTable, players)
-})
+socket.emit('enterLobby')
 
 createGameBtn.addEventListener('click', () => {
-	// Join lobby //
-	socket.emit('joinRoom', { username })
+	socket.emit('createGame', username)
 
-	socket.on('joinRoom', ({ username, room }) => {
+	socket.on('joinGame', ({ id }) => {
 		// Send player to game room //
-		window.location.href = `/chess.html?username=${username}&room=${room}&color=white`
+		window.location.href = `/chess.html?username=${username}&room=${id}&color=white`
 	})
+})
+
+// Get list of opened games and generate a table //
+socket.on('playersWaiting', (players) => {
+	clearTable()
+	generateTable(players)
 })

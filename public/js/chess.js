@@ -6,31 +6,30 @@ import { whitePlayer, blackPlayer } from './players.js'
 const { username, room, color } = Qs.parse(location.search, {
 	ignoreQueryPrefix: true,
 })
-
 const leaveGameButton = document.querySelector('#leave-game')
 const audio = document.querySelector('audio')
 const board = document.querySelector('.board')
 const squares = document.querySelectorAll('.square')
 const gameResult = document.querySelector('.game-result')
-
+const gameResultModal = document.querySelector('#game-result-modal')
+const socket = io()
 let selectedCell
 let selectedPiece
 let landingCell
 let landingSquare
 let legalMove
 
-const socket = io()
-
 socket.emit('joinGame', { username, room })
 
-const currentPlayer = color === 'white' ? whitePlayer : blackPlayer
-currentPlayer.room = room
+const player = color === 'white' ? whitePlayer : blackPlayer
+player.room = room
 
 const opponent = color === 'white' ? blackPlayer : whitePlayer
 opponent.room = room
 
 // Flip board for black //
 if (color === 'black') board.setAttribute('id', 'black-board')
+if (color === 'black') gameResult.setAttribute('id', 'black-board')
 
 //______________________________________________________________
 // Start-Game
@@ -38,14 +37,13 @@ if (color === 'black') board.setAttribute('id', 'black-board')
 chessBoard.clearBoard()
 placePiecesOnBoard(chessBoard)
 chessBoard.displayPieces()
-chessBoard.checkThreefoldRepitition()
-chessBoard.markEnemySquares(currentPlayer, opponent)
+chessBoard.markEnemySquares(player, opponent)
 
 for (const square of squares) {
 	square.addEventListener('dragstart', function (e) {
 		const { turn } = chessBoard
 
-		if (currentPlayer.color === turn) {
+		if (player.color === turn) {
 			selectedCell = chessBoard.identifyCell(e.target)
 			const selectedSquare = chessBoard.selectSquare(selectedCell)
 
@@ -59,10 +57,10 @@ for (const square of squares) {
 	square.addEventListener('dragenter', (e) => {
 		e.preventDefault()
 
-		square.style.border = '4px dashed rgb(235, 27, 12)'
+		square.style.border = '6px dashed #ed2f09'
 	})
 	square.addEventListener('dragleave', () => {
-		square.style.border = '1px solid black'
+		square.style.border = 'initial'
 	})
 	square.addEventListener('dragover', (e) => e.preventDefault())
 	square.addEventListener('drop', movePiece)
@@ -72,7 +70,7 @@ for (const square of squares) {
 }
 
 function movePiece(e) {
-	this.style.border = '1px solid black'
+	this.style.border = 'initial'
 
 	const { turn } = chessBoard
 
@@ -91,7 +89,7 @@ function movePiece(e) {
 		landingSquare = chessBoard.selectSquare(landingCell)
 
 		const { validMove, castle } = selectedPiece.checkMove(
-			currentPlayer,
+			player,
 			opponent,
 			chessBoard,
 			landingSquare
@@ -130,10 +128,8 @@ function movePiece(e) {
 socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	chessBoard.turn = turn
 
-	const activePlayer =
-		currentPlayer.color === chessBoard.turn ? opponent : currentPlayer
-	const inActivePlayer =
-		currentPlayer.color === chessBoard.turn ? currentPlayer : opponent
+	const activePlayer = player.color === chessBoard.turn ? opponent : player
+	const inActivePlayer = player.color === chessBoard.turn ? player : opponent
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
 	let selectedPiece = selectedSquare.piece
@@ -141,21 +137,15 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	const promotePawn =
 		selectedPiece.name === 'pawn' && backRank == landingCell.row ? true : false
 
-	chessBoard.movePiece(
-		currentPlayer,
-		opponent,
-		selectedPiece,
-		landingSquare,
-		socket
-	)
+	chessBoard.movePiece(player, opponent, selectedPiece, landingSquare, socket)
 	chessBoard.displayPieces()
 
 	//////////////////// Check for pawn promotion ////////////////////
 	if (promotePawn) {
 		let newPiece
 
-		if (currentPlayer.color !== turn) {
-			newPiece = await currentPlayer.selectPieceModal()
+		if (player.color !== turn) {
+			newPiece = await player.selectPieceModal()
 			socket.emit('promotePawn', room, newPiece)
 		} else {
 			newPiece = await opponent.getPromotedPiece(socket)
@@ -173,13 +163,10 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	}
 
 	// Mark enemy squares //
-	chessBoard.markEnemySquares(currentPlayer, opponent)
+	chessBoard.markEnemySquares(player, opponent)
 
 	// Check for draw //
 	chessBoard.checkDraw()
-
-	// Check for threefold repitition
-	chessBoard.checkThreefoldRepitition()
 
 	// Evaluate check //
 	inActivePlayer.isKingInCheck(chessBoard)
@@ -190,27 +177,29 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	// If king is in check set square to red //
 	if (inActivePlayer.inCheck) {
 		const { row, col } = inActivePlayer.kingSquare
-		chessBoard.board[row][col].cellBox.id = 'checkSquare'
+		chessBoard.board[row][col].cellBox.id = 'check-square'
 		audio.play()
 	} else {
-		// Reset check square and display //
 		chessBoard.board.forEach((row) =>
 			row.forEach((square) => square.cellBox.removeAttribute('id'))
 		)
 	}
 
 	if (inActivePlayer.checkMate) {
-		gameResult.style.display = 'block'
 		gameResult.innerHTML = 'Checkmate'
+		setTimeout(function () {
+			gameResultModal.style.visibility = 'visible'
+		}, 300)
 	} else if (chessBoard.draw) {
-		gameResult.style.display = 'block'
 		gameResult.innerHTML = 'Draw'
-	} else if (chessBoard.drawByRepetition) {
-		gameResult.style.display = 'block'
-		gameResult.innerHTML = 'Draw by repetition'
+		setTimeout(function () {
+			gameResultModal.style.visibility = 'visible'
+		}, 300)
 	} else if (chessBoard.staleMate) {
-		gameResult.style.display = 'block'
 		gameResult.innerHTML = 'Stalemate'
+		setTimeout(function () {
+			gameResultModal.style.visibility = 'visible'
+		}, 300)
 	}
 })
 

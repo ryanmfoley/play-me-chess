@@ -3,16 +3,14 @@ const express = require('express')
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, { cors: true })
-
 const {
 	Player,
-	addPlayer,
 	addPlayerToRoom,
-	getCurrentPlayer,
-	getPlayers,
-	getPlayersInRoom,
+	getPlayerByName,
 	removePlayer,
+	removeFromWaitList,
 } = require('./utils/players')
+let { players, playersWaiting } = require('./utils/players')
 
 // Set static folder //
 app.use(express.static(path.join(__dirname, 'public')))
@@ -20,54 +18,64 @@ app.use(express.static(path.join(__dirname, 'public')))
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
 
-let turn = 'white'
-
 // Run when client connects //
 io.on('connection', (socket) => {
+	// Listen for signIn event and check if username already exists //
+	socket.on('signIn', (username) => {
+		const nameExists = players.find((player) => player.username === username)
+		let isNameAvailable
+
+		if (!players.length || !nameExists) {
+			// Create player and add to players array //
+			const player = new Player(socket.id, username)
+			players.push(player)
+
+			isNameAvailable = true
+		} else isNameAvailable = false
+
+		socket.emit('signInStatus', isNameAvailable)
+	})
+
 	// Listen for name and room sent by client through the 'join' event //
-	socket.on('playersInLobby', () => {
-		// Get list of players in lobby //
-		const players = getPlayers()
-
-		// Send list of players to client //
-		socket.emit('playersInLobby', players)
+	socket.on('enterLobby', () => {
+		socket.emit('playersWaiting', playersWaiting)
 	})
 
-	socket.on('updatePlayersInLobby', (roomID) => {
-		// Remove player from lobby //
-		removePlayer(roomID)
+	socket.on('createGame', (username) => {
+		const player = getPlayerByName(username)
+		playersWaiting.push(player)
 
-		// Get list of players in lobby //
-		const players = getPlayers()
-
-		// Send list of players to client //
-		io.emit('playersInLobby', players)
+		socket.emit('joinGame', player)
+		io.emit('playersWaiting', playersWaiting)
 	})
 
-	socket.on('joinRoom', async ({ username, room }) => {
+	socket.on('joinGame', ({ username, room }) => {
+		// dont allow more than two players to enter room
+
+		// Join socket to a given room //
+		socket.join(room)
+
+		addPlayerToRoom(socket.id, username, room)
+	})
+
+	// socket.on('joinRoom', async ({ username, room }) => {
+	socket.on('joinRoom', ({ username, room }) => {
 		// Create player //
-		const player = await new Player(socket.id, username, room)
-
-		// Add player to list of players //
-		addPlayer(player)
+		const player = new Player(socket.id, username, room)
 
 		// Send currentPlayer to client //
 		socket.emit('joinRoom', player)
 
-		// Get list of players //
-		const players = getPlayers()
-
 		// Send list of players to client //
-		io.emit('playersInLobby', players)
+		io.emit('playersLoggedIn', players)
 	})
 
-	socket.on('joinGame', ({ username, room }) => {
-		// Join socket to a given room //
-		socket.join(room)
+	socket.on('updatePlayersWaiting', (id) => {
+		// Remove player from wait list //
+		playersWaiting = removeFromWaitList(id)
 
-		// const plyrs = getPlayersInRoom(room)
-
-		addPlayerToRoom(socket.id, username, room)
+		// Send list of players waiting to client //
+		socket.broadcast.emit('playersWaiting', playersWaiting)
 	})
 
 	socket.on('movePiece', ({ room, turn, selectedCell, landingCell }) => {
@@ -87,17 +95,13 @@ io.on('connection', (socket) => {
 		io.to(room).emit('promotePawn', newPiece)
 	})
 
-	// Tell everyone what player just connected //
-	// socket.broadcast.emit('playerConnection', turn)
-
-	// Runs when client disconnects
+	// Runs when client disconnects //
 	socket.on('playerDisconnected', () => {
 		const player = removePlayer(socket.id)
 
 		// if (player) {
-		// 	const players = getPlayersInRoom(player.room)
 
-		// 	// Send players and room info to client //
+		// Send players and room info to client //
 		// 	io.to(player.room).emit('playerDisconnected', players)
 		// }
 	})

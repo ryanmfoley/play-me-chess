@@ -3,7 +3,8 @@
 }
 
 body {
-	font-family: Helvetica Neue;
+	background-color: #312e2b;
+	font-family: 'Fjalla One', sans-serif;
 }
 
 header {
@@ -13,7 +14,8 @@ header {
 }
 
 header > h1 {
-	font-size: 48px;
+	color: white;
+	font-size: 72px;
 }
 
 #start-game {
@@ -41,21 +43,22 @@ header > h1 {
 	border: 2px solid black;
 }
 
-.board {
+/* .board {
 	position: relative;
-	border: 2px solid purple;
-}
+} */
 
 .board {
 	position: relative;
 	display: grid;
-	width: 800px;
-	height: 800px;
+	width: 806px;
+	height: 806px;
 	margin: 20px auto;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
 	cursor: pointer;
-	border: 1px solid black;
+	/* border: 5px solid #312e2b; */
+	border: 3px solid white;
+	border-radius: 10px;
 }
 
 .board > div {
@@ -65,7 +68,7 @@ header > h1 {
 	height: 100px;
 	justify-content: center;
 	align-items: center;
-	border: 1px solid black;
+	/* border: 1px solid black; */
 }
 
 .row-0:nth-child(even),
@@ -76,8 +79,21 @@ header > h1 {
 .row-5:nth-child(odd),
 .row-6:nth-child(even),
 .row-7:nth-child(odd) {
-	background: rgb(106, 168, 212);
-	/* background: rgb(120, 181, 120); */
+	/* background: #72b872; */
+	/* background: #809c5c; */
+	background: #315991;
+}
+
+.row-0:nth-child(odd),
+.row-1:nth-child(even),
+.row-2:nth-child(odd),
+.row-3:nth-child(even),
+.row-4:nth-child(odd),
+.row-5:nth-child(even),
+.row-6:nth-child(odd),
+.row-7:nth-child(even) {
+	background: #d9e0e6;
+	/* background: #f7f6dc; */
 }
 
 .board div > img {
@@ -88,15 +104,11 @@ header > h1 {
 #black-board {
 	transform: rotate(180deg);
 	-moz-transform: rotate(0.5turn);
-	-webkit-transform: rotate(180deg);
-	-o-transform: rotate(180deg);
 }
 
 .black-piece {
 	transform: rotate(180deg);
 	-moz-transform: rotate(0.5turn);
-	-webkit-transform: rotate(180deg);
-	-o-transform: rotate(180deg);
 }
 
 .check-text {
@@ -116,11 +128,11 @@ header > h1 {
 	display: none;
 }
 
-#checkSquare {
+#check-square {
 	background-color: rgb(255, 160, 160);
 }
 
-#promoteModal {
+#promote-modal {
 	display: flex;
 	visibility: hidden;
 	position: absolute;
@@ -132,4 +144,24 @@ header > h1 {
 	border: 3px solid white;
 	border-radius: 15px;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+}
+
+#game-result-modal {
+	visibility: hidden;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 80%;
+	height: 25%;
+	transform: translate(-50%, -50%);
+	background-color: rgba(0, 0, 0, 0.9);
+	border: 3px solid white;
+	border-radius: 15px;
+	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+}
+
+.game-result {
+	font-size: 72px;
+	color: white;
+	text-align: center;
 }

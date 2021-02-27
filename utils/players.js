@@ -1,4 +1,5 @@
 let players = []
+let playersWaiting = []
 let playersInRoom = []
 
 function Player(id, username, room = id) {
@@ -7,43 +8,36 @@ function Player(id, username, room = id) {
 	this.room = room
 }
 
-const addPlayer = (newPlayer) => {
-	if (!players.length) {
-		players.push(newPlayer)
-	} else if (!players.some((player) => player.username === newPlayer.username))
-		players.push(newPlayer)
-}
+// const addPlayer = (newPlayer) => {
+// 	if (!players.length) {
+// 		players.push(newPlayer)
+// 	} else if (!players.some((player) => player.username === newPlayer.username))
+// 		players.push(newPlayer)
+// }
 
 const addPlayerToRoom = (id, username, room) => {
 	const player = new Player(id, username, room)
+
+	// If user doesn't already exist //
 	if (!playersInRoom.find((player) => player.username === username))
 		playersInRoom.push(player)
 }
 
-// Get current player
-const getCurrentPlayer = (id) => players.find((player) => player.id === id)
+const getPlayerByName = (name) =>
+	players.find((player) => player.username === name)
 
-// Get players
-const getPlayers = () => players
+const removePlayer = (id) =>
+	(players = players.filter((player) => player.id !== id))
 
-const getPlayersInRoom = (room) =>
-	playersInRoom.filter((player) => player.room === room)
-
-const removePlayer = (id) => {
-	// Find player to remove
-	const player = players.find((player) => player.id === id)
-
-	// Remove player from room
-	players = players.filter((player) => player.id !== id)
-	return player
-}
+const removeFromWaitList = (id) =>
+	(playersWaiting = playersWaiting.filter((player) => player.id !== id))
 
 module.exports = {
 	Player,
-	addPlayer,
 	addPlayerToRoom,
-	getCurrentPlayer,
-	getPlayers,
-	getPlayersInRoom,
+	getPlayerByName,
+	players,
+	playersWaiting,
 	removePlayer,
+	removeFromWaitList,
 }

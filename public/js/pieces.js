@@ -27,6 +27,7 @@ class Piece {
 			chessBoard
 		)
 		chessBoardCopy.copyBoard(chessBoard)
+
 		const playerCopy = player.copyPlayer()
 		const opponentCopy = opponent.copyPlayer()
 		const selectedPiece = playerCopy.pieces.find(
@@ -34,17 +35,21 @@ class Piece {
 		)
 
 		// Check if player is in check after move //
-		chessBoardCopy.movePiece(
-			playerCopy,
-			opponentCopy,
-			selectedPiece,
-			landingSquare
-		)
-
+		if (validMove)
+			chessBoardCopy.movePiece(
+				playerCopy,
+				opponentCopy,
+				selectedPiece,
+				landingSquare
+			)
 		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 		playerCopy.isKingInCheck(chessBoardCopy)
 
-		if (playerCopy.inCheck) validMove = false
+		if (
+			playerCopy.inCheck ||
+			(landingSquare.piece && landingSquare.piece.name === 'king')
+		)
+			validMove = false
 
 		return { validMove, castle }
 	}
@@ -768,30 +773,30 @@ const whitePieces = []
 const blackPieces = []
 
 // Add pieces to whitePieces and blackPieces array //
-// for (let color of ['white', 'black']) {
-// 	for (let i = 0; i < 8; i++) {
-// 		color === 'white'
-// 			? whitePieces.push(new Pawn('white', 'pawn', 6, i))
-// 			: blackPieces.push(new Pawn('black', 'pawn', 1, i))
-// 	}
-// }
+for (let color of ['white', 'black']) {
+	for (let i = 0; i < 8; i++) {
+		color === 'white'
+			? whitePieces.push(new Pawn('white', 'pawn', 6, i))
+			: blackPieces.push(new Pawn('black', 'pawn', 1, i))
+	}
+}
 
-// whitePieces.push(new Knight('white', 'knight', 7, 1))
-// whitePieces.push(new Knight('white', 'knight', 7, 6))
-// whitePieces.push(new Bishop('white', 'bishop', 7, 2))
-// whitePieces.push(new Bishop('white', 'bishop', 7, 5))
-// whitePieces.push(new Rook('white', 'rook', 7, 0))
-// whitePieces.push(new Rook('white', 'rook', 7, 7))
+whitePieces.push(new Knight('white', 'knight', 7, 1))
+whitePieces.push(new Knight('white', 'knight', 7, 6))
+whitePieces.push(new Bishop('white', 'bishop', 7, 2))
+whitePieces.push(new Bishop('white', 'bishop', 7, 5))
+whitePieces.push(new Rook('white', 'rook', 7, 0))
+whitePieces.push(new Rook('white', 'rook', 7, 7))
 whitePieces.push(new Queen('white', 'queen', 7, 3))
 whitePieces.push(new King('white', 'king', 7, 4))
 
-// blackPieces.push(new Knight('black', 'knight', 0, 1))
-// blackPieces.push(new Knight('black', 'knight', 0, 6))
-// blackPieces.push(new Bishop('black', 'bishop', 0, 2))
-// blackPieces.push(new Bishop('black', 'bishop', 0, 5))
-// blackPieces.push(new Rook('black', 'rook', 0, 0))
-// blackPieces.push(new Rook('black', 'rook', 0, 7))
-// blackPieces.push(new Queen('black', 'queen', 0, 3))
+blackPieces.push(new Knight('black', 'knight', 0, 1))
+blackPieces.push(new Knight('black', 'knight', 0, 6))
+blackPieces.push(new Bishop('black', 'bishop', 0, 2))
+blackPieces.push(new Bishop('black', 'bishop', 0, 5))
+blackPieces.push(new Rook('black', 'rook', 0, 0))
+blackPieces.push(new Rook('black', 'rook', 0, 7))
+blackPieces.push(new Queen('black', 'queen', 0, 3))
 blackPieces.push(new King('black', 'king', 0, 4))
 
 // Assign pieces to squares on board //
