@@ -9,20 +9,19 @@
 			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 			crossorigin="anonymous"
 		/>
-		<link rel="stylesheet" href="./css/index.css" />
+		<link type="text/css" rel="stylesheet" href="/public/css/index.css" />
 		<script
 			src="https://kit.fontawesome.com/f5c3afdb68.js"
 			crossorigin="anonymous"
 		></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script defer src="js/index.js"></script>
 		<title>Chess</title>
 	</head>
 	<body>
 		<h1 class="my-3">Play Me Chess</h1>
 		<div class="signin-container">
 			<h2>Sign In</h2>
-			<form class="m-4">
+			<form class="m-4" action="/users/signin" method="POST">
 				<div class="signin-form">
 					<input
 						class="form-control form-control-lg"
@@ -34,7 +33,13 @@
 					/>
 					<i class="fas fa-check-circle"></i>
 					<i class="fas fa-exclamation-circle"></i>
-					<small>Username already taken</small>
+					<small>Username or password incorrect</small>
+					<input
+						class="form-control form-control-lg"
+						type="password"
+						placeholder="Password"
+						name="password"
+					/>
 				</div>
 				<button
 					type="submit"
@@ -43,7 +48,13 @@
 				>
 					<strong>Let's Play</strong>
 				</button>
+				<a href="/users/join">Join</a>
+				<a href="/users">View Users</a>
 			</form>
 		</div>
+		<a href="/lobby"><h3>Lobby</h3></a>
+		<script>
+			// localStorage.setItem('username', );
+		</script>
 	</body>
 </html>

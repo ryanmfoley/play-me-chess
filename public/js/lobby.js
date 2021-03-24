@@ -1,4 +1,4 @@
-const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+// const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 const createGameBtn = document.querySelector('#create-game-btn')
 const lobbyTable = document.querySelector('.lobby-rooms')
 const socket = io()
@@ -46,11 +46,12 @@ function generateTable(players) {
 socket.emit('enterLobby')
 
 createGameBtn.addEventListener('click', () => {
-	socket.emit('createGame', username)
+	// socket.emit('createGame', username)
+	socket.emit('createGame')
 
 	socket.on('joinGame', ({ id }) => {
 		// Send player to game room //
-		window.location.href = `/chess.html?username=${username}&room=${id}&color=white`
+		// window.location.href = `/chess.html?username=${username}&room=${id}&color=white`
 	})
 })
 

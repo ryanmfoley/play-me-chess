@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
+		<link type="text/css" rel="stylesheet" href="/public/css/index.css" />
+		<script
+			src="https://kit.fontawesome.com/f5c3afdb68.js"
+			crossorigin="anonymous"
+		></script>
+		<title>Chess</title>
+	</head>
+	<body>
+		<h1 class="my-3">Play Me Chess</h1>
+		<div class="signin-container">
+			<h2>Sign Up</h2>
+			<form class="m-4" action="/users/join" method="POST">
+				<div class="signin-form">
+					<label for="username"></label>
+					<input
+						class="form-control form-control-lg"
+						type="text"
+						id="username"
+						name="username"
+						placeholder="Enter username..."
+						required
+					/>
+					<i class="fas fa-check-circle"></i>
+					<i class="fas fa-exclamation-circle"></i>
+					<small>Username already taken</small>
+					<input
+						class="form-control form-control-lg"
+						type="password"
+						placeholder="Password"
+						name="password"
+					/>
+				</div>
+				<button
+					type="submit"
+					class="my-4 btn-lg btn-primary btn-block"
+					id="signin"
+				>
+					<strong>Let's Play</strong>
+				</button>
+			</form>
+		</div>
+	</body>
+</html>

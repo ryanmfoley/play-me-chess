@@ -1,8 +1,15 @@
-const path = require('path')
+/////////////////// remove uneeded imports like qs ///////////////////
+
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config()
+}
+
 const express = require('express')
+const session = require('express-session')
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, { cors: true })
+const methodOverride = require('method-override')
 const {
 	Player,
 	addPlayerToRoom,
@@ -12,8 +19,28 @@ const {
 } = require('./utils/players')
 let { players, playersWaiting } = require('./utils/players')
 
-// Set static folder //
-app.use(express.static(path.join(__dirname, 'public')))
+// Middleware //
+app.use(methodOverride('_method'))
+app.use(express.urlencoded({ extended: true }))
+app.use(
+	session({
+		secret: process.env.SECRET,
+		resave: false,
+		saveUninitialized: false,
+	})
+)
+app.use(express.static('public'))
+// Controllers //
+const userController = require('./controllers/users')
+app.use('/users', userController)
+const lobbyController = require('./controllers/lobby')
+app.use('/lobby', lobbyController)
+
+// Routes
+app.get('/', (req, res) => {
+	// res.redirect('/lobby')
+	res.render('lobby.ejs', { username: 'Ryan' })
+})
 
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
@@ -23,17 +50,15 @@ io.on('connection', (socket) => {
 	// Listen for signIn event and check if username already exists //
 	socket.on('signIn', (username) => {
 		const nameExists = players.find((player) => player.username === username)
-		let isNameAvailable
 
 		if (!players.length || !nameExists) {
 			// Create player and add to players array //
 			const player = new Player(socket.id, username)
+			const isNameAvailable = true
+
 			players.push(player)
-
-			isNameAvailable = true
-		} else isNameAvailable = false
-
-		socket.emit('signInStatus', isNameAvailable)
+			socket.emit('signInStatus', { isNameAvailable, player })
+		} else socket.emit('signInStatus', { isNameAvailable: false })
 	})
 
 	// Listen for name and room sent by client through the 'join' event //
@@ -46,7 +71,7 @@ io.on('connection', (socket) => {
 		playersWaiting.push(player)
 
 		socket.emit('joinGame', player)
-		io.emit('playersWaiting', playersWaiting)
+		// io.emit('playersWaiting', playersWaiting)
 	})
 
 	socket.on('joinGame', ({ username, room }) => {
@@ -58,24 +83,25 @@ io.on('connection', (socket) => {
 		addPlayerToRoom(socket.id, username, room)
 	})
 
-	// socket.on('joinRoom', async ({ username, room }) => {
-	socket.on('joinRoom', ({ username, room }) => {
-		// Create player //
-		const player = new Player(socket.id, username, room)
-
-		// Send currentPlayer to client //
-		socket.emit('joinRoom', player)
-
-		// Send list of players to client //
-		io.emit('playersLoggedIn', players)
-	})
-
 	socket.on('updatePlayersWaiting', (id) => {
 		// Remove player from wait list //
 		playersWaiting = removeFromWaitList(id)
 
 		// Send list of players waiting to client //
 		socket.broadcast.emit('playersWaiting', playersWaiting)
+	})
+
+	socket.on('disconnect', () => {
+		// const player = removePlayer(socket.id)
+		// if (player) {
+		// Send players and room info to client //
+		// 	io.to(player.room).emit('playerDisconnected', players)
+		// }
+		// )}
+	})
+
+	socket.on('signOut', () => {
+		console.log('logging out')
 	})
 
 	socket.on('movePiece', ({ room, turn, selectedCell, landingCell }) => {
@@ -96,19 +122,11 @@ io.on('connection', (socket) => {
 	})
 
 	// Runs when client disconnects //
-	socket.on('playerDisconnected', () => {
-		const player = removePlayer(socket.id)
-
-		// if (player) {
-
-		// Send players and room info to client //
-		// 	io.to(player.room).emit('playerDisconnected', players)
-		// }
-	})
+	// socket.on('playerDisconnected', () => {
 })
 
 //______________________________________________________________
 
-const PORT = process.env.PORT || 3000
+const { PORT } = process.env
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`))

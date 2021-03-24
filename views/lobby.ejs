@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
+		<link type="text/css" rel="stylesheet" href="/css/lobby.css" />
+		<script src="/socket.io/socket.io.js"></script>
+		<title>Chess Lobby</title>
+	</head>
+	<body>
+		<a href="/users">Home</a>
+		<div class="instructions">
+			<p>
+				Welcome <%= username %> to Play-Me-Chess. This game is still in
+				development. Either "create a game" or enter a game that's already
+				opened by clicking on the "Play Me" button.
+			</p>
+		</div>
+		<form class="lobby-container" action="/lobby" method="POST">
+			<button id="create-game-btn" type="submit" data-user="<%= username %>">
+				<strong>CREATE A GAME</strong>
+			</button>
+			<table class="lobby-rooms"></table>
+		</form>
+		<form class="" action="users?_method=DELETE" method="POST">
+			<input type="submit" name="" value="Log Out" />
+		</form>
+
+		<script>
+			const createGameBtn = document.querySelector('#create-game-btn')
+			const lobbyTable = document.querySelector('.lobby-rooms')
+			const username = createGameBtn.getAttribute('data-user')
+			const socket = io()
+
+			function clearTable() {
+				lobbyTable.innerHTML = ''
+				for (var i = lobbyTable.rows.length - 1; i > 0; i--) {
+					lobbyTable.deleteRow(i)
+				}
+			}
+
+			function generateTable(players) {
+				// Create table head //
+				const inviteText = document.createTextNode('Invite')
+				const playerText = document.createTextNode('Player')
+				const thead = lobbyTable.createTHead()
+				const theadRow = thead.insertRow()
+				const th1 = document.createElement('th')
+				const th2 = document.createElement('th')
+
+				th1.appendChild(playerText)
+				theadRow.appendChild(th1)
+				th2.appendChild(inviteText)
+				theadRow.appendChild(th2)
+
+				// Create table body //
+				players.forEach(({ username, id }) => {
+					const row = lobbyTable.insertRow()
+					const name = document.createTextNode(username)
+					const nameCell = row.insertCell()
+					const roomCell = row.insertCell()
+					const joinGameBtn = document.createElement('button')
+
+					joinGameBtn.innerText = 'Play Me'
+					joinGameBtn.onclick = () => {
+						socket.emit('updatePlayersWaiting', id)
+						window.location.href = `/chess.html?username=${username}&room=${id}&color=black`
+					}
+
+					nameCell.appendChild(name)
+					roomCell.appendChild(joinGameBtn)
+				})
+			}
+
+			socket.emit('enterLobby')
+
+			createGameBtn.addEventListener('click', () => {
+				socket.emit('createGame', username)
+
+				// socket.on('joinGame', ({ id }) => {
+				// socket.on('joinGame', (blah) => {
+					// Send player to game room //
+					// window.location.href = `/chess.html?username=${username}&room=${id}&color=white`
+				// })
+			})
+
+			// Get list of opened games and generate a table //
+			// socket.on('playersWaiting', (players) => {
+			// 	clearTable()
+			// 	generateTable(players)
+			// })
+		</script>
+	</body>
+</html>

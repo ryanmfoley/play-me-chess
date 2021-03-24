@@ -28,8 +28,10 @@ const opponent = color === 'white' ? blackPlayer : whitePlayer
 opponent.room = room
 
 // Flip board for black //
-if (color === 'black') board.setAttribute('id', 'black-board')
-if (color === 'black') gameResult.setAttribute('id', 'black-board')
+if (color === 'black') {
+	board.setAttribute('id', 'black-board')
+	gameResult.setAttribute('id', 'black-board')
+}
 
 //______________________________________________________________
 // Start-Game
@@ -207,6 +209,12 @@ leaveGameButton.addEventListener('click', () => {
 	socket.emit('playerDisconnected')
 	window.location.href = 'lobby.html'
 })
+
+// window.addEventListener('beforeunload', () => {
+// 	// const player = JSON.parse(localStorage)
+// 	console.log(localStorage)
+// 	socket.emit('signOut')
+// })
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
