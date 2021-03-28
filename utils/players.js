@@ -15,12 +15,23 @@ function Player(id, username, room = id) {
 // 		players.push(newPlayer)
 // }
 
-const addPlayerToRoom = (id, username, room) => {
+const addPlayerToRoom = (id, { username, room }) => {
 	const player = new Player(id, username, room)
 
 	// If user doesn't already exist //
 	if (!playersInRoom.find((player) => player.username === username))
 		playersInRoom.push(player)
+}
+
+const addToWaitList = (player) => {
+	const nameExists = playersWaiting.find(
+		({ username }) => player.username === username
+	)
+
+	// if (!playersWaiting.length || !nameExists) {
+	// Create player and add to playersWaiting array //
+	playersWaiting.push(player)
+	// }
 }
 
 const getPlayerByName = (name) =>
@@ -35,6 +46,7 @@ const removeFromWaitList = (id) =>
 module.exports = {
 	Player,
 	addPlayerToRoom,
+	addToWaitList,
 	getPlayerByName,
 	players,
 	playersWaiting,

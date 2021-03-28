@@ -4,7 +4,7 @@ const router = express.Router()
 const User = require('../models/users')
 
 router.get('/', (req, res) => {
-	User.find({}).then((users) => {
+	User.find().then((users) => {
 		res.render('users.ejs', { users })
 	})
 })
@@ -15,10 +15,8 @@ router.get('/join', (req, res) => {
 
 router.post('/join', (req, res) => {
 	req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
-	User.create(req.body, (err, createdUser) => {
-		console.log('the user was created: ', createdUser)
-		res.redirect('/')
-	})
+
+	User.create(req.body, (err, createdUser) => res.redirect('/'))
 })
 
 router.get('/signin', (req, res) => {
@@ -36,17 +34,16 @@ router.post('/signin', (req, res) => {
 			if (bcrypt.compareSync(req.body.password, foundUser.password)) {
 				req.session.currentUser = foundUser
 				res.redirect('/')
-			} else {
-				res.send('<a href="/"> Password does not match </a>')
-			}
+			} else res.send('<a href="/"> Password does not match </a>')
 		}
 	})
 })
 
+// router.delete('/', (req, res) => req.session.destroy(() => res.redirect('/')))
 router.delete('/', (req, res) => {
-	req.session.destroy(() => {
-		res.redirect('/')
-	})
+	// const { id } = req.session.currentUser
+
+	req.session.destroy(() => res.redirect('/'))
 })
 
 module.exports = router

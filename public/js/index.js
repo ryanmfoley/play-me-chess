@@ -19,7 +19,9 @@ form.addEventListener('submit', (e) => {
 			// Send player to lobby //
 			// window.location.href = '/lobby.html?username=' + username
 			window.location.href = '/lobby'
-		} else setError(usernameInput)
+		} else {
+			setError(usernameInput)
+		}
 	})
 })
 

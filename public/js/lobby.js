@@ -1,5 +1,6 @@
-// const { username } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-const createGameBtn = document.querySelector('#create-game-btn')
+const username = window.document.cookie.split('=')[1]
+const createGameBtn = document.querySelector('#create-game')
+const logOutBtn = document.querySelector('#logout')
 const lobbyTable = document.querySelector('.lobby-rooms')
 const socket = io()
 
@@ -10,7 +11,7 @@ function clearTable() {
 	}
 }
 
-function generateTable(players) {
+function generateTable(playersWaiting) {
 	// Create table head //
 	const inviteText = document.createTextNode('Invite')
 	const playerText = document.createTextNode('Player')
@@ -25,7 +26,7 @@ function generateTable(players) {
 	theadRow.appendChild(th2)
 
 	// Create table body //
-	players.forEach(({ username, id }) => {
+	playersWaiting.forEach(({ username, id }) => {
 		const row = lobbyTable.insertRow()
 		const name = document.createTextNode(username)
 		const nameCell = row.insertCell()
@@ -35,7 +36,9 @@ function generateTable(players) {
 		joinGameBtn.innerText = 'Play Me'
 		joinGameBtn.onclick = () => {
 			socket.emit('updatePlayersWaiting', id)
-			window.location.href = `/chess.html?username=${username}&room=${id}&color=black`
+			socket.emit('joinGame', { id, color: 'black' })
+
+			window.location.href = `/chess`
 		}
 
 		nameCell.appendChild(name)
@@ -43,20 +46,24 @@ function generateTable(players) {
 	})
 }
 
-socket.emit('enterLobby')
-
-createGameBtn.addEventListener('click', () => {
-	// socket.emit('createGame', username)
-	socket.emit('createGame')
-
-	socket.on('joinGame', ({ id }) => {
-		// Send player to game room //
-		// window.location.href = `/chess.html?username=${username}&room=${id}&color=white`
-	})
-})
+socket.emit('login', username)
 
 // Get list of opened games and generate a table //
-socket.on('playersWaiting', (players) => {
+socket.on('playersWaiting', (playersWaiting) => {
 	clearTable()
-	generateTable(players)
+	generateTable(playersWaiting)
+})
+
+createGameBtn.addEventListener('click', () => {
+	socket.emit('joinGame', { color: 'white' })
+
+	// Send player to game room //
+	window.location.href = '/chess'
+})
+
+logOutBtn.addEventListener('click', () => {
+	socket.emit('logout')
+	socket.on('logout', ({ id }) => {
+		socket.emit('updatePlayersWaiting', id)
+	})
 })

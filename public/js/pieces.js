@@ -107,7 +107,9 @@ class Pawn extends Piece {
 			) {
 				validMove = true
 			}
-		} else validMove = false
+		} else {
+			validMove = false
+		}
 
 		return { validMove, castle }
 	}

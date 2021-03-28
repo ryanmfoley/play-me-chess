@@ -13,7 +13,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 	const { username } = req.session.currentUser
 	res.cookie('username', username)
 
-	res.sendFile('/public/lobby.html', { root: process.cwd() })
+	res.sendFile('/public/chess.html', { root: process.cwd() })
 })
 
 module.exports = router
