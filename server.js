@@ -16,13 +16,6 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server, { cors: true })
 const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
-let playersWaiting = []
-
-function Player(id, username, room = id) {
-	this.id = id
-	this.username = username
-	this.room = room
-}
 
 // Middleware //
 app.use(cookieParser())
@@ -46,6 +39,14 @@ app.use('/chess', chessController)
 
 // Routes
 app.get('/', (req, res) => res.redirect('/lobby'))
+
+let playersWaiting = []
+
+function Player(id, username, room = id) {
+	this.id = id
+	this.username = username
+	this.room = room
+}
 
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
@@ -90,6 +91,7 @@ io.on('connection', (socket) => {
 		if (id) player.room = id
 
 		player.color = color
+		socket.handshake.session.save()
 
 		playersWaiting.push(player)
 
@@ -132,8 +134,8 @@ const { PORT } = process.env
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 
-// Listen for signIn event and check if username already exists //
-// socket.on('signIn', (username) => {
+// Listen for login event and check if username already exists //
+// socket.on('login', (username) => {
 // 	const nameExists = players.find((player) => player.username === username)
 
 // 	if (!players.length || !nameExists) {
@@ -143,8 +145,8 @@ server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 
 // 		players.push(player)
 
-// 		socket.emit('signInStatus', { isNameAvailable, player })
-// 	} else socket.emit('signInStatus', { isNameAvailable: false })
+// 		socket.emit('loginStatus', { isNameAvailable, player })
+// 	} else socket.emit('loginStatus', { isNameAvailable: false })
 // })
 
 // socket.on('disconnect', () => {

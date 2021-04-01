@@ -8,14 +8,27 @@ body {
 }
 
 header {
-	display: grid;
-	height: 180px;
-	justify-items: center;
+	margin: 0 auto;
+	font-size: 1.5rem;
 }
 
 header > h1 {
-	color: white;
-	font-size: 72px;
+	font-size: 84px;
+	-webkit-text-stroke: 1px white;
+	color: rgb(120, 181, 120);
+}
+
+#leave-game,
+#logout {
+	-webkit-text-stroke: 1px red;
+}
+
+#leave-game:hover,
+#logout:hover {
+	/* color: #315991; */
+	/* color: rgb(255, 88, 88); */
+	text-decoration: underline overline;
+	text-decoration-color: red;
 }
 
 #start-game {
@@ -32,31 +45,25 @@ header > h1 {
 	background: url('../images/bp.svg') no-repeat;
 }
 
-.leave-game-header {
-	display: flex;
-	margin-right: 100px;
-	justify-content: flex-end;
-}
-
 #leave-game {
-	width: 100px;
-	border: 2px solid black;
+	color: white;
+	cursor: pointer;
 }
 
-/* .board {
-	position: relative;
-} */
+#logout {
+	color: white;
+	cursor: pointer;
+}
 
 .board {
 	position: relative;
 	display: grid;
 	width: 806px;
 	height: 806px;
-	margin: 20px auto;
+	margin: 60px auto;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
 	cursor: pointer;
-	/* border: 5px solid #312e2b; */
 	border: 3px solid white;
 	border-radius: 10px;
 }
@@ -68,31 +75,32 @@ header > h1 {
 	height: 100px;
 	justify-content: center;
 	align-items: center;
-	/* border: 1px solid black; */
 }
 
-.row-0:nth-child(even),
-.row-1:nth-child(odd),
-.row-2:nth-child(even),
-.row-3:nth-child(odd),
-.row-4:nth-child(even),
-.row-5:nth-child(odd),
-.row-6:nth-child(even),
-.row-7:nth-child(odd) {
+.rows-0:nth-child(even),
+.rows-1:nth-child(odd),
+.rows-2:nth-child(even),
+.rows-3:nth-child(odd),
+.rows-4:nth-child(even),
+.rows-5:nth-child(odd),
+.rows-6:nth-child(even),
+.rows-7:nth-child(odd) {
 	/* background: #72b872; */
 	/* background: #809c5c; */
 	background: #315991;
+	/* background: rgb(120, 181, 120); */
 }
 
-.row-0:nth-child(odd),
-.row-1:nth-child(even),
-.row-2:nth-child(odd),
-.row-3:nth-child(even),
-.row-4:nth-child(odd),
-.row-5:nth-child(even),
-.row-6:nth-child(odd),
-.row-7:nth-child(even) {
+.rows-0:nth-child(odd),
+.rows-1:nth-child(even),
+.rows-2:nth-child(odd),
+.rows-3:nth-child(even),
+.rows-4:nth-child(odd),
+.rows-5:nth-child(even),
+.rows-6:nth-child(odd),
+.rows-7:nth-child(even) {
 	background: #d9e0e6;
+	/* background: white; */
 	/* background: #f7f6dc; */
 }
 

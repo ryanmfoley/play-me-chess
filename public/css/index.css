@@ -8,7 +8,7 @@ body {
 	font-family: Helvetica;
 }
 
-.signin-container {
+.login-container {
 	width: 650px;
 	height: 250px;
 	margin: 80px auto;
@@ -16,7 +16,7 @@ body {
 	border-radius: 10px;
 }
 
-.signin-form {
+.login-form {
 	position: relative;
 	/* margin-bottom: 10px;
 	padding-bottom: 20px; */
@@ -24,7 +24,7 @@ body {
 	border-radius: 4px;
 }
 
-.signin-form input {
+.login-form input {
 	border: 2px solid #f0f0f0;
 	border-radius: 4px;
 	display: block;
@@ -34,46 +34,46 @@ body {
 	width: 100%;
 }
 
-/* .signin-form.success input {
+/* .login-form.success input {
 	border-color: #2ecc71;
 } */
 
-.signin-form.error input {
+.login-form.error input {
 	border-color: #e74c3c;
 }
 
-.signin-form i {
+.login-form i {
 	position: absolute;
 	top: 15px;
 	right: 10px;
 	visibility: hidden;
 }
 
-/* .signin-form.success i.fa-check-circle {
+/* .login-form.success i.fa-check-circle {
 	color: #2ecc71;
 	visibility: visible;
 } */
 
-.signin-form.error i.fa-exclamation-circle {
+.login-form.error i.fa-exclamation-circle {
 	color: #e74c3c;
 	visibility: visible;
 }
 
-.signin-form small {
+.login-form small {
 	visibility: hidden;
 	position: absolute;
 	bottom: 10;
 	left: 0;
 }
 
-.signin-form.error small {
+.login-form.error small {
 	color: #e74c3c;
 	visibility: visible;
 }
 
 h1 {
 	font-size: 82px;
-	color: white;
+	color: rgb(120, 181, 120);
 	text-align: center;
 }
 
@@ -84,11 +84,11 @@ h2 {
 	border-bottom: 3px solid #322f2f;
 }
 
-#signin {
+#login {
 	background-color: rgb(120, 181, 120);
 	border: none;
 }
 
-#signin:hover {
+#login:hover {
 	border: 1px solid white;
 }

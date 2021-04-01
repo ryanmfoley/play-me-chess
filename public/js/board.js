@@ -3,7 +3,7 @@ function Cell(row, col) {
 	this.col = col
 	this.color = ''
 	this.piece = ''
-	this.cellBox = document.querySelectorAll(`.row-${row}`)[col]
+	this.cellBox = document.querySelectorAll(`.rows-${row}`)[col]
 }
 
 class Board {
@@ -201,8 +201,6 @@ class Board {
 				}
 			})
 		)
-
-		return this
 	}
 
 	identifyCell(cell) {
@@ -266,7 +264,7 @@ class Board {
 		}
 	}
 
-	async movePiece(player, opponent, piece, landingSquare) {
+	movePiece(player, opponent, piece, landingSquare) {
 		const activePlayer = player.color === this.turn ? opponent : player
 		const inActivePlayer = player.color === this.turn ? player : opponent
 		const startingSquare = piece.row

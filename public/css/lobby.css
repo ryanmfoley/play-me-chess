@@ -8,6 +8,10 @@ body {
 	font-family: Helvetica;
 }
 
+nav h1 {
+	color: rgb(120, 181, 120);
+}
+
 .instructions {
 	padding: 20px;
 	font-size: 32px;

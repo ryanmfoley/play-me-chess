@@ -19,11 +19,11 @@ router.post('/join', (req, res) => {
 	User.create(req.body, (err, createdUser) => res.redirect('/'))
 })
 
-router.get('/signin', (req, res) => {
-	res.render('signIn.ejs')
+router.get('/login', (req, res) => {
+	res.render('login.ejs')
 })
 
-router.post('/signin', (req, res) => {
+router.post('/login', (req, res) => {
 	User.findOne({ username: req.body.username }, (err, foundUser) => {
 		if (err) {
 			console.log(err)
@@ -39,11 +39,6 @@ router.post('/signin', (req, res) => {
 	})
 })
 
-// router.delete('/', (req, res) => req.session.destroy(() => res.redirect('/')))
-router.delete('/', (req, res) => {
-	// const { id } = req.session.currentUser
-
-	req.session.destroy(() => res.redirect('/'))
-})
+router.delete('/', (req, res) => req.session.destroy(() => res.redirect('/')))
 
 module.exports = router

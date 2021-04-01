@@ -2,10 +2,12 @@ import { chessBoard } from './board.js'
 import { placePiecesOnBoard } from './pieces.js'
 import { whitePlayer, blackPlayer } from './players.js'
 
-const leaveGameButton = document.querySelector('#leave-game')
 const audio = document.querySelector('audio')
 const board = document.querySelector('.board')
 const squares = document.querySelectorAll('.square')
+const leaveGameButton = document.querySelector('#leave-game')
+const logoutForm = document.getElementById('logout-form')
+const logoutButton = document.getElementById('logout')
 const gameResult = document.querySelector('.game-result')
 const gameResultModal = document.querySelector('#game-result-modal')
 const socket = io()
@@ -214,6 +216,8 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 leaveGameButton.addEventListener('click', () => {
 	window.location.href = '/lobby'
 })
+
+logoutButton.addEventListener('click', () => logoutForm.submit())
 
 window.addEventListener('beforeunload', () => {
 	socket.emit('logout')

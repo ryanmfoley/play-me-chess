@@ -18,11 +18,12 @@
 		<title>Chess</title>
 	</head>
 	<body>
-		<h1 class="my-3">Play Me Chess</h1>
-		<div class="signin-container">
-			<h2>Sign In</h2>
-			<form class="m-4" action="/users/signin" method="POST">
-				<div class="signin-form">
+		<%- include ('./partials/header.ejs') %>
+
+		<!-- <h1 class="my-3">Play-Me-Chess</h1> -->
+		<div class="login-container">
+			<form class="m-4" action="/users/login" method="POST">
+				<div class="login-form">
 					<input
 						class="form-control form-control-lg"
 						type="text"
@@ -44,17 +45,13 @@
 				<button
 					type="submit"
 					class="my-4 btn-lg btn-primary btn-block"
-					id="signin"
+					id="login"
 				>
-					<strong>Let's Play</strong>
+					<strong>Log In</strong>
+					<!-- <strong>Let's Play</strong> -->
 				</button>
-				<a href="/users/join">Join</a>
-				<a href="/users">View Users</a>
+				<a href="/users/join">New? Sign up - it's FREE!</a>
 			</form>
 		</div>
-		<a href="/lobby"><h3>Lobby</h3></a>
-		<script>
-			// localStorage.setItem('username', );
-		</script>
 	</body>
 </html>

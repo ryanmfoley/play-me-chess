@@ -4,7 +4,7 @@ const router = express.Router()
 const isAuthenticated = (req, res, next) => {
 	if (req.session.currentUser) {
 		return next()
-	} else res.redirect('/users/signIn')
+	} else res.redirect('/users/login')
 }
 
 router.use(isAuthenticated)

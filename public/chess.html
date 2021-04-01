@@ -3,102 +3,111 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="./css/chess.css" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
 		<link
 			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
 			rel="stylesheet"
 		/>
+		<link rel="stylesheet" href="./css/chess.css" />
 		<script src="/socket.io/socket.io.js"></script>
 		<script defer type="module" src="./js/chess.js"></script>
 		<title>Play-Me-Chess</title>
 	</head>
 	<body>
-		<div class="container">
-			<header>
-				<h1>Play-Me-Chess</h1>
-			</header>
+		<audio src="./sounds/check.wav"></audio>
 
-			<audio src="./sounds/check.wav"></audio>
+		<header class="w-50">
+			<h1 class="text-center my-3"><strong>Play-Me-Chess</strong></h1>
+			<form
+				id="logout-form"
+				class="w-50 d-flex justify-content-around mx-auto"
+				action="users?_method=DELETE"
+				method="POST"
+			>
+				<a id="leave-game">Leave Game</a>
+				<a id="logout">Log Out</a>
+			</form>
+		</header>
 
-			<div class="board">
-				<div class="row-0 col-0 square"></div>
-				<div class="row-0 col-1 square"></div>
-				<div class="row-0 col-2 square"></div>
-				<div class="row-0 col-3 square"></div>
-				<div class="row-0 col-4 square"></div>
-				<div class="row-0 col-5 square"></div>
-				<div class="row-0 col-6 square"></div>
-				<div class="row-0 col-7 square"></div>
+		<div class="board">
+			<div class="rows-0 cols-0 square"></div>
+			<div class="rows-0 cols-1 square"></div>
+			<div class="rows-0 cols-2 square"></div>
+			<div class="rows-0 cols-3 square"></div>
+			<div class="rows-0 cols-4 square"></div>
+			<div class="rows-0 cols-5 square"></div>
+			<div class="rows-0 cols-6 square"></div>
+			<div class="rows-0 cols-7 square"></div>
 
-				<div class="row-1 col-0 square"></div>
-				<div class="row-1 col-1 square"></div>
-				<div class="row-1 col-2 square"></div>
-				<div class="row-1 col-3 square"></div>
-				<div class="row-1 col-4 square"></div>
-				<div class="row-1 col-5 square"></div>
-				<div class="row-1 col-6 square"></div>
-				<div class="row-1 col-7 square"></div>
+			<div class="rows-1 cols-0 square"></div>
+			<div class="rows-1 cols-1 square"></div>
+			<div class="rows-1 cols-2 square"></div>
+			<div class="rows-1 cols-3 square"></div>
+			<div class="rows-1 cols-4 square"></div>
+			<div class="rows-1 cols-5 square"></div>
+			<div class="rows-1 cols-6 square"></div>
+			<div class="rows-1 cols-7 square"></div>
 
-				<div class="row-2 col-0 square"></div>
-				<div class="row-2 col-1 square"></div>
-				<div class="row-2 col-2 square"></div>
-				<div class="row-2 col-3 square"></div>
-				<div class="row-2 col-4 square"></div>
-				<div class="row-2 col-5 square"></div>
-				<div class="row-2 col-6 square"></div>
-				<div class="row-2 col-7 square"></div>
+			<div class="rows-2 cols-0 square"></div>
+			<div class="rows-2 cols-1 square"></div>
+			<div class="rows-2 cols-2 square"></div>
+			<div class="rows-2 cols-3 square"></div>
+			<div class="rows-2 cols-4 square"></div>
+			<div class="rows-2 cols-5 square"></div>
+			<div class="rows-2 cols-6 square"></div>
+			<div class="rows-2 cols-7 square"></div>
 
-				<div class="row-3 col-0 square"></div>
-				<div class="row-3 col-1 square"></div>
-				<div class="row-3 col-2 square"></div>
-				<div class="row-3 col-3 square"></div>
-				<div class="row-3 col-4 square"></div>
-				<div class="row-3 col-5 square"></div>
-				<div class="row-3 col-6 square"></div>
-				<div class="row-3 col-7 square"></div>
+			<div class="rows-3 cols-0 square"></div>
+			<div class="rows-3 cols-1 square"></div>
+			<div class="rows-3 cols-2 square"></div>
+			<div class="rows-3 cols-3 square"></div>
+			<div class="rows-3 cols-4 square"></div>
+			<div class="rows-3 cols-5 square"></div>
+			<div class="rows-3 cols-6 square"></div>
+			<div class="rows-3 cols-7 square"></div>
 
-				<div class="row-4 col-0 square"></div>
-				<div class="row-4 col-1 square"></div>
-				<div class="row-4 col-2 square"></div>
-				<div class="row-4 col-3 square"></div>
-				<div class="row-4 col-4 square"></div>
-				<div class="row-4 col-5 square"></div>
-				<div class="row-4 col-6 square"></div>
-				<div class="row-4 col-7 square"></div>
+			<div class="rows-4 cols-0 square"></div>
+			<div class="rows-4 cols-1 square"></div>
+			<div class="rows-4 cols-2 square"></div>
+			<div class="rows-4 cols-3 square"></div>
+			<div class="rows-4 cols-4 square"></div>
+			<div class="rows-4 cols-5 square"></div>
+			<div class="rows-4 cols-6 square"></div>
+			<div class="rows-4 cols-7 square"></div>
 
-				<div class="row-5 col-0 square"></div>
-				<div class="row-5 col-1 square"></div>
-				<div class="row-5 col-2 square"></div>
-				<div class="row-5 col-3 square"></div>
-				<div class="row-5 col-4 square"></div>
-				<div class="row-5 col-5 square"></div>
-				<div class="row-5 col-6 square"></div>
-				<div class="row-5 col-7 square"></div>
+			<div class="rows-5 cols-0 square"></div>
+			<div class="rows-5 cols-1 square"></div>
+			<div class="rows-5 cols-2 square"></div>
+			<div class="rows-5 cols-3 square"></div>
+			<div class="rows-5 cols-4 square"></div>
+			<div class="rows-5 cols-5 square"></div>
+			<div class="rows-5 cols-6 square"></div>
+			<div class="rows-5 cols-7 square"></div>
 
-				<div class="row-6 col-0 square"></div>
-				<div class="row-6 col-1 square"></div>
-				<div class="row-6 col-2 square"></div>
-				<div class="row-6 col-3 square"></div>
-				<div class="row-6 col-4 square"></div>
-				<div class="row-6 col-5 square"></div>
-				<div class="row-6 col-6 square"></div>
-				<div class="row-6 col-7 square"></div>
+			<div class="rows-6 cols-0 square"></div>
+			<div class="rows-6 cols-1 square"></div>
+			<div class="rows-6 cols-2 square"></div>
+			<div class="rows-6 cols-3 square"></div>
+			<div class="rows-6 cols-4 square"></div>
+			<div class="rows-6 cols-5 square"></div>
+			<div class="rows-6 cols-6 square"></div>
+			<div class="rows-6 cols-7 square"></div>
 
-				<div class="row-7 col-0 square"></div>
-				<div class="row-7 col-1 square"></div>
-				<div class="row-7 col-2 square"></div>
-				<div class="row-7 col-3 square"></div>
-				<div class="row-7 col-4 square"></div>
-				<div class="row-7 col-5 square"></div>
-				<div class="row-7 col-6 square"></div>
-				<div class="row-7 col-7 square"></div>
-				<div id="promote-modal"></div>
-				<div id="game-result-modal"><h2 class="game-result"></h2></div>
-			</div>
-		</div>
-		<div class="leave-game-header">
-			<button id="leave-game" type="button">Leave Game</button>
+			<div class="rows-7 cols-0 square"></div>
+			<div class="rows-7 cols-1 square"></div>
+			<div class="rows-7 cols-2 square"></div>
+			<div class="rows-7 cols-3 square"></div>
+			<div class="rows-7 cols-4 square"></div>
+			<div class="rows-7 cols-5 square"></div>
+			<div class="rows-7 cols-6 square"></div>
+			<div class="rows-7 cols-7 square"></div>
+			<div id="promote-modal"></div>
+			<div id="game-result-modal"><h2 class="game-result"></h2></div>
 		</div>
 	</body>
 </html>

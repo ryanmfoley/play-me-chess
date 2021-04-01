@@ -1,6 +1,6 @@
 const form = document.querySelector('form')
 const usernameInput = document.getElementById('username')
-const signInBtn = document.querySelector('button')
+const loginBtn = document.querySelector('button')
 const socket = io()
 
 // Handle form submit //
@@ -9,9 +9,9 @@ form.addEventListener('submit', (e) => {
 
 	const username = e.target.username.value.trim()
 
-	socket.emit('signIn', username)
+	socket.emit('login', username)
 	// Check if username already exist //
-	socket.on('signInStatus', ({ isNameAvailable, player }) => {
+	socket.on('loginStatus', ({ isNameAvailable, player }) => {
 		if (isNameAvailable) {
 			// Save login info to localStorage //
 			// localStorage.setItem('player', JSON.stringify(player))
@@ -27,5 +27,5 @@ form.addEventListener('submit', (e) => {
 
 function setError(input) {
 	const form = input.parentElement
-	form.className = 'signin-form error'
+	form.className = 'login-form error'
 }
