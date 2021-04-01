@@ -74,18 +74,6 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('enterGameRoom', () => {
-		const {
-			player,
-			player: { room },
-		} = socket.handshake.session
-
-		// Join socket to a given room //
-		socket.join(room)
-
-		socket.emit('startGame', player)
-	})
-
 	socket.on('joinGame', ({ id, color }) => {
 		const { player } = socket.handshake.session
 		if (id) player.room = id
@@ -104,6 +92,20 @@ io.on('connection', (socket) => {
 
 		// Send list of players waiting to client //
 		io.emit('playersWaiting', playersWaiting)
+	})
+
+	socket.on('enterGameRoom', () => {
+		const {
+			player,
+			player: { room },
+		} = socket.handshake.session
+
+		// Join socket to a given room //
+		socket.join(room)
+
+		socket.emit('enterGameRoom', player)
+
+		if (player.color === 'black') io.to(room).emit('startGame')
 	})
 
 	socket.on('movePiece', ({ turn, selectedCell, landingCell }) => {

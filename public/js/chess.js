@@ -6,35 +6,40 @@ const audio = document.querySelector('audio')
 const board = document.querySelector('.board')
 const squares = document.querySelectorAll('.square')
 const leaveGameButton = document.querySelector('#leave-game')
-const logoutForm = document.getElementById('logout-form')
-const logoutButton = document.getElementById('logout')
-const gameResult = document.querySelector('.game-result')
-const gameResultModal = document.querySelector('#game-result-modal')
+const logOutForm = document.getElementById('logout-form')
+const logOutButton = document.getElementById('logout')
+const gameInfo = document.querySelector('.game-info')
+const gameInfoModal = document.querySelector('#game-info-modal')
 const socket = io()
+let legalMove = true
 let selectedCell
 let selectedPiece
 let landingCell
 let landingSquare
-let legalMove
-let username
-let color
 let player
 let opponent
 
 socket.emit('enterGameRoom')
-
-socket.on('startGame', ({ username, color }) => {
+socket.on('enterGameRoom', ({ username, color }) => {
 	username = username
-	color = color
 
 	player = color === 'white' ? whitePlayer : blackPlayer
 	opponent = color === 'white' ? blackPlayer : whitePlayer
 
 	// Flip board for black //
-	if (color === 'black') {
+	if (color === 'white') {
+		gameInfoModal.style.visibility = 'visible'
+		gameInfo.innerHTML = 'Waiting for opponent...'
+		gameInfo.style.fontSize = '3rem'
+	} else {
 		board.setAttribute('id', 'black-board')
-		gameResult.setAttribute('id', 'black-board')
+		gameInfo.setAttribute('id', 'black-board')
 	}
+})
+
+socket.on('startGame', () => {
+	gameInfoModal.style.visibility = 'hidden'
+	gameInfo.style.fontSize = '5rem'
 
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
@@ -79,17 +84,15 @@ function movePiece(e) {
 	this.style.border = 'initial'
 	const { turn } = chessBoard
 
+	// Select piece if piece hasn't already been selected //
 	if (!selectedPiece) {
 		selectedCell = chessBoard.identifyCell(e.target)
 		const selectedSquare = chessBoard.selectSquare(selectedCell)
 
-		// Check if a piece was selected and it's their turn //
-		if (selectedSquare.color === turn) {
-			selectedPiece = selectedSquare.piece
-		}
+		if (selectedSquare.color === turn) selectedPiece = selectedSquare.piece
 
-		// If piece is selected //
-	} else if (!legalMove) {
+		// Piece has been selected //
+	} else if (legalMove) {
 		landingCell = chessBoard.identifyCell(e.target)
 		landingSquare = chessBoard.selectSquare(landingCell)
 
@@ -101,7 +104,7 @@ function movePiece(e) {
 		)
 		legalMove = validMove
 
-		if (validMove) {
+		if (legalMove) {
 			if (castle.validCastle) {
 				landingCell = chessBoard.identifyCell(e.target)
 
@@ -120,10 +123,11 @@ function movePiece(e) {
 				socket.emit('movePiece', { turn, selectedCell, landingCell })
 			}
 
-			// Reset turn variables //
 			selectedPiece = false
-			legalMove = false
-		} else selectedPiece = null
+		} else {
+			legalMove = true
+			selectedPiece = null
+		}
 	}
 }
 
@@ -137,8 +141,7 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	const inActivePlayer = player.color === chessBoard.turn ? player : opponent
 	const selectedSquare = chessBoard.selectSquare(selectedCell)
 	const landingSquare = chessBoard.selectSquare(landingCell)
-	// let selectedPiece = selectedSquare.piece
-	let { piece: selectedPiece } = selectedSquare
+	let selectedPiece = selectedSquare.piece
 	const backRank = turn === 'white' ? 7 : 0
 	const promotePawn =
 		selectedPiece.name === 'pawn' && backRank == landingCell.row ? true : false
@@ -193,23 +196,35 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	}
 
 	if (inActivePlayer.checkMate) {
-		gameResult.innerHTML = 'Checkmate'
+		gameInfo.innerHTML = 'Checkmate'
 
 		setTimeout(function () {
-			gameResultModal.style.visibility = 'visible'
-		}, 300)
+			gameInfoModal.style.visibility = 'visible'
+		}, 500)
+
+		setTimeout(function () {
+			window.location.href = '/lobby'
+		}, 2000)
 	} else if (chessBoard.draw) {
-		gameResult.innerHTML = 'Draw'
+		gameInfo.innerHTML = 'Draw'
 
 		setTimeout(function () {
-			gameResultModal.style.visibility = 'visible'
-		}, 300)
+			gameInfoModal.style.visibility = 'visible'
+		}, 500)
+
+		setTimeout(function () {
+			window.location.href = '/lobby'
+		}, 2000)
 	} else if (chessBoard.staleMate) {
-		gameResult.innerHTML = 'Stalemate'
+		gameInfo.innerHTML = 'Stalemate'
 
 		setTimeout(function () {
-			gameResultModal.style.visibility = 'visible'
-		}, 300)
+			gameInfoModal.style.visibility = 'visible'
+		}, 2000)
+
+		setTimeout(function () {
+			window.location.href = '/lobby'
+		}, 2000)
 	}
 })
 
@@ -217,7 +232,13 @@ leaveGameButton.addEventListener('click', () => {
 	window.location.href = '/lobby'
 })
 
-logoutButton.addEventListener('click', () => logoutForm.submit())
+logOutButton.addEventListener('click', () => {
+	socket.emit('logout')
+	socket.on('logout', ({ id }) => {
+		socket.emit('updatePlayersWaiting', id)
+	})
+	logOutForm.submit()
+})
 
 window.addEventListener('beforeunload', () => {
 	socket.emit('logout')

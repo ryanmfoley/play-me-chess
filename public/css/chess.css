@@ -8,51 +8,27 @@ body {
 }
 
 header {
-	margin: 0 auto;
 	font-size: 1.5rem;
 }
 
 header > h1 {
 	font-size: 84px;
-	-webkit-text-stroke: 1px white;
-	color: rgb(120, 181, 120);
+	-webkit-text-stroke: 1px #315991;
+	color: white;
 }
 
-#leave-game,
-#logout {
+header #leave-game,
+header #logout {
+	color: white;
 	-webkit-text-stroke: 1px red;
+	cursor: pointer;
 }
 
-#leave-game:hover,
-#logout:hover {
-	/* color: #315991; */
-	/* color: rgb(255, 88, 88); */
+header #leave-game:hover,
+header #logout:hover {
+	color: rgb(255, 113, 113);
 	text-decoration: underline overline;
-	text-decoration-color: red;
-}
-
-#start-game {
-	background: url('../images/wp.svg') no-repeat;
-	display: inline-block;
-	width: 60px;
-	height: 60px;
-	cursor: pointer;
-	border: 5px solid black;
-	border-radius: 10px;
-}
-
-#start-game:hover {
-	background: url('../images/bp.svg') no-repeat;
-}
-
-#leave-game {
-	color: white;
-	cursor: pointer;
-}
-
-#logout {
-	color: white;
-	cursor: pointer;
+	text-decoration-color: white;
 }
 
 .board {
@@ -85,10 +61,7 @@ header > h1 {
 .rows-5:nth-child(odd),
 .rows-6:nth-child(even),
 .rows-7:nth-child(odd) {
-	/* background: #72b872; */
-	/* background: #809c5c; */
 	background: #315991;
-	/* background: rgb(120, 181, 120); */
 }
 
 .rows-0:nth-child(odd),
@@ -100,8 +73,6 @@ header > h1 {
 .rows-6:nth-child(odd),
 .rows-7:nth-child(even) {
 	background: #d9e0e6;
-	/* background: white; */
-	/* background: #f7f6dc; */
 }
 
 .board div > img {
@@ -127,15 +98,6 @@ header > h1 {
 	border: 3px solid black;
 }
 
-#info {
-	text-align: center;
-	font-size: 32px;
-}
-
-.hide {
-	display: none;
-}
-
 #check-square {
 	background-color: rgb(255, 160, 160);
 }
@@ -154,7 +116,7 @@ header > h1 {
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-#game-result-modal {
+#game-info-modal {
 	visibility: hidden;
 	position: absolute;
 	top: 50%;
@@ -168,8 +130,7 @@ header > h1 {
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-.game-result {
-	font-size: 72px;
+.game-info {
 	color: white;
 	text-align: center;
 }

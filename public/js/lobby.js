@@ -1,6 +1,7 @@
 const username = window.document.cookie.split('=')[1]
 const createGameBtn = document.querySelector('#create-game')
 const logOutBtn = document.querySelector('#logout')
+const logOutForm = document.querySelector('#logout-form')
 const lobbyTable = document.querySelector('.lobby-rooms')
 const socket = io()
 
@@ -66,4 +67,5 @@ logOutBtn.addEventListener('click', () => {
 	socket.on('logout', ({ id }) => {
 		socket.emit('updatePlayersWaiting', id)
 	})
+	logOutForm.submit()
 })

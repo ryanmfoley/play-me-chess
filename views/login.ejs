@@ -9,25 +9,26 @@
 			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 			crossorigin="anonymous"
 		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
+			rel="stylesheet"
+		/>
 		<link type="text/css" rel="stylesheet" href="/css/index.css" />
-		<script
-			src="https://kit.fontawesome.com/f5c3afdb68.js"
-			crossorigin="anonymous"
-		></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<title>Chess</title>
+		<title>Login - Play-Me-Chess</title>
 	</head>
 	<body>
-		<%- include ('./partials/header.ejs') %>
+		<header class="w-50 mx-auto">
+			<h1 class="text-center mt-4 mb-3"><strong>Play-Me-Chess</strong></h1>
+		</header>
 
-		<!-- <h1 class="my-3">Play-Me-Chess</h1> -->
 		<div class="login-container">
 			<form class="m-4" action="/users/login" method="POST">
 				<div class="login-form">
 					<input
-						class="form-control form-control-lg"
 						type="text"
 						id="username"
+						class="form-control form-control-lg"
 						name="username"
 						placeholder="Enter username..."
 						required
@@ -36,10 +37,10 @@
 					<i class="fas fa-exclamation-circle"></i>
 					<small>Username or password incorrect</small>
 					<input
-						class="form-control form-control-lg"
 						type="password"
-						placeholder="Password"
+						class="form-control form-control-lg"
 						name="password"
+						placeholder="Password"
 					/>
 				</div>
 				<button

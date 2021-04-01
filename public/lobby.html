@@ -9,33 +9,30 @@
 			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 			crossorigin="anonymous"
 		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
+			rel="stylesheet"
+		/>
 		<link rel="stylesheet" href="./css/lobby.css" />
 		<script src="/socket.io/socket.io.js"></script>
 		<script defer src="./js/lobby.js"></script>
-		<title>Chess Lobby</title>
+		<title>Lobby - Play-Me-Chess</title>
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a href="#" class="navbar-brand mx-auto"
-				><h1><strong>Play-Me-Chess</strong></h1></a
+		<header class="w-50 mx-auto">
+			<h1 class="text-center mt-4 mb-3"><strong>Play-Me-Chess</strong></h1>
+			<form
+				id="logout-form"
+				class="w-50 d-flex justify-content-around mx-auto"
+				action="users?_method=DELETE"
+				method="POST"
 			>
-			<div class="collapse navbar-collapse">
-				<form class="ml-auto" action="users?_method=DELETE" method="POST">
-					<button type="submit" id="logout">Logout</button>
-				</form>
-			</div>
-		</nav>
-
-		<!-- <div class="instructions">
-			<p>
-				Welcome to Play-Me-Chess. This game is still in development. Either
-				"create a game" or enter a game that's already opened by clicking on the
-				"Play Me" button.
-			</p>
-		</div> -->
+				<a id="logout">Log Out</a>
+			</form>
+		</header>
 
 		<div class="lobby-container">
-			<button id="create-game" type="submit">
+			<button type="submit" id="create-game">
 				<strong>CREATE A GAME</strong>
 			</button>
 			<table class="lobby-rooms"></table>

@@ -7,17 +7,10 @@ class Player {
 		this.inCheck = false
 		this.checkMate = false
 		this.staleMate = false
-		this.copyPieces()
 	}
 
 	get kingSquare() {
 		return this.pieces.find((piece) => piece.name === 'king')
-	}
-
-	copyPieces() {
-		this.sparePieces = [...this.pieces].map((piece) =>
-			Object.assign(Object.create(Object.getPrototypeOf(piece)), piece)
-		)
 	}
 
 	copyPlayer() {

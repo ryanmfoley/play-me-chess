@@ -3,25 +3,35 @@
 }
 
 body {
-	background-color: #322f2f;
-	/* border: 1px solid blue; */
-	font-family: Helvetica;
+	background-color: #312e2b;
+	font-family: 'Fjalla One', sans-serif;
 }
 
-nav h1 {
-	color: rgb(120, 181, 120);
+header {
+	font-size: 1.5rem;
 }
 
-.instructions {
-	padding: 20px;
-	font-size: 32px;
+header > h1 {
+	font-size: 84px;
+	-webkit-text-stroke: 1px #315991;
 	color: white;
+}
+
+header #logout {
+	color: white;
+	-webkit-text-stroke: 1px red;
+	cursor: pointer;
+}
+
+header #logout:hover {
+	color: rgb(255, 113, 113);
+	text-decoration: underline overline;
+	text-decoration-color: white;
 }
 
 .lobby-container {
 	display: grid;
 	margin: 40px auto;
-	/* width: 50%; */
 	width: 400px;
 	height: 400px;
 	color: white;
