@@ -8,8 +8,9 @@ const squares = document.querySelectorAll('.square')
 const leaveGameButton = document.querySelector('#leave-game')
 const logOutForm = document.getElementById('logout-form')
 const logOutButton = document.getElementById('logout')
-const gameInfo = document.querySelector('.game-info')
 const gameInfoModal = document.querySelector('#game-info-modal')
+const gameInfo = document.querySelector('.game-info')
+const gameResult = document.querySelector('.game-result')
 const socket = io()
 let legalMove = true
 let selectedCell
@@ -29,8 +30,9 @@ socket.on('enterGameRoom', ({ username, color }) => {
 	// Flip board for black //
 	if (color === 'white') {
 		gameInfoModal.style.visibility = 'visible'
-		gameInfo.innerHTML = 'Waiting for opponent...'
-		gameInfo.style.fontSize = '3rem'
+		// gameInfo.style.display = 'block'
+		gameResult.style.display = 'block'
+		gameResult.innerHTML = 'Checkmate'
 	} else {
 		board.setAttribute('id', 'black-board')
 		gameInfo.setAttribute('id', 'black-board')
@@ -39,7 +41,7 @@ socket.on('enterGameRoom', ({ username, color }) => {
 
 socket.on('startGame', () => {
 	gameInfoModal.style.visibility = 'hidden'
-	gameInfo.style.fontSize = '5rem'
+	gameInfo.style.display = 'none'
 
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
@@ -196,30 +198,30 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	}
 
 	if (inActivePlayer.checkMate) {
-		gameInfo.innerHTML = 'Checkmate'
+		gameResult.innerHTML = 'Checkmate'
 
 		setTimeout(function () {
-			gameInfoModal.style.visibility = 'visible'
+			gameInfoModal.style.display = 'block'
 		}, 500)
 
 		setTimeout(function () {
 			window.location.href = '/lobby'
 		}, 2000)
 	} else if (chessBoard.draw) {
-		gameInfo.innerHTML = 'Draw'
+		gameResult.innerHTML = 'Draw'
 
 		setTimeout(function () {
-			gameInfoModal.style.visibility = 'visible'
+			gameInfoModal.style.display = 'block'
 		}, 500)
 
 		setTimeout(function () {
 			window.location.href = '/lobby'
 		}, 2000)
 	} else if (chessBoard.staleMate) {
-		gameInfo.innerHTML = 'Stalemate'
+		gameResult.innerHTML = 'Stalemate'
 
 		setTimeout(function () {
-			gameInfoModal.style.visibility = 'visible'
+			gameInfoModal.style.display = 'block'
 		}, 2000)
 
 		setTimeout(function () {

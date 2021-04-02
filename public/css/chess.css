@@ -7,18 +7,15 @@ body {
 	font-family: 'Fjalla One', sans-serif;
 }
 
-header {
-	font-size: 1.5rem;
-}
-
 header > h1 {
-	font-size: 84px;
+	font-size: 5rem;
 	-webkit-text-stroke: 1px #315991;
 	color: white;
 }
 
 header #leave-game,
 header #logout {
+	font-size: 1.5rem;
 	color: white;
 	-webkit-text-stroke: 1px red;
 	cursor: pointer;
@@ -46,7 +43,6 @@ header #logout:hover {
 
 .board > div {
 	display: grid;
-	margin: 0;
 	width: 100px;
 	height: 100px;
 	justify-content: center;
@@ -90,14 +86,6 @@ header #logout:hover {
 	-moz-transform: rotate(0.5turn);
 }
 
-.check-text {
-	display: none;
-	font-size: 38px;
-	text-align: center;
-	background-color: rgb(255, 160, 160);
-	border: 3px solid black;
-}
-
 #check-square {
 	background-color: rgb(255, 160, 160);
 }
@@ -130,7 +118,114 @@ header #logout:hover {
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-.game-info {
+#game-info-modal > .game-info {
+	display: none;
+	font-size: 3rem;
 	color: white;
-	text-align: center;
+}
+
+#game-info-modal > .game-result {
+	display: none;
+	font-size: 5rem;
+	color: white;
+}
+
+@media only screen and (max-device-width: 960px) {
+	body {
+		background-color: blue;
+	}
+	header > h1 {
+		font-size: 4.3rem;
+	}
+
+	header #leave-game,
+	header #logout {
+		font-size: 1.3rem;
+	}
+}
+
+@media only screen and (max-device-width: 850px) {
+	body {
+		background-color: red;
+	}
+	header > h1 {
+		font-size: 4rem;
+	}
+
+	.board {
+		width: 646px;
+		height: 646px;
+	}
+
+	.board > div {
+		width: 80px;
+		height: 80px;
+	}
+
+	.board div > img {
+		width: 80px;
+		height: 80px;
+	}
+
+	#game-info-modal > .game-info {
+		font-size: 2.5rem;
+	}
+
+	#game-info-modal > .game-result {
+		font-size: 4rem;
+	}
+}
+
+@media only screen and (max-device-width: 767px) {
+	body {
+		background-color: green;
+	}
+	header > h1 {
+		font-size: 3rem;
+	}
+
+	header #leave-game,
+	header #logout {
+		font-size: 1rem;
+	}
+
+	#game-info-modal > .game-info {
+		display: none;
+		font-size: 1.5rem;
+		color: white;
+	}
+
+	#game-info-modal > .game-result {
+		font-size: 3rem;
+		color: white;
+	}
+}
+
+@media only screen and (max-device-width: 500px) {
+	body {
+		background-color: purple;
+	}
+	header > h1 {
+		font-size: 2.5rem;
+	}
+
+	header #leave-game,
+	header #logout {
+		font-size: 0.75rem;
+	}
+
+	.board {
+		width: 403px;
+		height: 403px;
+	}
+
+	.board > div {
+		width: 50px;
+		height: 50px;
+	}
+
+	.board div > img {
+		width: 50px;
+		height: 50px;
+	}
 }
