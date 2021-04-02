@@ -21,17 +21,19 @@
 			<h1 class="text-center mt-4 mb-3"><strong>Play-Me-Chess</strong></h1>
 		</header>
 
-		<div class="login-container">
+		<main
+			class="d-flex flex-column justify-content-center w-25 text-center mx-auto mt-5 px-4 join-container"
+		>
 			<h2>Join Now — It’s Free & Easy!</h2>
-			<form class="m-4" action="/users/join" method="POST">
+			<form action="/users/join" method="POST">
 				<div class="login-form">
 					<label for="username"></label>
 					<input
 						type="text"
 						id="username"
-						class="form-control form-control-lg"
+						class="p-3 form-control form-control-lg"
 						name="username"
-						placeholder="Enter username..."
+						placeholder="Username"
 						required
 					/>
 					<i class="fas fa-check-circle"></i>
@@ -39,7 +41,7 @@
 					<small>Username already taken</small>
 					<input
 						type="password"
-						class="form-control form-control-lg"
+						class="my-4 p-3 form-control form-control-lg"
 						name="password"
 						placeholder="Password"
 					/>
@@ -49,9 +51,10 @@
 					id="login"
 					class="my-4 btn-lg btn-primary btn-block"
 				>
-					<strong>Create Your FREE Acount</strong>
+					<strong>Sign Up</strong>
 				</button>
 			</form>
-		</div>
+			<a href="/users/login"><span>Already a member?</span> Log In</a>
+		</main>
 	</body>
 </html>

@@ -30,9 +30,7 @@ socket.on('enterGameRoom', ({ username, color }) => {
 	// Flip board for black //
 	if (color === 'white') {
 		gameInfoModal.style.visibility = 'visible'
-		// gameInfo.style.display = 'block'
-		gameResult.style.display = 'block'
-		gameResult.innerHTML = 'Checkmate'
+		gameInfo.style.display = 'block'
 	} else {
 		board.setAttribute('id', 'black-board')
 		gameInfo.setAttribute('id', 'black-board')

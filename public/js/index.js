@@ -13,11 +13,7 @@ form.addEventListener('submit', (e) => {
 	// Check if username already exist //
 	socket.on('loginStatus', ({ isNameAvailable, player }) => {
 		if (isNameAvailable) {
-			// Save login info to localStorage //
-			// localStorage.setItem('player', JSON.stringify(player))
-
 			// Send player to lobby //
-			// window.location.href = '/lobby.html?username=' + username
 			window.location.href = '/lobby'
 		} else {
 			setError(usernameInput)

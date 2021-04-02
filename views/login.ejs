@@ -14,6 +14,10 @@
 			rel="stylesheet"
 		/>
 		<link type="text/css" rel="stylesheet" href="/css/index.css" />
+		<script
+			src="https://kit.fontawesome.com/f5c3afdb68.js"
+			crossorigin="anonymous"
+		></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<title>Login - Play-Me-Chess</title>
 	</head>
@@ -22,15 +26,17 @@
 			<h1 class="text-center mt-4 mb-3"><strong>Play-Me-Chess</strong></h1>
 		</header>
 
-		<div class="login-container">
-			<form class="m-4" action="/users/login" method="POST">
+		<main
+			class="d-flex flex-column justify-content-center w-25 text-center mx-auto mt-5 px-4 login-container"
+		>
+			<form action="/users/login" method="POST">
 				<div class="login-form">
 					<input
 						type="text"
 						id="username"
-						class="form-control form-control-lg"
+						class="p-3 form-control form-control-lg"
 						name="username"
-						placeholder="Enter username..."
+						placeholder="Username"
 						required
 					/>
 					<i class="fas fa-check-circle"></i>
@@ -38,21 +44,16 @@
 					<small>Username or password incorrect</small>
 					<input
 						type="password"
-						class="form-control form-control-lg"
+						class="my-4 p-3 form-control form-control-lg"
 						name="password"
 						placeholder="Password"
 					/>
 				</div>
-				<button
-					type="submit"
-					class="my-4 btn-lg btn-primary btn-block"
-					id="login"
-				>
+				<button type="submit" id="login" class="my-4 btn btn-primary btn-block">
 					<strong>Log In</strong>
-					<!-- <strong>Let's Play</strong> -->
 				</button>
-				<a href="/users/join">New? Sign up - it's FREE!</a>
 			</form>
-		</div>
+			<a href="/users/join"><span>New?</span> Sign up - it's FREE!</a>
+		</main>
 	</body>
 </html>
