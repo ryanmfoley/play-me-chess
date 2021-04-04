@@ -5,19 +5,20 @@
 body {
 	background-color: #312e2b;
 	font-family: 'Fjalla One', sans-serif;
+	font-size: 68px;
 }
 
 header > h1 {
-	font-size: 5rem;
-	-webkit-text-stroke: 1px #315991;
+	font-size: 0.9em;
 	color: white;
+	-webkit-text-stroke: 0.009em #315991;
 }
 
 header #leave-game,
 header #logout {
-	font-size: 1.5rem;
+	font-size: 0.3em;
 	color: white;
-	-webkit-text-stroke: 1px red;
+	-webkit-text-stroke: 0.04em red;
 	cursor: pointer;
 }
 
@@ -29,24 +30,27 @@ header #logout:hover {
 }
 
 .board {
-	position: relative;
 	display: grid;
-	width: 806px;
-	height: 806px;
-	margin: 60px auto;
+	position: relative;
+	width: 10em;
+	height: 10em;
+	margin: 0.5em auto;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
+	border: 0.04em solid white;
+	border-radius: 0.06em;
 	cursor: pointer;
-	border: 3px solid white;
-	border-radius: 10px;
 }
 
 .board > div {
 	display: grid;
-	width: 100px;
-	height: 100px;
 	justify-content: center;
 	align-items: center;
+}
+
+.board div > img {
+	width: 100%;
+	height: 100%;
 }
 
 .rows-0:nth-child(even),
@@ -71,11 +75,6 @@ header #logout:hover {
 	background: #d9e0e6;
 }
 
-.board div > img {
-	width: 100px;
-	height: 100px;
-}
-
 #black-board {
 	transform: rotate(180deg);
 	-moz-transform: rotate(0.5turn);
@@ -90,20 +89,6 @@ header #logout:hover {
 	background-color: rgb(255, 160, 160);
 }
 
-#promote-modal {
-	display: flex;
-	visibility: hidden;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 60%;
-	transform: translate(-50%, -50%);
-	background-color: rgba(0, 0, 0, 0.4);
-	border: 3px solid white;
-	border-radius: 15px;
-	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
-}
-
 #game-info-modal {
 	visibility: hidden;
 	position: absolute;
@@ -114,118 +99,91 @@ header #logout:hover {
 	transform: translate(-50%, -50%);
 	background-color: rgba(0, 0, 0, 0.9);
 	border: 3px solid white;
-	border-radius: 15px;
+	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
 #game-info-modal > .game-info {
 	display: none;
-	font-size: 3rem;
+	font-size: 0.7em;
 	color: white;
 }
 
 #game-info-modal > .game-result {
 	display: none;
-	font-size: 5rem;
+	font-size: 1em;
 	color: white;
 }
 
-@media only screen and (max-device-width: 960px) {
-	body {
-		background-color: blue;
-	}
-	header > h1 {
-		font-size: 4.3rem;
-	}
+#promote-modal {
+	display: flex;
+	visibility: hidden;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 60%;
+	transform: translate(-50%, -50%);
+	background-color: rgba(0, 0, 0, 0.6);
+	border: 0.04em solid white;
+	border-radius: 0.2em;
+	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+}
 
-	header #leave-game,
-	header #logout {
-		font-size: 1.3rem;
+#promote-modal > img {
+	width: 1em;
+	height: 1em;
+}
+
+@media only screen and (max-device-width: 830px), (max-device-height: 935px) {
+	body {
+		font-size: 62px;
 	}
 }
 
-@media only screen and (max-device-width: 850px) {
+@media only screen and (max-device-width: 665px), (max-device-height: 735px) {
 	body {
-		background-color: red;
-	}
-	header > h1 {
-		font-size: 4rem;
-	}
-
-	.board {
-		width: 646px;
-		height: 646px;
-	}
-
-	.board > div {
-		width: 80px;
-		height: 80px;
-	}
-
-	.board div > img {
-		width: 80px;
-		height: 80px;
-	}
-
-	#game-info-modal > .game-info {
-		font-size: 2.5rem;
-	}
-
-	#game-info-modal > .game-result {
-		font-size: 4rem;
+		font-size: 55px;
 	}
 }
 
-@media only screen and (max-device-width: 767px) {
+@media only screen and (max-device-width: 615px), (max-device-height: 685px) {
 	body {
-		background-color: green;
-	}
-	header > h1 {
-		font-size: 3rem;
-	}
-
-	header #leave-game,
-	header #logout {
-		font-size: 1rem;
-	}
-
-	#game-info-modal > .game-info {
-		display: none;
-		font-size: 1.5rem;
-		color: white;
-	}
-
-	#game-info-modal > .game-result {
-		font-size: 3rem;
-		color: white;
+		font-size: 49px;
 	}
 }
 
-@media only screen and (max-device-width: 500px) {
+@media only screen and (max-device-width: 565px), (max-device-height: 635px) {
 	body {
-		background-color: purple;
+		font-size: 44px;
 	}
-	header > h1 {
-		font-size: 2.5rem;
-	}
+}
 
-	header #leave-game,
-	header #logout {
-		font-size: 0.75rem;
+@media only screen and (max-device-width: 515px), (max-device-height: 585px) {
+	body {
+		font-size: 41px;
 	}
+}
 
-	.board {
-		width: 403px;
-		height: 403px;
+@media only screen and (max-device-width: 475px), (max-device-height: 535px) {
+	body {
+		font-size: 38px;
 	}
+}
 
-	.board > div {
-		width: 50px;
-		height: 50px;
+@media only screen and (max-device-width: 435px), (max-device-height: 485px) {
+	body {
+		font-size: 35px;
 	}
+}
 
-	.board div > img {
-		width: 50px;
-		height: 50px;
+@media only screen and (max-device-width: 395px), (max-device-height: 435px) {
+	body {
+		font-size: 32px;
+	}
+}
+
+@media only screen and (max-device-width: 350px), (max-device-height: 385px) {
+	body {
+		font-size: 28px;
 	}
 }

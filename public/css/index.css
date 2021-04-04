@@ -101,3 +101,14 @@ a {
 a > span {
 	color: #312e2b;
 }
+
+@media only screen and (max-device-width: 813px) {
+	header > h1 {
+		font-size: 1.8rem;
+	}
+
+	.login-container {
+		/* height: 370px; */
+		width: 80% !important;
+	}
+}
