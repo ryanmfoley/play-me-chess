@@ -29,8 +29,12 @@ socket.on('enterGameRoom', ({ username, color }) => {
 
 	// Flip board for black //
 	if (color === 'white') {
-		gameInfoModal.style.visibility = 'visible'
-		gameInfo.style.display = 'block'
+		// gameInfoModal.style.visibility = 'visible'
+		// gameInfo.style.display = 'block'
+		chessBoard.clearBoard()
+		placePiecesOnBoard(chessBoard)
+		chessBoard.displayPieces()
+		chessBoard.markEnemySquares(player, opponent)
 	} else {
 		board.setAttribute('id', 'black-board')
 		gameInfo.setAttribute('id', 'black-board')

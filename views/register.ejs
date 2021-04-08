@@ -14,24 +14,25 @@
 			rel="stylesheet"
 		/>
 		<link type="text/css" rel="stylesheet" href="/css/index.css" />
+		<link type="text/css" rel="stylesheet" href="/css/member.css" />
+		<link type="text/css" rel="stylesheet" href="/css/mediaQueries.css" />
 		<title>Join - Play-Me-Chess</title>
 	</head>
 	<body>
 		<header class="w-50 mx-auto">
-			<h1 class="text-center mt-4 mb-3"><strong>Play-Me-Chess</strong></h1>
+			<h1 class="text-center"><strong>Play-Me-Chess</strong></h1>
 		</header>
 
 		<main
-			class="d-flex flex-column justify-content-center w-25 text-center mx-auto mt-5 px-4 join-container"
+			class="d-flex justify-content-center flex-column justify-content-center text-center mx-auto member-container"
 		>
 			<h2>Join Now — It’s Free & Easy!</h2>
-			<form action="/users/join" method="POST">
-				<div class="login-form">
-					<label for="username"></label>
+			<form action="/users/register" method="POST">
+				<div class="member-form">
 					<input
 						type="text"
 						id="username"
-						class="p-3 form-control form-control-lg"
+						class="form-control form-control-lg"
 						name="username"
 						placeholder="Username"
 						required
@@ -41,20 +42,28 @@
 					<small>Username already taken</small>
 					<input
 						type="password"
-						class="my-4 p-3 form-control form-control-lg"
+						class="form-control form-control-lg"
 						name="password"
 						placeholder="Password"
 					/>
 				</div>
-				<button
-					type="submit"
-					id="login"
-					class="my-4 btn-lg btn-primary btn-block"
-				>
+				<button type="submit" id="submit" class="btn-lg btn-primary btn-block">
 					<strong>Sign Up</strong>
 				</button>
 			</form>
 			<a href="/users/login"><span>Already a member?</span> Log In</a>
 		</main>
+		<script>
+			if (navigator.userAgent.indexOf('Chrome') === -1) {
+				const head = document.getElementsByTagName('HEAD')[0]
+				const link = document.createElement('link')
+
+				link.type = 'text/css'
+				link.rel = 'stylesheet'
+				link.href = '/css/nonChromeBrowser.css'
+
+				head.appendChild(link)
+			}
+		</script>
 	</body>
 </html>

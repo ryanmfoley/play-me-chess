@@ -2,48 +2,41 @@ const username = window.document.cookie.split('=')[1]
 const createGameBtn = document.querySelector('#create-game')
 const logOutBtn = document.querySelector('#logout')
 const logOutForm = document.querySelector('#logout-form')
-const lobbyTable = document.querySelector('.lobby-rooms')
+const lobbyTable = document.querySelector('.lobby-table tbody')
 const socket = io()
 
-function clearTable() {
-	lobbyTable.innerHTML = ''
-	for (var i = lobbyTable.rows.length - 1; i > 0; i--) {
-		lobbyTable.deleteRow(i)
-	}
-}
-
 function generateTable(playersWaiting) {
-	// Create table head //
-	const inviteText = document.createTextNode('Invite')
-	const playerText = document.createTextNode('Player')
-	const thead = lobbyTable.createTHead()
-	const theadRow = thead.insertRow()
-	const th1 = document.createElement('th')
-	const th2 = document.createElement('th')
-
-	th1.appendChild(playerText)
-	theadRow.appendChild(th1)
-	th2.appendChild(inviteText)
-	theadRow.appendChild(th2)
-
 	// Create table body //
-	playersWaiting.forEach(({ username, id }) => {
-		const row = lobbyTable.insertRow()
+	playersWaiting.forEach(({ username, id }, index) => {
 		const name = document.createTextNode(username)
-		const nameCell = row.insertCell()
-		const roomCell = row.insertCell()
 		const joinGameBtn = document.createElement('button')
 
 		joinGameBtn.innerText = 'Play Me'
+		joinGameBtn.className = 'w-75 btn btn-dark'
+		joinGameBtn.classList.add('join-game')
 		joinGameBtn.onclick = () => {
 			socket.emit('updatePlayersWaiting', id)
 			socket.emit('joinGame', { id, color: 'black' })
 
-			window.location.href = `/chess`
+			window.location.href = '/chess'
 		}
 
-		nameCell.appendChild(name)
-		roomCell.appendChild(joinGameBtn)
+		if (index < 5) {
+			const rows = document.querySelectorAll('tbody > tr')
+			const [nameCell, inviteCell] = rows[index].cells
+
+			nameCell.appendChild(name)
+			inviteCell.appendChild(joinGameBtn)
+			inviteCell.classList.add('text-center')
+		} else {
+			const row = lobbyTable.insertRow()
+			const nameCell = row.insertCell()
+			const inviteCell = row.insertCell()
+
+			nameCell.appendChild(name)
+			inviteCell.appendChild(joinGameBtn)
+			inviteCell.classList.add('text-center')
+		}
 	})
 }
 
@@ -51,7 +44,6 @@ socket.emit('login', username)
 
 // Get list of opened games and generate a table //
 socket.on('playersWaiting', (playersWaiting) => {
-	clearTable()
 	generateTable(playersWaiting)
 })
 

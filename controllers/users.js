@@ -9,11 +9,11 @@ router.get('/', (req, res) => {
 	})
 })
 
-router.get('/join', (req, res) => {
-	res.render('join.ejs')
+router.get('/register', (req, res) => {
+	res.render('register.ejs')
 })
 
-router.post('/join', (req, res) => {
+router.post('/register', (req, res) => {
 	req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
 
 	User.create(req.body, (err, createdUser) => res.redirect('/'))
