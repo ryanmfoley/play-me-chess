@@ -21,20 +21,14 @@ let player
 let opponent
 
 socket.emit('enterGameRoom')
-socket.on('enterGameRoom', ({ username, color }) => {
-	username = username
-
+socket.on('enterGameRoom', ({ color }) => {
 	player = color === 'white' ? whitePlayer : blackPlayer
 	opponent = color === 'white' ? blackPlayer : whitePlayer
 
 	// Flip board for black //
 	if (color === 'white') {
-		// gameInfoModal.style.visibility = 'visible'
-		// gameInfo.style.display = 'block'
-		chessBoard.clearBoard()
-		placePiecesOnBoard(chessBoard)
-		chessBoard.displayPieces()
-		chessBoard.markEnemySquares(player, opponent)
+		gameInfoModal.style.visibility = 'visible'
+		gameInfo.style.display = 'block'
 	} else {
 		board.setAttribute('id', 'black-board')
 		gameInfo.setAttribute('id', 'black-board')

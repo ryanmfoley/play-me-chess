@@ -133,27 +133,3 @@ io.on('connection', (socket) => {
 const { PORT } = process.env
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-
-// Listen for login event and check if username already exists //
-// socket.on('login', (username) => {
-// 	const nameExists = players.find((player) => player.username === username)
-
-// 	if (!players.length || !nameExists) {
-// 		// Create player and add to players array //
-// 		const player = new Player(socket.id, username)
-// 		const isNameAvailable = true
-
-// 		players.push(player)
-
-// 		socket.emit('loginStatus', { isNameAvailable, player })
-// 	} else socket.emit('loginStatus', { isNameAvailable: false })
-// })
-
-// socket.on('disconnect', () => {
-// 	const player = removePlayer(socket.id)
-// 	if (player) {
-// 	// Send players and room info to client
-// 		io.to(player.room).emit('playerDisconnected', players)
-// 	}
-// 	)}
-// })
