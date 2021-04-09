@@ -13,13 +13,13 @@
 			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
 			rel="stylesheet"
 		/>
-		<link type="text/css" rel="stylesheet" href="/css/index.css" />
-		<link type="text/css" rel="stylesheet" href="/css/member.css" />
-		<link type="text/css" rel="stylesheet" href="/css/mediaQueries.css" />
 		<script
 			src="https://kit.fontawesome.com/f5c3afdb68.js"
 			crossorigin="anonymous"
 		></script>
+		<link type="text/css" rel="stylesheet" href="/css/index.css" />
+		<link type="text/css" rel="stylesheet" href="/css/member.css" />
+		<link type="text/css" rel="stylesheet" href="/css/mediaQueries.css" />
 		<title>Login - Play-Me-Chess</title>
 	</head>
 	<body>
@@ -32,23 +32,27 @@
 		>
 			<form action="/users/login" method="POST">
 				<div class="member-form">
-					<input
-						type="text"
-						id="username"
-						class="form-control"
-						name="username"
-						placeholder="Username"
-						required
-					/>
-					<i class="fas fa-check-circle"></i>
-					<i class="fas fa-exclamation-circle"></i>
-					<small>Username or password incorrect</small>
-					<input
-						type="password"
-						class="form-control"
-						name="password"
-						placeholder="Password"
-					/>
+					<div class="username-input <%= userCheck %>">
+						<input
+							type="text"
+							class="form-control <%= usernameInputBorder %>"
+							name="username"
+							placeholder="Username"
+							required
+						/>
+						<i class="fas fa-exclamation-circle"></i>
+						<small>Invalid username</small>
+					</div>
+					<div class="password-input <%= passwordCheck %>">
+						<input
+							type="password"
+							class="form-control <%= passwordInputBorder %>"
+							name="password"
+							placeholder="Password"
+						/>
+						<i class="fas fa-exclamation-circle"></i>
+						<small>Invalid password</small>
+					</div>
 				</div>
 				<button type="submit" id="submit" class="btn btn-primary btn-block">
 					<strong>Log In</strong>
@@ -56,6 +60,7 @@
 			</form>
 			<a href="/users/register"><span>New?</span> Sign up - it's FREE!</a>
 		</main>
+
 		<script>
 			if (navigator.userAgent.indexOf('Chrome') === -1) {
 				const head = document.getElementsByTagName('HEAD')[0]

@@ -2,6 +2,7 @@
 	width: 30%;
 	margin-top: 1.2em;
 	padding: 0.4em;
+	font-family: sans-serif;
 	font-size: 68px;
 	background-color: white;
 	border-radius: 0.15em;
@@ -12,65 +13,77 @@
 	margin-bottom: 1em;
 }
 
-.member-form {
+.member-form.username-input {
+	position: relative;
+}
+
+.member-form.password-input {
 	position: relative;
 }
 
 .member-form input {
 	display: block;
-	font-family: sans-serif;
-	font-size: 0.3em;
 	width: 100%;
 	height: 2.8em;
+	margin-bottom: 1.5em;
+	font-family: sans-serif;
+	font-size: 0.3em;
 	border: 0.1em solid rgb(181, 181, 181);
 }
 
-.member-form > #username {
-	margin-bottom: 0.9em;
-}
-
 .member-form input::placeholder {
-	color: rgb(181, 181, 181) !important;
+	color: rgb(181, 181, 181);
 }
 
-.member-form.success input {
-	border-color: #2ecc71;
+.username-input {
+	position: relative;
 }
 
-.member-form.error input {
-	border-color: #e74c3c;
+.password-input {
+	position: relative;
 }
 
 .member-form i {
 	position: absolute;
-	top: 15px;
-	right: 10px;
+	top: 0.7em;
+	right: 0.4em;
 	visibility: hidden;
-}
-
-.member-form.success i.fa-check-circle {
-	color: #2ecc71;
-	visibility: visible;
-}
-
-.member-form.error i.fa-exclamation-circle {
-	color: #e74c3c;
-	visibility: visible;
+	font-size: 0.35em;
 }
 
 .member-form small {
-	visibility: hidden;
 	position: absolute;
-	bottom: 10;
-	left: 0;
+	bottom: -1.8em;
+	left: 0em;
+	visibility: hidden;
+	font-size: 0.2em;
 }
 
-.member-form.error small {
+.member-form input.is-invalid {
+	border-color: #e74c3c !important;
+}
+
+.username-input.error > i.fa-exclamation-circle {
 	color: #e74c3c;
 	visibility: visible;
 }
 
-form > button#submit {
+.password-input.error > i.fa-exclamation-circle {
+	color: #e74c3c;
+	visibility: visible;
+}
+
+.username-input.error > small {
+	color: #e74c3c;
+	visibility: visible;
+}
+
+.password-input.error > small {
+	color: #e74c3c;
+	visibility: visible;
+}
+
+button#submit {
 	display: inline-block;
 	height: 2.1em;
 	margin-bottom: 0.5em;
@@ -82,6 +95,7 @@ form > button#submit {
 }
 
 a {
+	font-family: 'Fjalla One', sans-serif;
 	font-size: 0.3em;
 	color: #3e70b7;
 }

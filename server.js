@@ -1,5 +1,3 @@
-/////////////////// remove uneeded imports like qs ///////////////////
-
 if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config()
 }

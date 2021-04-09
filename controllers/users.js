@@ -3,40 +3,93 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/users')
 
-router.get('/', (req, res) => {
-	User.find().then((users) => {
-		res.render('users.ejs', { users })
+router.get('/register', (req, res) => {
+	res.render('register.ejs', {
+		userCheck: '',
+		usernameInputBorder: '',
 	})
 })
 
-router.get('/register', (req, res) => {
-	res.render('register.ejs')
-})
+router.post('/register', (req, res, next) => {
+	User.findOne({ username: req.body.username }).then((user) => {
+		if (user) {
+			res.render('register.ejs', {
+				userCheck: 'error',
+				usernameInputBorder: 'is-invalid',
+			})
+		} else {
+			req.body.password = bcrypt.hashSync(
+				req.body.password,
+				bcrypt.genSaltSync(10)
+			)
 
-router.post('/register', (req, res) => {
-	req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
-
-	User.create(req.body, (err, createdUser) => res.redirect('/'))
+			User.create(req.body)
+				.then(() => res.redirect('/'))
+				.catch(next)
+		}
+	})
 })
 
 router.get('/login', (req, res) => {
-	res.render('login.ejs')
+	res.render('login.ejs', {
+		userCheck: '',
+		passwordCheck: '',
+		usernameInputBorder: '',
+		passwordInputBorder: '',
+	})
 })
 
 router.post('/login', (req, res) => {
-	User.findOne({ username: req.body.username }, (err, foundUser) => {
-		if (err) {
-			console.log(err)
-			res.send('oops the db had a problem')
-		} else if (!foundUser) {
-			res.send('<a href="/">Sorry User not found</a>')
-		} else {
-			if (bcrypt.compareSync(req.body.password, foundUser.password)) {
-				req.session.currentUser = foundUser
+	User.findOne({ username: req.body.username }).then((user) => {
+		if (user) {
+			if (bcrypt.compareSync(req.body.password, user.password)) {
+				req.session.currentUser = user
+
 				res.redirect('/')
-			} else res.send('<a href="/"> Password does not match </a>')
+			} else {
+				res.render('login.ejs', {
+					userCheck: '',
+					passwordCheck: 'error',
+					usernameInputBorder: '',
+					passwordInputBorder: 'is-invalid',
+				})
+			}
+		} else {
+			res.render('login.ejs', {
+				userCheck: 'error',
+				passwordCheck: '',
+				usernameInputBorder: 'is-invalid',
+				passwordInputBorder: '',
+			})
 		}
 	})
+
+	// User.findOne({ username: req.body.username }, (err, foundUser) => {
+	// 	if (err) {
+	// 		console.log(err)
+	// 		res.send('oops the db had a problem')
+	// 	} else if (foundUser) {
+	// 		if (bcrypt.compareSync(req.body.password, foundUser.password)) {
+	// 			req.session.currentUser = foundUser
+
+	// 			res.redirect('/')
+	// 		} else {
+	// 			res.render('login.ejs', {
+	// 				userCheck: '',
+	// 				passwordCheck: 'error',
+	// 				usernameInputBorder: '',
+	// 				passwordInputBorder: 'is-invalid',
+	// 			})
+	// 		}
+	// 	} else {
+	// 		res.render('login.ejs', {
+	// 			userCheck: 'error',
+	// 			passwordCheck: '',
+	// 			usernameInputBorder: 'is-invalid',
+	// 			passwordInputBorder: '',
+	// 		})
+	// 	}
+	// })
 })
 
 router.delete('/', (req, res) => req.session.destroy(() => res.redirect('/')))

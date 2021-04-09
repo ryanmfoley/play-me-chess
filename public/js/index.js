@@ -10,6 +10,7 @@ form.addEventListener('submit', (e) => {
 	const username = e.target.username.value.trim()
 
 	socket.emit('login', username)
+
 	// Check if username already exist //
 	socket.on('loginStatus', ({ isNameAvailable, player }) => {
 		if (isNameAvailable) {
@@ -23,5 +24,5 @@ form.addEventListener('submit', (e) => {
 
 function setError(input) {
 	const form = input.parentElement
-	form.className = 'login-form error'
+	form.className = 'member-form error'
 }
