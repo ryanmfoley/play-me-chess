@@ -19,43 +19,48 @@
 		></script>
 		<link type="text/css" rel="stylesheet" href="/css/index.css" />
 		<link type="text/css" rel="stylesheet" href="/css/member.css" />
-		<link type="text/css" rel="stylesheet" href="/css/mediaQueries.css" />
 		<title>Join - Play-Me-Chess</title>
 	</head>
 	<body>
-		<header class="w-50 mx-auto">
+		<header>
 			<h1 class="text-center"><strong>Play-Me-Chess</strong></h1>
 		</header>
 
-		<main
-			class="d-flex flex-column justify-content-center text-center mx-auto member-container"
-		>
-			<h2>Join Now — It’s Free & Easy!</h2>
-			<form action="/users/register" method="POST">
-				<div class="member-form">
-					<div class="username-input <%= userCheck %>">
+		<main>
+			<div class="member-container d-flex flex-column mx-auto text-center">
+				<h2>Join Now — It’s Free & Easy!</h2>
+				<form action="/users/register" method="POST">
+					<div class="member-form">
+						<div class="username-input <%= userCheck %>">
+							<input
+								type="text"
+								class="form-control <%= usernameInputBorder %>"
+								name="username"
+								placeholder="Username"
+								required
+							/>
+							<i class="fas fa-exclamation-circle"></i>
+							<small>Username already taken</small>
+						</div>
 						<input
-							type="text"
-							class="form-control <%= usernameInputBorder %>"
-							name="username"
-							placeholder="Username"
-							required
+							type="password"
+							class="form-control"
+							name="password"
+							placeholder="Password"
 						/>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Username already taken</small>
 					</div>
-					<input
-						type="password"
-						class="form-control"
-						name="password"
-						placeholder="Password"
-					/>
-				</div>
-				<button type="submit" id="submit" class="btn btn-primary btn-block">
-					<strong>Sign Up</strong>
-				</button>
-			</form>
-			<a href="/users/login"><span>Already a member?</span> Log In</a>
+					<button
+						type="submit"
+						id="submit-btn"
+						class="btn btn-primary btn-block"
+					>
+						<strong>Sign Up</strong>
+					</button>
+				</form>
+				<a href="/users/login" class="member-link text-center"
+					><span>Already a member?</span> Log In</a
+				>
+			</div>
 		</main>
 
 		<script>

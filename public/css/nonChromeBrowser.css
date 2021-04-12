@@ -2,7 +2,7 @@ header > h1 {
 	-webkit-text-stroke: 0.04em #315991;
 }
 
-header #leave-game,
-header #logout {
+#leave-game-btn,
+#logout-btn {
 	-webkit-text-stroke: 0.01em red;
 }

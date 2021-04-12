@@ -1,3 +1,8 @@
+main {
+	width: 80vh;
+	margin: 1em auto;
+}
+
 .lobby-container {
 	display: grid;
 	width: 6em;
@@ -12,22 +17,20 @@
 }
 
 table {
-	empty-cells: show;
+	font-family: sans-serif;
 }
 
 thead {
-	background-color: #312e2b;
+	background: #312e2b;
 	border: 0.07em solid #312e2b;
 }
 
-table.table-bordered > thead > tr > th {
+table.table-bordered th {
 	border-bottom: 0.07em solid white;
-	/* border-bottom: 0.07em solid #312e2b; */
 }
 
 table th:first-child {
 	border-right: 0.07em solid white;
-	/* border-right: 0.07em solid #312e2b; */
 }
 
 tbody {
@@ -35,22 +38,22 @@ tbody {
 	color: white;
 }
 
-table.table-bordered > tbody > tr > td {
+table.table-bordered td {
 	height: 2em;
 	vertical-align: middle;
 	border: 0.07em solid #312e2b;
 }
 
 tbody > tr:nth-child(odd) {
-	background-color: #315991;
+	background: #315991;
 }
 
 tbody > tr:nth-child(even) {
-	background-color: #d9e0e6;
+	background: #d9e0e6;
 	color: #312e2b;
 }
 
-#create-game {
+#create-game-btn {
 	color: #3e70b7;
 	font-family: sans-serif;
 	font-size: 0.5em;
@@ -60,17 +63,17 @@ tbody > tr:nth-child(even) {
 	border: 2px solid black;
 }
 
-#create-game:hover {
+#create-game-btn:hover {
 	letter-spacing: 0.06em;
-	background-color: white;
+	background: white;
 	color: #5099ff;
 	border: 2px solid #5099ff;
 }
 
-button.join-game {
+.join-game-btn {
 	font-size: 0.75em;
 }
 
-button.join-game:hover {
+.join-game-btn:hover {
 	border: 0.05em solid white;
 }

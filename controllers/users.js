@@ -63,33 +63,6 @@ router.post('/login', (req, res) => {
 			})
 		}
 	})
-
-	// User.findOne({ username: req.body.username }, (err, foundUser) => {
-	// 	if (err) {
-	// 		console.log(err)
-	// 		res.send('oops the db had a problem')
-	// 	} else if (foundUser) {
-	// 		if (bcrypt.compareSync(req.body.password, foundUser.password)) {
-	// 			req.session.currentUser = foundUser
-
-	// 			res.redirect('/')
-	// 		} else {
-	// 			res.render('login.ejs', {
-	// 				userCheck: '',
-	// 				passwordCheck: 'error',
-	// 				usernameInputBorder: '',
-	// 				passwordInputBorder: 'is-invalid',
-	// 			})
-	// 		}
-	// 	} else {
-	// 		res.render('login.ejs', {
-	// 			userCheck: 'error',
-	// 			passwordCheck: '',
-	// 			usernameInputBorder: 'is-invalid',
-	// 			passwordInputBorder: '',
-	// 		})
-	// 	}
-	// })
 })
 
 router.delete('/', (req, res) => req.session.destroy(() => res.redirect('/')))

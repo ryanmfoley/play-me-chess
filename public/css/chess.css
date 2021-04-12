@@ -1,9 +1,10 @@
 .board {
 	display: grid;
 	position: relative;
-	width: 10em;
-	height: 10em;
-	margin: 0.5em auto;
+	box-sizing: content-box;
+	width: 80vh;
+	height: 80vh;
+	margin: auto;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
 	border: 0.04em solid white;
@@ -11,15 +12,15 @@
 	cursor: pointer;
 }
 
+.square > img {
+	width: 10vh;
+	height: 10vh;
+}
+
 .board > div {
 	display: grid;
 	justify-content: center;
 	align-items: center;
-}
-
-.board div > img {
-	width: 1.2em;
-	height: 1.2em;
 }
 
 .rows-0:nth-child(even),
@@ -45,17 +46,17 @@
 }
 
 #black-board {
-	transform: rotate(180deg);
 	-moz-transform: rotate(0.5turn);
+	transform: rotate(180deg);
 }
 
 .black-piece {
-	transform: rotate(180deg);
 	-moz-transform: rotate(0.5turn);
+	transform: rotate(180deg);
 }
 
 #check-square {
-	background-color: rgb(255, 160, 160);
+	background: rgb(255, 160, 160);
 }
 
 #game-info-modal {
@@ -66,19 +67,19 @@
 	width: 80%;
 	height: 25%;
 	transform: translate(-50%, -50%);
-	background-color: rgba(0, 0, 0, 0.9);
+	background: rgba(0, 0, 0, 0.9);
 	border: 3px solid white;
 	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-#game-info-modal > .game-info {
+.game-info {
 	display: none;
 	font-size: 0.7em;
 	color: white;
 }
 
-#game-info-modal > .game-result {
+.game-result {
 	display: none;
 	font-size: 1em;
 	color: white;
@@ -92,13 +93,13 @@
 	left: 50%;
 	width: 60%;
 	transform: translate(-50%, -50%);
-	background-color: rgba(0, 0, 0, 0.6);
+	background: rgba(0, 0, 0, 0.6);
 	border: 0.04em solid white;
 	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
 #promote-modal > img {
-	width: 1em;
-	height: 1em;
+	width: 10vh;
+	height: 10vh;
 }

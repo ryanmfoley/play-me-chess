@@ -28,14 +28,11 @@ io.use(
 app.use(express.static('public'))
 
 // Controllers //
-const userController = require('./controllers/users')
-app.use('/users', userController)
-const lobbyController = require('./controllers/lobby')
-app.use('/lobby', lobbyController)
-const chessController = require('./controllers/chess')
-app.use('/chess', chessController)
+app.use('/users', require('./controllers/users'))
+app.use('/lobby', require('./controllers/lobby'))
+app.use('/chess', require('./controllers/chess'))
 
-// Routes
+// Routes //
 app.get('/', (req, res) => res.redirect('/lobby'))
 
 let playersWaiting = []

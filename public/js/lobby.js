@@ -1,6 +1,6 @@
 const username = window.document.cookie.split('=')[1]
-const createGameBtn = document.querySelector('#create-game')
-const logOutBtn = document.querySelector('#logout')
+const createGameBtn = document.querySelector('#create-game-btn')
+const logOutBtn = document.querySelector('#logout-btn')
 const logOutForm = document.querySelector('#logout-form')
 const lobbyTable = document.querySelector('.lobby-table tbody')
 const socket = io()
@@ -13,7 +13,7 @@ function generateTable(playersWaiting) {
 
 		joinGameBtn.innerText = 'Play Me'
 		joinGameBtn.className = 'w-75 btn btn-dark'
-		joinGameBtn.classList.add('join-game')
+		joinGameBtn.classList.add('join-game-btn')
 		joinGameBtn.onclick = () => {
 			socket.emit('updatePlayersWaiting', id)
 			socket.emit('joinGame', { id, color: 'black' })

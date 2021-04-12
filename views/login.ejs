@@ -19,46 +19,52 @@
 		></script>
 		<link type="text/css" rel="stylesheet" href="/css/index.css" />
 		<link type="text/css" rel="stylesheet" href="/css/member.css" />
-		<link type="text/css" rel="stylesheet" href="/css/mediaQueries.css" />
 		<title>Login - Play-Me-Chess</title>
 	</head>
 	<body>
-		<header class="w-50 mx-auto">
+		<header>
 			<h1 class="text-center"><strong>Play-Me-Chess</strong></h1>
 		</header>
 
-		<main
-			class="d-flex flex-column justify-content-center text-center mx-auto member-container"
-		>
-			<form action="/users/login" method="POST">
-				<div class="member-form">
-					<div class="username-input <%= userCheck %>">
-						<input
-							type="text"
-							class="form-control <%= usernameInputBorder %>"
-							name="username"
-							placeholder="Username"
-							required
-						/>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Invalid username</small>
+		<main>
+			<div class="member-container d-flex flex-column mx-auto">
+				<form action="/users/login" method="POST">
+					<div class="member-form">
+						<div class="username-input <%= userCheck %>">
+							<input
+								type="text"
+								class="form-control <%= usernameInputBorder %>"
+								name="username"
+								placeholder="Username"
+								required
+							/>
+							<i class="fas fa-exclamation-circle"></i>
+							<small>Invalid username</small>
+						</div>
+						<div class="password-input <%= passwordCheck %>">
+							<input
+								type="password"
+								class="form-control <%= passwordInputBorder %>"
+								name="password"
+								placeholder="Password"
+								required
+							/>
+							<i class="fas fa-exclamation-circle"></i>
+							<small>Invalid password</small>
+						</div>
 					</div>
-					<div class="password-input <%= passwordCheck %>">
-						<input
-							type="password"
-							class="form-control <%= passwordInputBorder %>"
-							name="password"
-							placeholder="Password"
-						/>
-						<i class="fas fa-exclamation-circle"></i>
-						<small>Invalid password</small>
-					</div>
-				</div>
-				<button type="submit" id="submit" class="btn btn-primary btn-block">
-					<strong>Log In</strong>
-				</button>
-			</form>
-			<a href="/users/register"><span>New?</span> Sign up - it's FREE!</a>
+					<button
+						type="submit"
+						id="submit-btn"
+						class="btn btn-primary btn-block"
+					>
+						<strong>Log In</strong>
+					</button>
+				</form>
+				<a href="/users/register" class="member-link text-center"
+					><span>New?</span> Sign up - it's FREE!</a
+				>
+			</div>
 		</main>
 
 		<script>
