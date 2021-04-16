@@ -1,23 +1,16 @@
-main {
-	width: 80vh;
-	margin: 1em auto;
-}
-
-.lobby-container {
+main.lobby-container {
 	display: grid;
-	width: 6em;
-	margin: 1.2em;
+	width: min(90vw, 500px);
+	margin: 0.5em auto;
 	color: white;
 	border: 0.1em solid white;
 	border-radius: 0.1em;
 }
 
-.lobby-table {
-	font-size: 0.5em;
-}
-
-table {
+table.lobby-table {
+	width: 100%;
 	font-family: sans-serif;
+	font-size: min(4.5vw, 0.3em);
 }
 
 thead {

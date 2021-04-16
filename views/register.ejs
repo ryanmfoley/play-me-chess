@@ -10,8 +10,8 @@
 			crossorigin="anonymous"
 		/>
 		<link
-			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
 			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
 		/>
 		<script
 			src="https://kit.fontawesome.com/f5c3afdb68.js"
@@ -26,41 +26,35 @@
 			<h1 class="text-center"><strong>Play-Me-Chess</strong></h1>
 		</header>
 
-		<main>
-			<div class="member-container d-flex flex-column mx-auto text-center">
-				<h2>Join Now — It’s Free & Easy!</h2>
-				<form action="/users/register" method="POST">
-					<div class="member-form">
-						<div class="username-input <%= userCheck %>">
-							<input
-								type="text"
-								class="form-control <%= usernameInputBorder %>"
-								name="username"
-								placeholder="Username"
-								required
-							/>
-							<i class="fas fa-exclamation-circle"></i>
-							<small>Username already taken</small>
-						</div>
+		<main class="member-container d-flex flex-column text-center">
+			<h2>Join Now — It’s Free & Easy!</h2>
+			<form action="/users/register" method="POST">
+				<div class="member-form">
+					<div class="username-input <%= userCheck %>">
 						<input
-							type="password"
-							class="form-control"
-							name="password"
-							placeholder="Password"
+							type="text"
+							class="form-control <%= usernameInputBorder %>"
+							name="username"
+							placeholder="Username"
+							required
 						/>
+						<i class="fas fa-exclamation-circle"></i>
+						<small>Username already taken</small>
 					</div>
-					<button
-						type="submit"
-						id="submit-btn"
-						class="btn btn-primary btn-block"
-					>
-						<strong>Sign Up</strong>
-					</button>
-				</form>
-				<a href="/users/login" class="member-link text-center"
-					><span>Already a member?</span> Log In</a
-				>
-			</div>
+					<input
+						type="password"
+						class="form-control"
+						name="password"
+						placeholder="Password"
+					/>
+				</div>
+				<button type="submit" id="submit-btn" class="btn btn-primary btn-block">
+					<strong>Sign Up</strong>
+				</button>
+			</form>
+			<a href="/users/login" class="member-link text-center"
+				><span>Already a member?</span> Log In</a
+			>
 		</main>
 
 		<script>

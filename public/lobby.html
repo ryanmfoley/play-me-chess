@@ -10,8 +10,8 @@
 			crossorigin="anonymous"
 		/>
 		<link
-			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
 			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
 		/>
 		<link rel="stylesheet" href="./css/index.css" />
 		<link rel="stylesheet" href="./css/lobby.css" />
@@ -24,52 +24,27 @@
 			<h1 class="text-center"><strong>Play-Me-Chess</strong></h1>
 			<form
 				id="logout-form"
-				class="d-flex justify-content-around mx-auto"
+				class="d-flex justify-content-center"
 				action="users?_method=DELETE"
 				method="POST"
 			>
-				<div class="nav-wrapper d-flex justify-content-center">
-					<a id="logout-btn">Log Out</a>
-				</div>
+				<a id="logout-btn">Log Out</a>
 			</form>
 		</header>
 
-		<main>
-			<div class="lobby-container mx-auto">
-				<table class="lobby-table table table-sm table-dark table-bordered m-0">
-					<thead>
-						<tr>
-							<th>Player</th>
-							<th>Invite</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-				<button id="create-game-btn" class="btn btn-light btn-block">
-					<strong>CREATE A GAME</strong>
-				</button>
-			</div>
+		<main class="lobby-container mx-auto">
+			<table class="lobby-table table table-sm table-dark table-bordered m-0">
+				<thead>
+					<tr>
+						<th>Player</th>
+						<th>Invite</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<button id="create-game-btn" class="btn btn-light btn-block">
+				<strong>CREATE A GAME</strong>
+			</button>
 		</main>
 
 		<script>

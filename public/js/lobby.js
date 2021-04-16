@@ -6,14 +6,23 @@ const lobbyTable = document.querySelector('.lobby-table tbody')
 const socket = io()
 
 function generateTable(playersWaiting) {
+	// Clear table //
+	lobbyTable.innerHTML = ''
+
+	// Genereate first 6 empty rows //
+	for (let i = 0; i < 5; i++) {
+		const row = lobbyTable.insertRow()
+		row.insertCell()
+		row.insertCell()
+	}
+
 	// Create table body //
 	playersWaiting.forEach(({ username, id }, index) => {
 		const name = document.createTextNode(username)
 		const joinGameBtn = document.createElement('button')
 
 		joinGameBtn.innerText = 'Play Me'
-		joinGameBtn.className = 'w-75 btn btn-dark'
-		joinGameBtn.classList.add('join-game-btn')
+		joinGameBtn.className = 'join-game-btn w-75 btn btn-dark'
 		joinGameBtn.onclick = () => {
 			socket.emit('updatePlayersWaiting', id)
 			socket.emit('joinGame', { id, color: 'black' })
@@ -25,7 +34,10 @@ function generateTable(playersWaiting) {
 			const rows = document.querySelectorAll('tbody > tr')
 			const [nameCell, inviteCell] = rows[index].cells
 
+			nameCell.innerHTML = '<td></td>'
 			nameCell.appendChild(name)
+
+			inviteCell.innerHTML = '<td></td>'
 			inviteCell.appendChild(joinGameBtn)
 			inviteCell.classList.add('text-center')
 		} else {
@@ -33,7 +45,10 @@ function generateTable(playersWaiting) {
 			const nameCell = row.insertCell()
 			const inviteCell = row.insertCell()
 
+			nameCell.innerHTML = '<td></td>'
 			nameCell.appendChild(name)
+
+			inviteCell.innerHTML = '<td></td>'
 			inviteCell.appendChild(joinGameBtn)
 			inviteCell.classList.add('text-center')
 		}

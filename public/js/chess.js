@@ -21,9 +21,10 @@ let player
 let opponent
 
 socket.emit('enterGameRoom')
-socket.on('enterGameRoom', ({ color }) => {
+socket.on('enterGameRoom', ({ id, color }) => {
 	player = color === 'white' ? whitePlayer : blackPlayer
 	opponent = color === 'white' ? blackPlayer : whitePlayer
+	player.id = id
 
 	// Flip board for black //
 	if (color === 'white') {
@@ -45,40 +46,25 @@ socket.on('startGame', () => {
 	chessBoard.markEnemySquares(player, opponent)
 })
 
-//______________________________________________________________
-// Start-Game
+function selectPiece(e) {
+	e.dataTransfer.setData('text', 'mydata') // Needed by Firefox
 
-for (const square of squares) {
-	square.addEventListener('dragstart', function (e) {
-		const { turn } = chessBoard
+	const { turn } = chessBoard
 
-		if (player.color === turn) {
-			selectedCell = chessBoard.identifyCell(e.target)
-			const selectedSquare = chessBoard.selectSquare(selectedCell)
+	if (player.color === turn) {
+		selectedCell = chessBoard.identifyCell(e.target)
+		const selectedSquare = chessBoard.selectSquare(selectedCell)
 
-			if (selectedSquare.color === turn) {
-				selectedPiece = selectedSquare.piece
-				setTimeout(() => (e.target.style.display = 'none'), 0)
-			}
+		if (selectedSquare.color === turn) {
+			selectedPiece = selectedSquare.piece
+			setTimeout(() => (e.target.style.display = 'none'), 0)
 		}
-	})
-
-	square.addEventListener('dragenter', (e) => {
-		e.preventDefault()
-
-		square.style.border = '6px dashed #ed2f09'
-	})
-	square.addEventListener('dragleave', () => {
-		square.style.border = 'initial'
-	})
-	square.addEventListener('dragover', (e) => e.preventDefault())
-	square.addEventListener('drop', movePiece)
-	square.addEventListener('dragend', (e) =>
-		setTimeout(() => (e.target.style.display = 'block'), 0)
-	)
+	}
 }
 
 function movePiece(e) {
+	e.preventDefault()
+
 	this.style.border = 'initial'
 	const { turn } = chessBoard
 
@@ -127,6 +113,23 @@ function movePiece(e) {
 			selectedPiece = null
 		}
 	}
+}
+
+//______________________________________________________________
+// Start-Game
+
+for (const square of squares) {
+	square.addEventListener('dragstart', selectPiece)
+	square.addEventListener('dragenter', (e) => {
+		e.preventDefault()
+		square.style.border = '6px dashed #ed2f09'
+	})
+	square.addEventListener('dragleave', () => (square.style.border = 'initial'))
+	square.addEventListener('dragover', (e) => e.preventDefault())
+	square.addEventListener('drop', movePiece)
+	square.addEventListener('dragend', (e) =>
+		setTimeout(() => (e.target.style.display = 'block'), 0)
+	)
 }
 
 //______________________________________________________________
@@ -197,7 +200,8 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		gameResult.innerHTML = 'Checkmate'
 
 		setTimeout(function () {
-			gameInfoModal.style.display = 'block'
+			gameInfoModal.style.visibility = 'visible'
+			gameResult.style.display = 'block'
 		}, 500)
 
 		setTimeout(function () {
@@ -207,7 +211,8 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		gameResult.innerHTML = 'Draw'
 
 		setTimeout(function () {
-			gameInfoModal.style.display = 'block'
+			gameInfoModal.style.visibility = 'visible'
+			gameResult.style.display = 'block'
 		}, 500)
 
 		setTimeout(function () {
@@ -217,7 +222,8 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		gameResult.innerHTML = 'Stalemate'
 
 		setTimeout(function () {
-			gameInfoModal.style.display = 'block'
+			gameInfoModal.style.visibility = 'visible'
+			gameResult.style.display = 'block'
 		}, 2000)
 
 		setTimeout(function () {
@@ -227,6 +233,8 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 })
 
 leaveGameButton.addEventListener('click', () => {
+	socket.emit('updatePlayersWaiting', player.id)
+
 	window.location.href = '/lobby'
 })
 

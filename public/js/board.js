@@ -126,6 +126,7 @@ class Board {
 				switch (square.piece.name) {
 					case 'pawn':
 						img = document.createElement('img')
+
 						if (square.color === 'white') {
 							img.src = './images/wp.svg'
 							img.classList.add('piece')
@@ -138,6 +139,7 @@ class Board {
 						break
 					case 'knight':
 						img = document.createElement('img')
+
 						if (square.color === 'white') {
 							img.src = './images/wn.svg'
 							img.classList.add('piece')
@@ -150,6 +152,7 @@ class Board {
 						break
 					case 'bishop':
 						img = document.createElement('img')
+
 						if (square.color === 'white') {
 							img.src = './images/wb.svg'
 							img.classList.add('piece')
@@ -162,6 +165,7 @@ class Board {
 						break
 					case 'rook':
 						img = document.createElement('img')
+
 						if (square.color === 'white') {
 							img.src = './images/wr.svg'
 							img.classList.add('piece')
@@ -174,6 +178,7 @@ class Board {
 						break
 					case 'queen':
 						img = document.createElement('img')
+
 						if (square.color === 'white') {
 							img.src = './images/wq.svg'
 							img.classList.add('piece')
@@ -186,6 +191,7 @@ class Board {
 						break
 					case 'king':
 						img = document.createElement('img')
+
 						if (square.color === 'white') {
 							img.src = './images/wk.svg'
 							img.classList.add('piece')

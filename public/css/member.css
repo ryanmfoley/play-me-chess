@@ -1,25 +1,18 @@
-main {
-	width: 80vh;
+main.member-container {
 	margin: 1em auto;
-}
-
-.member-container {
-	width: 350px;
+	width: min(90vw, 500px);
 	padding: 0.4em;
 	font-size: 68px;
 	background: white;
-	border-radius: 0.15em;
+	border-radius: 0.1em;
 }
 
-.member-container > h2 {
+main.member-container > h2 {
 	font-size: 0.38em;
 	margin-bottom: 1em;
 }
 
-.member-form.username-input {
-	position: relative;
-}
-
+.member-form.username-input,
 .member-form.password-input {
 	position: relative;
 }
@@ -38,10 +31,7 @@ main {
 	color: rgb(181, 181, 181);
 }
 
-.username-input {
-	position: relative;
-}
-
+.username-input,
 .password-input {
 	position: relative;
 }
@@ -66,21 +56,9 @@ main {
 	border-color: #e74c3c !important;
 }
 
-.username-input.error > i.fa-exclamation-circle {
-	color: #e74c3c;
-	visibility: visible;
-}
-
-.password-input.error > i.fa-exclamation-circle {
-	color: #e74c3c;
-	visibility: visible;
-}
-
-.username-input.error > small {
-	color: #e74c3c;
-	visibility: visible;
-}
-
+.username-input.error > i.fa-exclamation-circle,
+.password-input.error > i.fa-exclamation-circle,
+.username-input.error > small,
 .password-input.error > small {
 	color: #e74c3c;
 	visibility: visible;

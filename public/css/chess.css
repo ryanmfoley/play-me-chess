@@ -1,7 +1,6 @@
 .board {
 	display: grid;
 	position: relative;
-	box-sizing: content-box;
 	width: 80vh;
 	height: 80vh;
 	margin: auto;
@@ -13,8 +12,8 @@
 }
 
 .square > img {
-	width: 10vh;
-	height: 10vh;
+	width: 9.8vh;
+	height: 9.8vh;
 }
 
 .board > div {
@@ -68,20 +67,20 @@
 	height: 25%;
 	transform: translate(-50%, -50%);
 	background: rgba(0, 0, 0, 0.9);
-	border: 3px solid white;
+	border: 0.3vmin solid white;
 	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-.game-info {
+h2.game-info {
 	display: none;
-	font-size: 0.7em;
+	font-size: 5vmin;
 	color: white;
 }
 
-.game-result {
+h2.game-result {
 	display: none;
-	font-size: 1em;
+	font-size: 7vmin;
 	color: white;
 }
 
@@ -94,12 +93,29 @@
 	width: 60%;
 	transform: translate(-50%, -50%);
 	background: rgba(0, 0, 0, 0.6);
-	border: 0.04em solid white;
+	border: 0.3vmin solid white;
 	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
 #promote-modal > img {
-	width: 10vh;
-	height: 10vh;
+	width: 9.8vh;
+	height: 9.8vh;
+}
+
+@media (orientation: portrait) {
+	.board {
+		width: 100vw;
+		height: 100vw;
+	}
+
+	.square > img {
+		width: 12.3vw;
+		height: 12.3vw;
+	}
+
+	#promote-modal > img {
+		width: 9.8vh;
+		height: 9.8vh;
+	}
 }
