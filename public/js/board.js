@@ -122,88 +122,21 @@ class Board {
 	displayPieces() {
 		this.board.forEach((row) =>
 			row.forEach((square) => {
-				let img
-				switch (square.piece.name) {
-					case 'pawn':
-						img = document.createElement('img')
+				square.cellBox.innerHTML = ''
 
-						if (square.color === 'white') {
-							img.src = './images/wp.svg'
-							img.classList.add('piece')
-						} else {
-							img.src = './images/bp.svg'
-							img.classList.add('piece', 'black-piece')
-						}
-						square.cellBox.innerHTML = ''
-						square.cellBox.append(img)
-						break
-					case 'knight':
-						img = document.createElement('img')
+				if (square.piece) {
+					const img = document.createElement('img')
+					const {
+						color,
+						piece: { name: piece },
+					} = square
 
-						if (square.color === 'white') {
-							img.src = './images/wn.svg'
-							img.classList.add('piece')
-						} else {
-							img.src = './images/bn.svg'
-							img.classList.add('piece', 'black-piece')
-						}
-						square.cellBox.innerHTML = ''
-						square.cellBox.append(img)
-						break
-					case 'bishop':
-						img = document.createElement('img')
+					img.src = `./images/${color}-${piece}.svg`
+					img.className = color === 'white' ? 'piece' : 'piece black-piece'
+					img.dataset.color = color
+					img.draggable = true
 
-						if (square.color === 'white') {
-							img.src = './images/wb.svg'
-							img.classList.add('piece')
-						} else {
-							img.src = './images/bb.svg'
-							img.classList.add('piece', 'black-piece')
-						}
-						square.cellBox.innerHTML = ''
-						square.cellBox.append(img)
-						break
-					case 'rook':
-						img = document.createElement('img')
-
-						if (square.color === 'white') {
-							img.src = './images/wr.svg'
-							img.classList.add('piece')
-						} else {
-							img.src = './images/br.svg'
-							img.classList.add('piece', 'black-piece')
-						}
-						square.cellBox.innerHTML = ''
-						square.cellBox.append(img)
-						break
-					case 'queen':
-						img = document.createElement('img')
-
-						if (square.color === 'white') {
-							img.src = './images/wq.svg'
-							img.classList.add('piece')
-						} else {
-							img.src = './images/bq.svg'
-							img.classList.add('piece', 'black-piece')
-						}
-						square.cellBox.innerHTML = ''
-						square.cellBox.append(img)
-						break
-					case 'king':
-						img = document.createElement('img')
-
-						if (square.color === 'white') {
-							img.src = './images/wk.svg'
-							img.classList.add('piece')
-						} else {
-							img.src = './images/bk.svg'
-							img.classList.add('piece', 'black-piece')
-						}
-						square.cellBox.innerHTML = ''
-						square.cellBox.append(img)
-						break
-					default:
-						square.cellBox.innerHTML = ''
+					square.cellBox.append(img)
 				}
 			})
 		)
@@ -211,7 +144,7 @@ class Board {
 
 	identifyCell(cell) {
 		const square =
-			cell.parentElement.classList.value === 'board'
+			cell.parentElement.id === 'board'
 				? cell.classList
 				: cell.parentElement.classList
 		const [row] = square[0].match(/\d+/)

@@ -204,46 +204,19 @@ class Player {
 
 	selectPieceModal() {
 		const promoteModal = document.querySelector('#promote-modal')
-		const knight = document.createElement('img')
-		const bishop = document.createElement('img')
-		const rook = document.createElement('img')
-		const queen = document.createElement('img')
-
-		if (this.color === 'white') {
-			knight.src = './images/wn.svg'
-			knight.setAttribute('data-piece', 'knight')
-
-			bishop.src = './images/wb.svg'
-			bishop.setAttribute('data-piece', 'bishop')
-
-			rook.src = './images/wr.svg'
-			rook.setAttribute('data-piece', 'rook')
-
-			queen.src = './images/wq.svg'
-			queen.setAttribute('data-piece', 'queen')
-		} else {
-			knight.src = './images/bn.svg'
-			knight.classList.add('black-piece')
-			knight.setAttribute('data-piece', 'knight')
-
-			bishop.src = './images/bb.svg'
-			bishop.classList.add('black-piece')
-			bishop.setAttribute('data-piece', 'bishop')
-
-			rook.src = './images/br.svg'
-			rook.classList.add('black-piece')
-			rook.setAttribute('data-piece', 'rook')
-
-			queen.src = './images/bq.svg'
-			queen.classList.add('black-piece')
-			queen.setAttribute('data-piece', 'queen')
-		}
+		const pieces = ['knight', 'bishop', 'rook', 'queen']
 
 		promoteModal.innerHTML = ''
-		promoteModal.append(knight)
-		promoteModal.append(bishop)
-		promoteModal.append(rook)
-		promoteModal.append(queen)
+
+		for (const piece of pieces) {
+			const img = document.createElement('img')
+
+			img.src = `./images/${color}-${piece}.svg`
+			img.className = color === 'white' ? 'piece' : 'piece black-piece'
+			img.setAttribute('data-piece', piece)
+
+			promoteModal.append(img)
+		}
 
 		setTimeout(function () {
 			promoteModal.style.visibility = 'visible'

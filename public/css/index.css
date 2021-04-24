@@ -8,6 +8,8 @@
 }
 
 body {
+	height: 100%;
+	overflow: hidden;
 	font-size: 68px;
 	background: #312e2b;
 	font-family: 'Fjalla One', sans-serif;

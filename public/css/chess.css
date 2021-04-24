@@ -1,4 +1,4 @@
-.board {
+#board {
 	display: grid;
 	position: relative;
 	width: 80vh;
@@ -11,15 +11,17 @@
 	cursor: pointer;
 }
 
-.square > img {
-	width: 9.8vh;
-	height: 9.8vh;
-}
-
-.board > div {
+.square {
 	display: grid;
 	justify-content: center;
 	align-items: center;
+	user-select: none;
+}
+
+.square > img {
+	width: 9.8vh;
+	height: 9.8vh;
+	user-select: none;
 }
 
 .rows-0:nth-child(even),
@@ -44,14 +46,12 @@
 	background: #d9e0e6;
 }
 
-#black-board {
-	-moz-transform: rotate(0.5turn);
+.black-piece {
 	transform: rotate(180deg);
 }
 
-.black-piece {
-	-moz-transform: rotate(0.5turn);
-	transform: rotate(180deg);
+.hover-border {
+	border: 0.5vmin dashed #ed2f09;
 }
 
 #check-square {
@@ -104,7 +104,7 @@ h2.game-result {
 }
 
 @media (orientation: portrait) {
-	.board {
+	#board {
 		width: 100vw;
 		height: 100vw;
 	}

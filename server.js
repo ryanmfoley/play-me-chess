@@ -72,18 +72,16 @@ io.on('connection', (socket) => {
 	socket.on('joinGame', ({ id, color }) => {
 		const { player } = socket.handshake.session
 
-		try {
-			if (id) player.room = id
+		if (id) player.room = id
+		player.color = color
 
-			player.color = color
-			socket.handshake.session.save()
+		socket.handshake.session.save()
 
-			playersWaiting.push(player)
+		playersWaiting.push(player)
 
-			setTimeout(() => {
-				io.emit('playersWaiting', playersWaiting)
-			}, 500)
-		} catch (error) {}
+		setTimeout(() => {
+			io.emit('playersWaiting', playersWaiting)
+		}, 500)
 	})
 
 	socket.on('updatePlayersWaiting', (id) => {

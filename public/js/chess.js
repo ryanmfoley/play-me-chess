@@ -3,7 +3,7 @@ import { placePiecesOnBoard } from './pieces.js'
 import { whitePlayer, blackPlayer } from './players.js'
 
 const audio = document.querySelector('audio')
-const board = document.querySelector('.board')
+const board = document.querySelector('#board')
 const squares = document.querySelectorAll('.square')
 const leaveGameButton = document.querySelector('#leave-game-btn')
 const logOutForm = document.getElementById('logout-form')
@@ -12,6 +12,8 @@ const gameInfoModal = document.querySelector('#game-info-modal')
 const gameInfo = document.querySelector('.game-info')
 const gameResult = document.querySelector('.game-result')
 const socket = io()
+
+// Game variables //
 let legalMove = true
 let selectedCell
 let selectedPiece
@@ -21,6 +23,7 @@ let player
 let opponent
 
 socket.emit('enterGameRoom')
+
 socket.on('enterGameRoom', ({ id, color }) => {
 	player = color === 'white' ? whitePlayer : blackPlayer
 	opponent = color === 'white' ? blackPlayer : whitePlayer
@@ -31,8 +34,8 @@ socket.on('enterGameRoom', ({ id, color }) => {
 		gameInfoModal.style.visibility = 'visible'
 		gameInfo.style.display = 'block'
 	} else {
-		board.setAttribute('id', 'black-board')
-		gameInfo.setAttribute('id', 'black-board')
+		board.classList.add('black-piece')
+		gameInfo.classList.add('black-piece')
 	}
 })
 
@@ -46,9 +49,7 @@ socket.on('startGame', () => {
 	chessBoard.markEnemySquares(player, opponent)
 })
 
-function selectPiece(e) {
-	e.dataTransfer.setData('text', 'mydata') // Needed by Firefox
-
+function handleDragStart(e) {
 	const { turn } = chessBoard
 
 	if (player.color === turn) {
@@ -62,22 +63,17 @@ function selectPiece(e) {
 	}
 }
 
-function movePiece(e) {
+function handleDrop(e) {
 	e.preventDefault()
 
-	this.style.border = 'initial'
+	this.classList.remove('hover-border')
+
 	const { turn } = chessBoard
+	const piece = e.target
 
-	// Select piece if piece hasn't already been selected //
-	if (!selectedPiece) {
-		selectedCell = chessBoard.identifyCell(e.target)
-		const selectedSquare = chessBoard.selectSquare(selectedCell)
-
-		if (selectedSquare.color === turn) selectedPiece = selectedSquare.piece
-
-		// Piece has been selected //
-	} else if (legalMove) {
-		landingCell = chessBoard.identifyCell(e.target)
+	// if (piece.classList.contains('piece') && piece.dataset.color === turn) {
+	if (true) {
+		landingCell = chessBoard.identifyCell(piece)
 		landingSquare = chessBoard.selectSquare(landingCell)
 
 		const { validMove, castle } = selectedPiece.checkMove(
@@ -86,12 +82,11 @@ function movePiece(e) {
 			chessBoard,
 			landingSquare
 		)
+
 		legalMove = validMove
 
 		if (legalMove) {
 			if (castle.validCastle) {
-				landingCell = chessBoard.identifyCell(e.target)
-
 				// Send king move to server //
 				socket.emit('movePiece', { selectedCell, landingCell })
 
@@ -101,8 +96,6 @@ function movePiece(e) {
 				// Send rook move to server //
 				socket.emit('movePiece', { turn, selectedCell, landingCell })
 			} else {
-				landingCell = chessBoard.identifyCell(e.target)
-
 				// Send move to server //
 				socket.emit('movePiece', { turn, selectedCell, landingCell })
 			}
@@ -115,21 +108,34 @@ function movePiece(e) {
 	}
 }
 
+function handleDragEnter(e) {
+	e.preventDefault()
+
+	this.classList.add('hover-border')
+}
+
+function handleDragLeave() {
+	this.classList.remove('hover-border')
+}
+
+function handleDragEnd(e) {
+	setTimeout(() => (e.target.style.display = 'block'), 0)
+}
+
+function handleDragOver(e) {
+	e.preventDefault()
+}
+
 //______________________________________________________________
 // Start-Game
 
 for (const square of squares) {
-	square.addEventListener('dragstart', selectPiece)
-	square.addEventListener('dragenter', (e) => {
-		e.preventDefault()
-		square.style.border = '6px dashed #ed2f09'
-	})
-	square.addEventListener('dragleave', () => (square.style.border = 'initial'))
-	square.addEventListener('dragover', (e) => e.preventDefault())
-	square.addEventListener('drop', movePiece)
-	square.addEventListener('dragend', (e) =>
-		setTimeout(() => (e.target.style.display = 'block'), 0)
-	)
+	square.addEventListener('dragstart', handleDragStart, false)
+	square.addEventListener('dragenter', handleDragEnter, false)
+	square.addEventListener('dragover', handleDragOver, false)
+	square.addEventListener('dragleave', handleDragLeave, false)
+	square.addEventListener('drop', handleDrop, false)
+	square.addEventListener('dragend', handleDragEnd, false)
 }
 
 //______________________________________________________________
@@ -252,18 +258,13 @@ window.addEventListener('beforeunload', () => {
 
 /////////////////////////////////// NOTES ///////////////////////////////////
 
-// 1. create game sends user chess.js with a "waiting for opponent..." modal
-// 2. wait for pieces to appear for both clients before allowing moves
-// 3. after checkmate, smoothly send clients to lobby
-// 4. send one or both clients back to lobby after a page reload
-// 5. username displayed along with captured pieces
+// 1. detect when opponent reloads or leaves game
 
 // probably don't need the piece class
-// combine identifyCell and selectSquare
 // maybe remove img pieces from chess.html
-// remove socket.emit('info') && socket.on('info')
 // may not need king variable in castling logic - pieces.js
 // double check if isCastling is needed
+// might not need - img.dataset.color = color - in displayPieces
 // Do I need socket.off()?
 // dont allow more than two players to enter room ?????????????
 // probably don't need room=id ???????????????????
@@ -274,3 +275,49 @@ window.addEventListener('beforeunload', () => {
 // }
 // Runs when client disconnects //
 // socket.on('playerDisconnected', () => {
+// I temporarily removed defer from script tag
+
+// function drag(e) {
+// 	e.preventDefault()
+
+// 	const piece = e.target
+
+// 	if (
+// 		piece.classList.contains('piece') &&
+// 		piece.dataset.activePiece &&
+// 		mouseDown
+// 	) {
+// 		// if (piece.classList.contains('piece')) {
+// 		// if (chessBoard.turn === piece.dataset.color) {
+// 		landingX =
+// 			e.type === 'touchmove'
+// 				? e.touches[0].clientX - startingX
+// 				: e.clientX - startingX
+// 		landingY =
+// 			e.type === 'touchmove'
+// 				? e.touches[0].clientY - startingY
+// 				: e.clientY - startingY
+// 		// }
+
+// 		if (piece.classList.contains('black-piece')) {
+// 			piece.style.webkitTransform = `rotate(180deg) translate3d(${landingX}px, ${landingY}px, 0)`
+// 			piece.style.MozTransform = `rotate(0.5turn) translate3d(${landingX}px, ${landingY}px, 0)`
+// 			piece.style.transform = `rotate(180deg) translate3d(${landingX}px, ${landingY}px, 0)`
+// 			// piece.style.zIndex = 1
+// 		} else {
+// 			piece.style.webkitTransform = `translate3d(${landingX}px, ${landingY}px, 0)`
+// 			piece.style.MozTransform = `translate3d(${landingX}px, ${landingY}px, 0)`
+// 			piece.style.transform = `translate3d(${landingX}px, ${landingY}px, 0)`
+// 			// piece.style.zIndex = 1
+// 		}
+
+// 		this.addEventListener('mouseup', movePiece, false)
+// 	}
+// }
+// const cell =
+// 	e.type === 'touchend'
+// 		? document.elementFromPoint(
+// 				e.changedTouches[0].clientX,
+// 				e.changedTouches[0].clientY
+// 		  )
+// 		: document.elementFromPoint(e.clientX, e.clientY)

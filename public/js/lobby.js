@@ -2,7 +2,7 @@ const username = window.document.cookie.split('=')[1]
 const createGameBtn = document.querySelector('#create-game-btn')
 const logOutBtn = document.querySelector('#logout-btn')
 const logOutForm = document.querySelector('#logout-form')
-const lobbyTable = document.querySelector('.lobby-table tbody')
+const lobbyTable = document.querySelector('#lobby-table tbody')
 const socket = io()
 
 function generateTable(playersWaiting) {
@@ -27,7 +27,9 @@ function generateTable(playersWaiting) {
 			socket.emit('updatePlayersWaiting', id)
 			socket.emit('joinGame', { id, color: 'black' })
 
-			window.location.href = '/chess'
+			setTimeout(() => {
+				window.location.href = '/chess'
+			}, 100)
 		}
 
 		if (index < 5) {
