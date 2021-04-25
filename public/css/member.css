@@ -84,3 +84,27 @@ main.member-container > h2 {
 .member-link > span {
 	color: #312e2b;
 }
+
+footer {
+	margin-top: 5vh;
+	font-size: x-large;
+}
+
+.role {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1.2em;
+	letter-spacing: 0.1vmin;
+	color: white;
+	text-decoration: underline;
+	margin: auto;
+}
+
+.name {
+	color: #3e70b7;
+}
+
+.socials > a {
+	font-size: 1.5em;
+	color: white;
+	text-decoration: none;
+}
