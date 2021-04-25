@@ -207,12 +207,14 @@ class Player {
 		const pieces = ['knight', 'bishop', 'rook', 'queen']
 
 		promoteModal.innerHTML = ''
+		if (this.color === 'black')
+			promoteModal.classList.add('promote-modal-black')
 
 		for (const piece of pieces) {
 			const img = document.createElement('img')
 
-			img.src = `./images/${color}-${piece}.svg`
-			img.className = color === 'white' ? 'piece' : 'piece black-piece'
+			img.src = `./images/${this.color}-${piece}.svg`
+			img.className = this.color === 'white' ? 'piece' : 'piece black-piece'
 			img.setAttribute('data-piece', piece)
 
 			promoteModal.append(img)

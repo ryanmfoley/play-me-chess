@@ -33,9 +33,11 @@ socket.on('enterGameRoom', ({ id, color }) => {
 	if (color === 'white') {
 		gameInfoModal.style.visibility = 'visible'
 		gameInfo.style.display = 'block'
+		gameInfo.innerHTML = 'Waiting for opponent...'
 	} else {
 		board.classList.add('black-piece')
 		gameInfo.classList.add('black-piece')
+		gameResult.classList.add('black-piece')
 	}
 })
 
@@ -71,40 +73,37 @@ function handleDrop(e) {
 	const { turn } = chessBoard
 	const piece = e.target
 
-	// if (piece.classList.contains('piece') && piece.dataset.color === turn) {
-	if (true) {
-		landingCell = chessBoard.identifyCell(piece)
-		landingSquare = chessBoard.selectSquare(landingCell)
+	landingCell = chessBoard.identifyCell(piece)
+	landingSquare = chessBoard.selectSquare(landingCell)
 
-		const { validMove, castle } = selectedPiece.checkMove(
-			player,
-			opponent,
-			chessBoard,
-			landingSquare
-		)
+	const { validMove, castle } = selectedPiece.checkMove(
+		player,
+		opponent,
+		chessBoard,
+		landingSquare
+	)
 
-		legalMove = validMove
+	legalMove = validMove
 
-		if (legalMove) {
-			if (castle.validCastle) {
-				// Send king move to server //
-				socket.emit('movePiece', { selectedCell, landingCell })
+	if (legalMove) {
+		if (castle.validCastle) {
+			// Send king move to server //
+			socket.emit('movePiece', { selectedCell, landingCell })
 
-				selectedCell = castle.rooksStartingSquare
-				landingCell = castle.rooksLandingSquare
+			selectedCell = castle.rooksStartingSquare
+			landingCell = castle.rooksLandingSquare
 
-				// Send rook move to server //
-				socket.emit('movePiece', { turn, selectedCell, landingCell })
-			} else {
-				// Send move to server //
-				socket.emit('movePiece', { turn, selectedCell, landingCell })
-			}
-
-			selectedPiece = false
+			// Send rook move to server //
+			socket.emit('movePiece', { turn, selectedCell, landingCell })
 		} else {
-			legalMove = true
-			selectedPiece = null
+			// Send move to server //
+			socket.emit('movePiece', { turn, selectedCell, landingCell })
 		}
+
+		selectedPiece = false
+	} else {
+		legalMove = true
+		selectedPiece = null
 	}
 }
 
@@ -238,14 +237,31 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	}
 })
 
+socket.on('leaveGame', (id) => {
+	if (id && player.id !== id) {
+		gameInfoModal.style.visibility = 'visible'
+		gameInfo.style.display = 'block'
+		gameInfo.innerHTML = 'Opponent left game'
+
+		socket.emit('updatePlayersWaiting', player.id)
+
+		setTimeout(() => {
+			window.location.href = '/lobby'
+		}, 1000)
+	}
+})
+
 leaveGameButton.addEventListener('click', () => {
+	socket.emit('leaveGame', player.id)
 	socket.emit('updatePlayersWaiting', player.id)
 
 	window.location.href = '/lobby'
 })
 
 logOutButton.addEventListener('click', () => {
+	socket.emit('leaveGame', player.id)
 	socket.emit('logout')
+
 	socket.on('logout', ({ id }) => {
 		socket.emit('updatePlayersWaiting', id)
 	})
@@ -253,71 +269,6 @@ logOutButton.addEventListener('click', () => {
 })
 
 window.addEventListener('beforeunload', () => {
+	socket.emit('leaveGame', player.id)
 	socket.emit('logout')
 })
-
-/////////////////////////////////// NOTES ///////////////////////////////////
-
-// 1. detect when opponent reloads or leaves game
-
-// probably don't need the piece class
-// maybe remove img pieces from chess.html
-// may not need king variable in castling logic - pieces.js
-// double check if isCastling is needed
-// might not need - img.dataset.color = color - in displayPieces
-// Do I need socket.off()?
-// dont allow more than two players to enter room ?????????????
-// probably don't need room=id ???????????????????
-// function Player(id, username, room = id) {
-// 	this.id = id
-// 	this.username = username
-// 	this.room = room
-// }
-// Runs when client disconnects //
-// socket.on('playerDisconnected', () => {
-// I temporarily removed defer from script tag
-
-// function drag(e) {
-// 	e.preventDefault()
-
-// 	const piece = e.target
-
-// 	if (
-// 		piece.classList.contains('piece') &&
-// 		piece.dataset.activePiece &&
-// 		mouseDown
-// 	) {
-// 		// if (piece.classList.contains('piece')) {
-// 		// if (chessBoard.turn === piece.dataset.color) {
-// 		landingX =
-// 			e.type === 'touchmove'
-// 				? e.touches[0].clientX - startingX
-// 				: e.clientX - startingX
-// 		landingY =
-// 			e.type === 'touchmove'
-// 				? e.touches[0].clientY - startingY
-// 				: e.clientY - startingY
-// 		// }
-
-// 		if (piece.classList.contains('black-piece')) {
-// 			piece.style.webkitTransform = `rotate(180deg) translate3d(${landingX}px, ${landingY}px, 0)`
-// 			piece.style.MozTransform = `rotate(0.5turn) translate3d(${landingX}px, ${landingY}px, 0)`
-// 			piece.style.transform = `rotate(180deg) translate3d(${landingX}px, ${landingY}px, 0)`
-// 			// piece.style.zIndex = 1
-// 		} else {
-// 			piece.style.webkitTransform = `translate3d(${landingX}px, ${landingY}px, 0)`
-// 			piece.style.MozTransform = `translate3d(${landingX}px, ${landingY}px, 0)`
-// 			piece.style.transform = `translate3d(${landingX}px, ${landingY}px, 0)`
-// 			// piece.style.zIndex = 1
-// 		}
-
-// 		this.addEventListener('mouseup', movePiece, false)
-// 	}
-// }
-// const cell =
-// 	e.type === 'touchend'
-// 		? document.elementFromPoint(
-// 				e.changedTouches[0].clientX,
-// 				e.changedTouches[0].clientY
-// 		  )
-// 		: document.elementFromPoint(e.clientX, e.clientY)

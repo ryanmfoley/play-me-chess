@@ -59,6 +59,7 @@ io.on('connection', (socket) => {
 
 	socket.on('logout', () => {
 		const { player } = socket.handshake.session
+
 		if (player) {
 			playersWaiting = playersWaiting.filter(
 				(playerWaiting) => playerWaiting.id !== player.id
@@ -82,6 +83,12 @@ io.on('connection', (socket) => {
 		setTimeout(() => {
 			io.emit('playersWaiting', playersWaiting)
 		}, 500)
+	})
+
+	socket.on('leaveGame', async (id) => {
+		const { room } = await socket.handshake.session.player
+
+		io.to(room).emit('leaveGame', id)
 	})
 
 	socket.on('updatePlayersWaiting', (id) => {

@@ -133,7 +133,6 @@ class Board {
 
 					img.src = `./images/${color}-${piece}.svg`
 					img.className = color === 'white' ? 'piece' : 'piece black-piece'
-					img.dataset.color = color
 					img.draggable = true
 
 					square.cellBox.append(img)

@@ -651,9 +651,6 @@ class King extends Piece {
 				landingSquare.col + 1
 			)
 
-			// const [, { piece: rook }] = chessBoard.board[this.row]
-			// 	.slice(this.col)
-			// 	.filter((square) => square.piece)
 			const rook = chessBoard.board[this.row][7].piece
 			castle.rooksStartingSquare = { row: rook.row, col: 7 }
 			castle.rooksLandingSquare = { row: rook.row, col: this.col + 1 }
@@ -693,9 +690,6 @@ class King extends Piece {
 				this.col
 			)
 
-			// const [{ piece: rook }] = chessBoard.board[this.row]
-			// 	.slice(0, this.col + 1)
-			// 	.filter((square) => square.piece)
 			const rook = chessBoard.board[this.row][0].piece
 			castle.rooksStartingSquare = { row: rook.row, col: 0 }
 			castle.rooksLandingSquare = { row: rook.row, col: this.col - 1 }

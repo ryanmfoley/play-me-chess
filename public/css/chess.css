@@ -18,9 +18,9 @@
 	user-select: none;
 }
 
-.square > img {
-	width: 9.8vh;
-	height: 9.8vh;
+.piece {
+	width: 9.4vh;
+	height: 9.4vh;
 	user-select: none;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .hover-border {
-	border: 0.5vmin dashed #ed2f09;
+	border: 0.3vmin dashed #ed2f09;
 }
 
 #check-square {
@@ -59,6 +59,9 @@
 }
 
 #game-info-modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	visibility: hidden;
 	position: absolute;
 	top: 50%;
@@ -92,15 +95,18 @@ h2.game-result {
 	left: 50%;
 	width: 60%;
 	transform: translate(-50%, -50%);
+	justify-content: center;
 	background: rgba(0, 0, 0, 0.6);
 	border: 0.3vmin solid white;
 	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-#promote-modal > img {
-	width: 9.8vh;
-	height: 9.8vh;
+#promote-modal.promote-modal-black {
+	background: rgba(194, 194, 194, 0.6);
+	border: 0.3vmin solid black;
+	box-shadow: 0 5px 8px 0 rgba(194, 194, 194, 0.2),
+		0 7px 20px 0 rgba(194, 194, 194, 0.17);
 }
 
 @media (orientation: portrait) {
@@ -109,13 +115,8 @@ h2.game-result {
 		height: 100vw;
 	}
 
-	.square > img {
-		width: 12.3vw;
-		height: 12.3vw;
-	}
-
-	#promote-modal > img {
-		width: 9.8vh;
-		height: 9.8vh;
+	.piece {
+		width: 11.8vw;
+		height: 11.8vw;
 	}
 }
