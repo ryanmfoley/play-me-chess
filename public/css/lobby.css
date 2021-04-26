@@ -2,8 +2,8 @@ main#lobby-container {
 	display: grid;
 	width: min(90vw, 500px);
 	margin: 0.5em auto;
-	color: white;
-	border: 0.1em solid white;
+	color: #fff;
+	border: 0.1em solid #fff;
 	border-radius: 0.1em;
 }
 
@@ -19,16 +19,16 @@ thead {
 }
 
 table.table-bordered th {
-	border-bottom: 0.07em solid white;
+	border-bottom: 0.07em solid #fff;
 }
 
 table th:first-child {
-	border-right: 0.07em solid white;
+	border-right: 0.07em solid #fff;
 }
 
 tbody {
 	font-size: 0.75em;
-	color: white;
+	color: #fff;
 }
 
 table.table-bordered td {
@@ -53,12 +53,12 @@ tbody > tr:nth-child(even) {
 	height: 2.5em;
 	letter-spacing: 0.03em;
 	border-radius: 0.1em;
-	border: 2px solid black;
+	border: 2px solid #000;
 }
 
 #create-game-btn:hover {
 	letter-spacing: 0.06em;
-	background: white;
+	background: #fff;
 	color: #5099ff;
 	border: 2px solid #5099ff;
 }
@@ -68,5 +68,5 @@ tbody > tr:nth-child(even) {
 }
 
 .join-game-btn:hover {
-	border: 0.05em solid white;
+	border: 0.05em solid #fff;
 }
