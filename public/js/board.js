@@ -248,8 +248,8 @@ class Board {
 		}
 	}
 
-	removePieceFromGame({ pieces }, pieceToRemove) {
-		pieces = pieces.filter(
+	removePieceFromGame(player, pieceToRemove) {
+		player.pieces = player.pieces.filter(
 			(piece) =>
 				piece.row !== pieceToRemove.row || piece.col !== pieceToRemove.col
 		)

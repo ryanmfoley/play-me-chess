@@ -120,7 +120,6 @@ class Player {
 								landingSquare
 							)
 
-							chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 							playerCopy.isKingInCheck(chessBoardCopy)
 
 							if (!playerCopy.inCheck) {
@@ -129,7 +128,7 @@ class Player {
 							}
 						})
 					} else {
-						// If validMove and not castling or promoting pawn //
+						// If validMove and not castling nor promoting pawn //
 						chessBoardCopy.movePiece(
 							playerCopy,
 							opponentCopy,
@@ -138,7 +137,6 @@ class Player {
 						)
 					}
 
-					chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 					playerCopy.isKingInCheck(chessBoardCopy)
 
 					// Check if player can escape check //
@@ -173,16 +171,12 @@ class Player {
 			this.color === 'white' ? blackSquares.flat() : whiteSquares.flat()
 
 		// Get King's position //
-		try {
-			const { row, col } = this.kingSquare
-			if (
-				enemySquares.find((square) => row === square.row && col === square.col)
-			) {
-				this.inCheck = true
-			} else this.inCheck = false
-		} catch (err) {
-			console.error(err)
-		}
+		const { row, col } = this.kingSquare
+		if (
+			enemySquares.find((square) => row === square.row && col === square.col)
+		) {
+			this.inCheck = true
+		} else this.inCheck = false
 	}
 
 	promotePawn(pawn, { color, piece }) {

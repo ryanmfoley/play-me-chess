@@ -176,9 +176,6 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		chessBoard.displayPieces()
 	}
 
-	// Mark enemy squares //
-	chessBoard.markEnemySquares(player, opponent)
-
 	// Check for draw //
 	chessBoard.checkDraw()
 

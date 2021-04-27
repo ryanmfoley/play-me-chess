@@ -42,7 +42,7 @@ class Piece {
 				selectedPiece,
 				landingSquare
 			)
-		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
+
 		playerCopy.isKingInCheck(chessBoardCopy)
 
 		if (
