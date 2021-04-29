@@ -1,5 +1,4 @@
 main.member-container {
-	margin: 1em auto;
 	width: min(90vw, 500px);
 	padding: 0.4em;
 	font-size: 68px;
@@ -86,13 +85,12 @@ main.member-container > h2 {
 }
 
 footer {
-	margin-top: 5vh;
-	font-size: x-large;
+	margin-top: 32px;
+	font-size: 18px;
 }
 
 .role {
 	font-family: 'Montserrat', sans-serif;
-	font-size: 1.2em;
 	letter-spacing: 0.1vmin;
 	color: white;
 	text-decoration: underline;
