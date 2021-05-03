@@ -183,8 +183,7 @@ class Board {
 				: selectedPiece.col - 1
 
 		if (
-			this.board[selectedPiece.row][leftSquare] &&
-			this.board[selectedPiece.row][leftSquare].piece &&
+			this.board[selectedPiece.row][leftSquare]?.piece &&
 			this.board[selectedPiece.row][leftSquare].piece.color !==
 				selectedPiece.color
 		) {
@@ -192,8 +191,7 @@ class Board {
 			this.board[selectedPiece.row][leftSquare].piece.enPassant = true
 		}
 		if (
-			this.board[selectedPiece.row][rightSquare] &&
-			this.board[selectedPiece.row][rightSquare].piece &&
+			this.board[selectedPiece.row][rightSquare]?.piece &&
 			this.board[selectedPiece.row][rightSquare].piece.color !==
 				selectedPiece.color
 		) {
