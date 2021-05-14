@@ -1,18 +1,17 @@
 #board {
-	display: grid;
 	position: relative;
-	width: 80vh;
-	height: 80vh;
-	margin: auto;
+	display: grid;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
+	width: 80vh;
+	height: 80vh;
 	border: 0.04em solid white;
 	border-radius: 0.06em;
 	cursor: pointer;
 }
 
 .square {
-	display: grid;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	user-select: none;
