@@ -111,28 +111,26 @@ io.on('connection', (socket) => {
 
 		socket.emit('enterGameRoom', player)
 
-		if (player.color === 'black') io.to(room).emit('startGame')
-	})
-
-	socket.on('movePiece', ({ turn, selectedCell, landingCell }) => {
-		const { room } = socket.handshake.session.player
-
-		// Change turn //
-		turn = turn === 'white' ? 'black' : 'white'
-
-		// Send game state to client //
-		io.to(room).emit('movePiece', {
-			turn,
-			selectedCell,
-			landingCell,
+		socket.on('getPlayersNames', () => {
+			io.to(room).emit('getPlayersNames', player)
 		})
-	})
 
-	// Send promoted piece //
-	socket.on('promotePawn', (newPiece) => {
-		const { room } = socket.handshake.session.player
-
-		io.to(room).emit('promotePawn', newPiece)
+		if (player.color === 'black') io.to(room).emit('startGame')
+		
+		socket.on('movePiece', ({ turn, selectedCell, landingCell }) => {
+			// Change turn //
+			turn = turn === 'white' ? 'black' : 'white'
+			
+			// Send game state to client //
+			io.to(room).emit('movePiece', {
+				turn,
+				selectedCell,
+				landingCell,
+			})
+		})
+		
+		// Send promoted piece //
+		socket.on('promotePawn', (newPiece) => io.to(room).emit('promotePawn', newPiece))
 	})
 })
 

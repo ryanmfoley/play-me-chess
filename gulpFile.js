@@ -1,6 +1,5 @@
 const gulp = require('gulp')
 const concat = require('gulp-concat')
-const minifyJS = require('gulp-uglify')
 const minifyCSS = require('gulp-clean-css')
 
 gulp.task('minify-css', () =>
@@ -11,8 +10,8 @@ gulp.task('minify-css', () =>
 		.pipe(gulp.dest('public/dist/css/'))
 )
 
-gulp.task('minify-js', () =>
-	gulp.src('public/js/*.js').pipe(minifyJS()).pipe(gulp.dest('public/dist/js/'))
-)
+gulp.task('watch', function () {
+	gulp.watch('./public/css/*.css', gulp.series('minify-css'))
+})
 
-gulp.task('default', gulp.series('minify-css', 'minify-js'))
+gulp.task('default', gulp.series('minify-css', 'watch'))

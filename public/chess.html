@@ -36,7 +36,11 @@
 			</form>
 		</header>
 
-		<div id="board" class="mx-auto">
+		<div id="opponents-name" class="mx-auto">
+			<h3></h3>
+		</div>
+
+		<main id="board" class="mx-auto">
 			<div class="rows-0 cols-0 square"></div>
 			<div class="rows-0 cols-1 square"></div>
 			<div class="rows-0 cols-2 square"></div>
@@ -113,16 +117,20 @@
 				<h2 class="game-info text-center"></h2>
 				<h2 class="game-result text-center"></h2>
 			</div>
+		</main>
+
+		<div id="players-name" class="mx-auto">
+			<h3></h3>
 		</div>
 
 		<script>
 			if (navigator.userAgent.indexOf('Chrome') === -1) {
-				const head = document.getElementsByTagName('HEAD')[0]
+				const head = document.querySelector('head')
 				const link = document.createElement('link')
 
 				link.type = 'text/css'
 				link.rel = 'stylesheet'
-				link.href = '/css/nonChromeBrowser.css'
+				link.href = '/css/nonChromeBrowsers/nonChromeBrowsers.css'
 
 				head.appendChild(link)
 			}

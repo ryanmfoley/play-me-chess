@@ -3,8 +3,9 @@
 	display: grid;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(8, 1fr);
-	width: 80vh;
-	height: 80vh;
+	box-sizing: content-box;
+	width: 67vh;
+	height: 67vh;
 	border: 0.04em solid white;
 	border-radius: 0.06em;
 	cursor: pointer;
@@ -18,8 +19,8 @@
 }
 
 .piece {
-	width: 9.4vh;
-	height: 9.4vh;
+	width: calc(67vh / 8);
+	height: calc(67vh / 8);
 	user-select: none;
 }
 
@@ -51,6 +52,33 @@
 
 .hover-border {
 	border: 0.3vmin dashed #ed2f09;
+}
+
+#players-name,
+#opponents-name {
+	display: flex;
+	align-items: center;
+	visibility: hidden;
+	width: 67vh;
+	margin: 5px;
+}
+
+#players-name h3,
+#opponents-name h3 {
+	margin: 0;
+	padding: 0.8vmin;
+	background: black;
+	font-size: 2.5vmin;
+	letter-spacing: 2px;
+	color: gray;
+	border: 0.25vmin solid gray;
+	border-radius: 0.5vmin;
+}
+
+#players-name h3.active-player,
+#opponents-name h3.active-player {
+	color: white;
+	border: 0.25vh solid white;
 }
 
 #check-square {
@@ -110,12 +138,17 @@ h2.game-result {
 
 @media (orientation: portrait) {
 	#board {
-		width: 100vw;
-		height: 100vw;
+		width: 95vw;
+		height: 95vw;
 	}
 
 	.piece {
-		width: 11.8vw;
-		height: 11.8vw;
+		width: calc(95vw / 8);
+		height: calc(95vw / 8);
+	}
+
+	#players-name,
+	#opponents-name {
+		width: 95vw;
 	}
 }

@@ -5,6 +5,8 @@ import { whitePlayer, blackPlayer } from './players.js'
 const audio = document.querySelector('audio')
 const board = document.querySelector('#board')
 const squares = document.querySelectorAll('.square')
+const playersName = document.querySelector('#players-name h3')
+const opponentsName = document.querySelector('#opponents-name h3')
 const leaveGameButton = document.querySelector('#leave-game-btn')
 const logOutForm = document.getElementById('logout-form')
 const logOutButton = document.getElementById('logout-btn')
@@ -24,10 +26,11 @@ let opponent
 
 socket.emit('enterGameRoom')
 
-socket.on('enterGameRoom', ({ id, color }) => {
+socket.on('enterGameRoom', ({ id, username, color }) => {
 	player = color === 'white' ? whitePlayer : blackPlayer
 	opponent = color === 'white' ? blackPlayer : whitePlayer
 	player.id = id
+	player.username = username
 
 	// Flip board for black //
 	if (color === 'white') {
@@ -41,7 +44,23 @@ socket.on('enterGameRoom', ({ id, color }) => {
 	}
 })
 
+socket.on('getPlayersNames', ({ username, color }) => {
+	if (player.color !== color) opponent.username = username
+
+	if (player.color === 'white') {
+		playersName.classList.add('active-player')
+	} else opponentsName.classList.add('active-player')
+
+	// Display players names //
+	playersName.style.visibility = 'visible'
+	opponentsName.style.visibility = 'visible'
+	playersName.innerText = player.username
+	opponentsName.innerText = opponent.username
+})
+
 socket.on('startGame', () => {
+	socket.emit('getPlayersNames')
+
 	gameInfoModal.style.visibility = 'hidden'
 	gameInfo.style.display = 'none'
 
@@ -231,6 +250,14 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		setTimeout(function () {
 			window.location.href = '/lobby'
 		}, 2000)
+	}
+
+	if (player.color === turn) {
+		opponentsName.classList.remove('active-player')
+		playersName.classList.add('active-player')
+	} else {
+		playersName.classList.remove('active-player')
+		opponentsName.classList.add('active-player')
 	}
 })
 

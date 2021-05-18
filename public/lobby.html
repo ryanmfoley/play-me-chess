@@ -51,12 +51,12 @@
 
 		<script>
 			if (navigator.userAgent.indexOf('Chrome') === -1) {
-				const head = document.getElementsByTagName('HEAD')[0]
+				const head = document.querySelector('head')
 				const link = document.createElement('link')
 
 				link.type = 'text/css'
 				link.rel = 'stylesheet'
-				link.href = '/css/nonChromeBrowser.css'
+				link.href = '/css/nonChromeBrowsers/nonChromeBrowsers.css'
 
 				head.appendChild(link)
 			}

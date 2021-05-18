@@ -9,10 +9,6 @@
 			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 			crossorigin="anonymous"
 		/>
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
-		/>
 		<script
 			src="https://kit.fontawesome.com/f5c3afdb68.js"
 			crossorigin="anonymous"
@@ -79,12 +75,12 @@
 
 		<script>
 			if (navigator.userAgent.indexOf('Chrome') === -1) {
-				const head = document.getElementsByTagName('HEAD')[0]
+				const head = document.querySelector('head')
 				const link = document.createElement('link')
 
 				link.type = 'text/css'
 				link.rel = 'stylesheet'
-				link.href = '/css/nonChromeBrowser.css'
+				link.href = '/css/nonChromeBrowsers/nonChromeBrowsers.css'
 
 				head.appendChild(link)
 			}
