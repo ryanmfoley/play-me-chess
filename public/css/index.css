@@ -25,7 +25,7 @@ header > h1 {
 	font-size: max(7vmin, 32px);
 	letter-spacing: 0.1em;
 	color: white;
-	-webkit-text-stroke: max(0.1vw, 0.6px) #315991;
+	-webkit-text-stroke: max(0.1vw, 0.8px) #315991;
 	margin-bottom: 1vh;
 }
 
@@ -34,7 +34,7 @@ a#logout-btn {
 	font-size: max(3vmin, 18px);
 	margin: 0 max(3%, 2.5em);
 	color: white;
-	-webkit-text-stroke: max(0.06vw, 0.4px) red;
+	-webkit-text-stroke: max(0.06vw, 0.8px) red;
 	cursor: pointer;
 }
 

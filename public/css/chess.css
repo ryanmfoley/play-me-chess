@@ -6,6 +6,8 @@
 	box-sizing: content-box;
 	width: 67vh;
 	height: 67vh;
+	max-width: 550px;
+	max-height: 550px;
 	border: 0.04em solid white;
 	border-radius: 0.06em;
 	cursor: pointer;
@@ -19,8 +21,7 @@
 }
 
 .piece {
-	width: calc(67vh / 8);
-	height: calc(67vh / 8);
+	width: 100%;
 	user-select: none;
 }
 
@@ -60,6 +61,7 @@
 	align-items: center;
 	visibility: hidden;
 	width: 67vh;
+	max-width: 550px;
 	margin: 5px;
 }
 
@@ -83,6 +85,13 @@
 
 #check-square {
 	background: rgb(255, 160, 160);
+}
+
+.blah {
+	width: 550px;
+	height: 100px;
+	margin: auto;
+	background: salmon;
 }
 
 #game-info-modal {
@@ -140,11 +149,6 @@ h2.game-result {
 	#board {
 		width: 95vw;
 		height: 95vw;
-	}
-
-	.piece {
-		width: calc(95vw / 8);
-		height: calc(95vw / 8);
 	}
 
 	#players-name,
