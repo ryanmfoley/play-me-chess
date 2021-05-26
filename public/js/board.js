@@ -9,18 +9,20 @@ function Cell(row, col) {
 class Board {
 	constructor() {
 		this.board = new Array(8)
+		this.turn = 'white'
+		this.boardPosition = []
+		this.draw = false
+		this.staleMate = false
+
 		for (let i = 0; i < 8; i++) {
 			this.board[i] = new Array(8)
 		}
+
 		for (let row = 0; row < 8; row++) {
 			for (let col = 0; col < 8; col++) {
 				this.board[row][col] = new Cell(row, col)
 			}
 		}
-		this.turn = 'white'
-		this.boardPosition = []
-		this.draw = false
-		this.staleMate = false
 	}
 
 	assignPieceToSquare(piece) {

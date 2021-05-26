@@ -27,11 +27,11 @@ class Player {
 
 	checkEscapeMoves(chessBoard, activePlayer) {
 		this.escapeCheck = false
-		const { pieces } = this.copyPlayer()
+
 		const promotionPieces = ['knight', 'queen']
 
 		// Evaluate if player can escape check //
-		piecesLoop: for (const piece of pieces) {
+		piecesLoop: for (const piece of this.pieces) {
 			if (piece.name === 'pawn') {
 				const oneSquareUp =
 					piece.color === 'white' ? piece.row - 1 : piece.row + 1
@@ -55,10 +55,11 @@ class Player {
 				let breakLoop = false
 
 				// Copy board, players, pieces, and targets //
-				let chessBoardCopy = Object.assign(
+				const chessBoardCopy = Object.assign(
 					Object.create(Object.getPrototypeOf(chessBoard)),
 					chessBoard
 				)
+
 				chessBoardCopy.copyBoard(chessBoard)
 
 				const playerCopy = this.copyPlayer()
