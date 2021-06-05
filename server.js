@@ -14,7 +14,6 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server, { cors: true })
 const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
-const path = require('path')
 
 // Middleware //
 app.use(cookieParser())
