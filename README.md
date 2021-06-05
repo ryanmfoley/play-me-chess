@@ -6,7 +6,7 @@
 
 ## Technologies Used:
 
-**<u>Back-end</u>**
+<u><strong>Back-end:</strong></u>
 
 - NodeJS
 - Express
@@ -14,7 +14,7 @@
 - Mongoose
 - Socket.io
 
-**<u>Front-end</u>**
+<u><strong>Front-end:</strong></u>
 
 - JavaScript
 - Socket.io
