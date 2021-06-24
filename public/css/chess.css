@@ -21,7 +21,8 @@
 }
 
 .piece {
-	width: 100%;
+	width: calc(63vh / 8);
+	height: calc(63vh / 8);
 	user-select: none;
 }
 
@@ -85,13 +86,6 @@
 
 #check-square {
 	background: rgb(255, 160, 160);
-}
-
-.blah {
-	width: 550px;
-	height: 100px;
-	margin: auto;
-	background: salmon;
 }
 
 #game-info-modal {

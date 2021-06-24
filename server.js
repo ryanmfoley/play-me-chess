@@ -16,8 +16,9 @@ const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
+const fromNumber = process.env.TWILIO_FROM_NUMBER
+const toNumber = process.env.TWILIO_TO_NUMBER
 const client = require('twilio')(accountSid, authToken)
-
 
 // Middleware //
 app.use(cookieParser())
@@ -50,11 +51,11 @@ function Player(id, username, room = id) {
 function sendText(player) {
   client.messages.create({
 	  body: `${player} wants to play a game with you.`,
-	  from: '+17162457324',
-	  to: '+12097158154'
+	  from: fromNumber,
+	  to: toNumber
   })
   .then(msg => console.log(msg))
-  .catch(err => console.log(err))
+  .catch(err => console.log('err'))
 }
 
 //______________________________________________________________
