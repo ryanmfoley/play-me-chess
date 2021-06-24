@@ -14,6 +14,11 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server, { cors: true })
 const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
+const accountSid = process.env.TWILIO_ACCOUNT_SID
+const authToken = process.env.TWILIO_AUTH_TOKEN
+const fromNumber = process.env.TWILIO_FROM_NUMBER
+const toNumber = process.env.TWILIO_TO_NUMBER
+const client = require('twilio')(accountSid, authToken)
 
 // Middleware //
 app.use(cookieParser())
@@ -43,6 +48,16 @@ function Player(id, username, room = id) {
 	this.room = room
 }
 
+function sendText(player) {
+  client.messages.create({
+	  body: `${player} wants to play a game with you.`,
+	  from: fromNumber,
+	  to: toNumber
+  })
+  .then(msg => console.log(msg))
+  .catch(err => console.log('err'))
+}
+
 //______________________________________________________________
 // START SOCKET CONNECTION HERE
 
@@ -70,15 +85,18 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('joinGame', ({ id, color }) => {
+	socket.on('joinGame', ({ id, color, isUserRyan }) => {
 		const { player } = socket.handshake.session
 
+		// If no ID, it's a new game being created //
 		if (id) player.room = id
 		player.color = color
 
 		socket.handshake.session.save()
 
 		playersWaiting.push(player)
+
+		if (isUserRyan) sendText(player.username)
 
 		setTimeout(() => {
 			io.emit('playersWaiting', playersWaiting)
@@ -135,6 +153,6 @@ io.on('connection', (socket) => {
 
 //______________________________________________________________
 
-const { PORT } = process.env
+const { PORT } = process.env 
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`))

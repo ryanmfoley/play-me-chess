@@ -24,8 +24,10 @@ function generateTable(playersWaiting) {
 		joinGameBtn.innerText = 'Play Me'
 		joinGameBtn.className = 'join-game-btn w-75 btn btn-dark'
 		joinGameBtn.onclick = () => {
+			const isUserRyan = username === 'Ryan_Foley' ? true : false
+
 			socket.emit('updatePlayersWaiting', id)
-			socket.emit('joinGame', { id, color: 'black' })
+			socket.emit('joinGame', { id, color: 'black', isUserRyan })
 
 			setTimeout(() => {
 				window.location.href = '/chess'
