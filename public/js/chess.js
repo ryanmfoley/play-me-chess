@@ -36,7 +36,7 @@ socket.on('enterGameRoom', ({ id, username, color }) => {
 	if (color === 'white') {
 		gameInfoModal.style.visibility = 'visible'
 		gameInfo.style.display = 'block'
-		gameInfo.innerHTML = 'Waiting for opponent...'
+		gameInfo.innerHTML = 'WAITING FOR OPPONENT'
 	} else {
 		board.classList.add('black-piece')
 		gameInfo.classList.add('black-piece')

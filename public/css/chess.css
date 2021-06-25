@@ -97,7 +97,7 @@
 	top: 50%;
 	left: 50%;
 	width: 80%;
-	height: 25%;
+	height: 20%;
 	transform: translate(-50%, -50%);
 	background: rgba(0, 0, 0, 0.9);
 	border: 0.3vmin solid white;
@@ -107,8 +107,15 @@
 
 h2.game-info {
 	display: none;
-	font-size: 5vmin;
+	font-size: 4vmin;
 	color: white;
+	animation: moving-text 3s linear infinite alternate;
+}
+
+h2.game-info:after {
+	display: inline-block;
+	animation: loading-ellipses steps(1, end) 3s infinite;
+	content: '';
 }
 
 h2.game-result {
@@ -137,6 +144,27 @@ h2.game-result {
 	border: 0.3vmin solid black;
 	box-shadow: 0 5px 8px 0 rgba(194, 194, 194, 0.2),
 		0 7px 20px 0 rgba(194, 194, 194, 0.17);
+}
+
+@keyframes loading-ellipses {
+	0% {
+		content: '.';
+	}
+	33% {
+		content: '..';
+	}
+	67% {
+		content: '...';
+	}
+}
+
+@keyframes moving-text {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(10px);
+	}
 }
 
 @media (orientation: portrait) {
