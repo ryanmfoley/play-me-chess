@@ -110,19 +110,22 @@ h2.game-info {
 	display: none;
 	font-size: 4vmin;
 	color: white;
-	animation: moving-text 3s linear infinite alternate;
-}
-
-h2.game-info:after {
-	display: inline-block;
-	animation: loading-ellipses steps(1, end) 3s infinite;
-	content: '';
 }
 
 h2.game-result {
 	display: none;
 	font-size: 7vmin;
 	color: white;
+}
+
+.waiting {
+	animation: moving-text 3s linear infinite alternate;
+}
+
+.waiting:after {
+	display: inline-block;
+	animation: loading-ellipses steps(1, end) 3s infinite;
+	content: '';
 }
 
 #promote-modal {

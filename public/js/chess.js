@@ -32,12 +32,13 @@ socket.on('enterGameRoom', ({ id, username, color }) => {
 	player.id = id
 	player.username = username
 
-	// Flip board for black //
 	if (color === 'white') {
 		gameInfoModal.style.visibility = 'visible'
 		gameInfo.style.display = 'block'
+		gameInfo.classList.add('waiting')
 		gameInfo.innerHTML = 'WAITING FOR OPPONENT'
 	} else {
+		// Flip board for black //
 		board.classList.add('black-piece')
 		gameInfo.classList.add('black-piece')
 		gameResult.classList.add('black-piece')
@@ -63,6 +64,7 @@ socket.on('startGame', () => {
 
 	gameInfoModal.style.visibility = 'hidden'
 	gameInfo.style.display = 'none'
+	gameInfo.classList.remove('waiting')
 
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
