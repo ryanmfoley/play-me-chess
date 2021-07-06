@@ -17,12 +17,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	overflow: hidden;
 	user-select: none;
 }
 
 .piece {
-	width: calc(63vh / 8);
-	height: calc(63vh / 8);
+	width: calc(67vh / 8);
+	height: calc(67vh / 8);
 	user-select: none;
 }
 
@@ -171,6 +172,11 @@ h2.game-result {
 	#board {
 		width: 95vw;
 		height: 95vw;
+	}
+
+	.piece {
+		width: calc(95vw / 8);
+		height: calc(95vw / 8);
 	}
 
 	#players-name,
