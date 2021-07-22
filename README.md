@@ -13,6 +13,7 @@
 - MongoDB
 - Mongoose
 - Socket.io
+- Twilio
 
 <u><strong>Front-end:</strong></u>
 
@@ -24,4 +25,4 @@
 
 ## Installation:
 
-Open the deployed app at https://play-me-chess.herokuapp.com. Feel free to fork and clone this repository.
+Open the deployed app at https://playmechess.com. Feel free to fork and clone this repository.
