@@ -5,11 +5,15 @@ const logOutForm = document.querySelector('#logout-form')
 const lobbyTable = document.querySelector('#lobby-table tbody')
 const socket = io()
 
-function generateTable(playersWaiting) {
+// Send username to server //
+socket.emit('login', username)
+
+// Get list of opened games and generate a table //
+socket.on('playersWaiting', (playersWaiting) => {
 	// Clear table //
 	lobbyTable.innerHTML = ''
 
-	// Genereate first 6 empty rows //
+	// Generate first 6 empty rows //
 	for (let i = 0; i < 5; i++) {
 		const row = lobbyTable.insertRow()
 		row.insertCell()
@@ -57,13 +61,6 @@ function generateTable(playersWaiting) {
 			inviteCell.classList.add('text-center')
 		}
 	})
-}
-
-socket.emit('login', username)
-
-// Get list of opened games and generate a table //
-socket.on('playersWaiting', (playersWaiting) => {
-	generateTable(playersWaiting)
 })
 
 createGameBtn.addEventListener('click', () => {

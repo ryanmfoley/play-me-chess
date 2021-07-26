@@ -7,12 +7,10 @@ const isAuthenticated = (req, res, next) => {
 	} else res.redirect('/users/login')
 }
 
-router.use(isAuthenticated)
-
 router.get('/', isAuthenticated, async (req, res) => {
 	const { username } = req.session.currentUser
-	res.cookie('username', username)
 
+	res.cookie('username', username)
 	res.sendFile('/public/lobby.html', { root: process.cwd() })
 })
 

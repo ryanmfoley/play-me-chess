@@ -22,8 +22,8 @@
 }
 
 .piece {
-	width: calc(67vh / 8);
-	height: calc(67vh / 8);
+	width: 100%;
+	height: 100%;
 	user-select: none;
 }
 
@@ -168,11 +168,6 @@ h2.game-result {
 	#board {
 		width: 95vw;
 		height: 95vw;
-	}
-
-	.piece {
-		width: calc(95vw / 8);
-		height: calc(95vw / 8);
 	}
 
 	#players-name,
