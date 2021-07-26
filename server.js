@@ -14,6 +14,8 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server, { cors: true })
 const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
+
+// Twilio communication API for SMS //
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const fromNumber = process.env.TWILIO_FROM_NUMBER
@@ -24,8 +26,8 @@ const client = require('twilio')(accountSid, authToken)
 app.use(cookieParser())
 app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }))
-app.use(session)
 app.use(express.static('public'))
+app.use(session)
 io.use(
 	sharedSession(session, {
 		autoSave: true,
@@ -88,13 +90,17 @@ io.on('connection', (socket) => {
 	socket.on('joinGame', ({ id, color, isUserRyan }) => {
 		const { player } = socket.handshake.session
 
-		// If no ID, it's a new game being created //
-		if (id) player.room = id
+		if (id) {
+      // Joining already created game //
+      player.room = id
+    } else {
+      // New game created //
+      playersWaiting.push(player)
+    }
+
 		player.color = color
 
 		socket.handshake.session.save()
-
-		playersWaiting.push(player)
 
 		if (isUserRyan) sendText(player.username)
 
@@ -104,14 +110,18 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('leaveGame', async (id) => {
+    if (socket.handshake.session.player) {
 		const { room } = await socket.handshake.session.player
 
 		io.to(room).emit('leaveGame', id)
+    }
 	})
 
 	socket.on('updatePlayersWaiting', (id) => {
+    console.log('updatePlayersWaiting1',id,playersWaiting)
 		// Remove player from wait list //
 		playersWaiting = playersWaiting.filter((player) => player.id !== id)
+    console.log('updatePlayersWaiting2', playersWaiting)
 
 		// Send list of players waiting to client //
 		io.emit('playersWaiting', playersWaiting)
