@@ -118,10 +118,8 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('updatePlayersWaiting', (id) => {
-    console.log('updatePlayersWaiting1',id,playersWaiting)
 		// Remove player from wait list //
 		playersWaiting = playersWaiting.filter((player) => player.id !== id)
-    console.log('updatePlayersWaiting2', playersWaiting)
 
 		// Send list of players waiting to client //
 		io.emit('playersWaiting', playersWaiting)
