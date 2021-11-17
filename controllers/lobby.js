@@ -11,6 +11,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 	const { username } = req.session.currentUser
 
 	res.cookie('username', username)
+
 	res.sendFile('/public/lobby.html', { root: process.cwd() })
 })
 

@@ -65,7 +65,7 @@ function sendText(player) {
 
 // Run when client connects //
 io.on('connection', (socket) => {
-	socket.on('login', (username) => {
+	socket.once('login', (username) => {
 		const player = new Player(socket.id, username)
 
 		socket.handshake.session.player = player
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
 		socket.emit('playersWaiting', playersWaiting)
 	})
 
-	socket.on('logout', () => {
+	socket.once('logout', () => {
 		const { player } = socket.handshake.session
 
 		if (player) {
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
 		}
 	})
 
-	socket.on('joinGame', ({ id, color, isUserRyan }) => {
+	socket.once('joinGame', ({ id, color, isUserRyan }) => {
 		const { player } = socket.handshake.session
 
 		if (id) {
@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
 		}, 500)
 	})
 
-	socket.on('leaveGame', async (id) => {
+	socket.once('leaveGame', async (id) => {
     if (socket.handshake.session.player) {
 		const { room } = await socket.handshake.session.player
 
@@ -125,7 +125,7 @@ io.on('connection', (socket) => {
 		io.emit('playersWaiting', playersWaiting)
 	})
 
-	socket.on('enterGameRoom', () => {
+	socket.once('enterGameRoom', () => {
 		const {
 			player,
 			player: { room },

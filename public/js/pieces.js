@@ -68,12 +68,13 @@ class Pawn extends Piece {
 		const castle = { validCastle: false }
 
 		const startingSquare = this.color === 'white' ? 6 : 1
-		const direction =
-			this.color === 'white' && this.row >= landingSquare.row
-				? 'forward'
-				: 'backward'
 		const oneSquareUp = this.color === 'white' ? this.row - 1 : this.row + 1
 		const twoSquaresUp = this.color === 'white' ? this.row - 2 : this.row + 2
+		const isMovingForward =
+			(this.color === 'white' && this.row >= landingSquare.row) ||
+			(this.color !== 'white' && this.row <= landingSquare.row)
+				? true
+				: false
 		let validMove
 
 		if (
@@ -95,7 +96,7 @@ class Pawn extends Piece {
 			///////////////// Pawn captures opponents piece /////////////////
 			Math.abs(this.row - landingSquare.row) === 1 &&
 			Math.abs(this.col - landingSquare.col) === 1 &&
-			direction === 'forward' &&
+			isMovingForward &&
 			landingSquare.piece &&
 			this.color !== landingSquare.piece.color
 		) {

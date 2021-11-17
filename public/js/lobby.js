@@ -1,4 +1,4 @@
-const username = window.document.cookie.split('=')[1]
+const username = /username=(.*)/.exec(window.document.cookie)[1]
 const createGameBtn = document.querySelector('#create-game-btn')
 const logOutBtn = document.querySelector('#logout-btn')
 const logOutForm = document.querySelector('#logout-form')
