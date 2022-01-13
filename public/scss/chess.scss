@@ -1,3 +1,8 @@
+$color-primary-dark: #315991;
+$color-light-square: #d9e0e6;
+$color-hover-border: #ed2f09;
+$color-check-square: rgb(255, 160, 160);
+
 #board {
 	position: relative;
 	display: grid;
@@ -35,7 +40,7 @@
 .rows-5:nth-child(odd),
 .rows-6:nth-child(even),
 .rows-7:nth-child(odd) {
-	background: #315991;
+	background: $color-primary-dark;
 }
 
 .rows-0:nth-child(odd),
@@ -46,7 +51,7 @@
 .rows-5:nth-child(even),
 .rows-6:nth-child(odd),
 .rows-7:nth-child(even) {
-	background: #d9e0e6;
+	background: $color-light-square;
 }
 
 .black-piece {
@@ -54,7 +59,7 @@
 }
 
 .hover-border {
-	border: 0.3vmin dashed #ed2f09;
+	border: 0.3vmin dashed $color-hover-border;
 }
 
 #players-name,
@@ -65,28 +70,24 @@
 	width: 67vh;
 	max-width: 550px;
 	margin: 5px;
-}
-
-#players-name h3,
-#opponents-name h3 {
-	margin: 0;
-	padding: 0.8vmin;
-	background: black;
-	font-size: 2.5vmin;
-	letter-spacing: 2px;
-	color: gray;
-	border: 0.25vmin solid gray;
-	border-radius: 0.5vmin;
-}
-
-#players-name h3.active-player,
-#opponents-name h3.active-player {
-	color: white;
-	border: 0.25vh solid white;
+	h3 {
+		margin: 0;
+		padding: 0.8vmin;
+		background: black;
+		font-size: 2.5vmin;
+		letter-spacing: 2px;
+		color: gray;
+		border: 0.25vmin solid gray;
+		border-radius: 0.5vmin;
+		&.active-player {
+			color: white;
+			border: 0.25vh solid white;
+		}
+	}
 }
 
 #check-square {
-	background: rgb(255, 160, 160);
+	background: $color-check-square;
 }
 
 #game-info-modal {
@@ -105,13 +106,13 @@
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
 }
 
-h2.game-info {
+.game-info {
 	display: none;
 	font-size: 4vmin;
 	color: white;
 }
 
-h2.game-result {
+.game-result {
 	display: none;
 	font-size: 7vmin;
 	color: white;
@@ -136,13 +137,16 @@ h2.game-result {
 	border: 0.3vmin solid white;
 	border-radius: 0.2em;
 	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
-}
-
-#promote-modal.promote-modal-black {
-	background: rgba(194, 194, 194, 0.6);
-	border: 0.3vmin solid black;
-	box-shadow: 0 5px 8px 0 rgba(194, 194, 194, 0.2),
-		0 7px 20px 0 rgba(194, 194, 194, 0.17);
+	.piece {
+		width: calc(67vh / 8);
+		height: calc(67vh / 8);
+	}
+	&.promote-modal-black {
+		background: rgba(194, 194, 194, 0.6);
+		border: 0.3vmin solid black;
+		box-shadow: 0 5px 8px 0 rgba(194, 194, 194, 0.2),
+			0 7px 20px 0 rgba(194, 194, 194, 0.17);
+	}
 }
 
 @keyframes loading-ellipses {

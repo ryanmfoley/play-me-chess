@@ -1,0 +1,49 @@
+@font-face {
+	font-family: neuropolitical;
+	src: url(/fonts/neuropolitical.otf);
+}
+
+$color-primary-dark: #315991;
+$color-gray-dark: #312e2b;
+$color-nav-link: rgb(255, 113, 113);
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	height: 100%;
+	overflow: hidden;
+	font-size: 68px;
+	background: $color-gray-dark;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+header {
+	margin: 3vh auto 3vh;
+	> h1 {
+		-moz-font-family: 'neuropolitical', sans-serif;
+		font-family: 'neuropolitical', sans-serif;
+		font-size: max(7vmin, 32px);
+		letter-spacing: 0.1em;
+		color: white;
+		-webkit-text-stroke: max(0.1vw, 0.8px) $color-primary-dark;
+		margin-bottom: 1vh;
+	}
+}
+
+#leave-game-btn,
+#logout-btn {
+	font-size: max(3vmin, 18px);
+	margin: 0 max(3%, 2.5em);
+	color: white;
+	-webkit-text-stroke: max(0.06vw, 0.8px) red;
+	cursor: pointer;
+}
+
+#leave-game-btn:hover,
+#logout-btn:hover {
+	color: $color-nav-link;
+	text-decoration: underline overline;
+	text-decoration-color: white;
+}
