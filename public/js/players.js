@@ -181,7 +181,7 @@ class Player {
 	}
 
 	promotePawn(pawn, { color, piece }) {
-		const sparePiece = this.sparePieces.find(
+		const sparePiece = this.pieces.find(
 			(sparePiece) => sparePiece.name === piece
 		)
 		const newPiece = Object.assign(
