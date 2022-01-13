@@ -1,0 +1,105 @@
+$color-primary-medium: #3e70b7;
+$color-gray-dark: #312e2b;
+$color-input-border: rgb(181, 181, 181);
+$color-invalid-border: #e74c3c;
+
+.member-container {
+	width: min(90vw, 500px);
+	padding: 0.4em;
+	font-size: 68px;
+	background: white;
+	border-radius: 0.1em;
+	& > h2 {
+		font-size: 0.38em;
+		margin-bottom: 1em;
+	}
+}
+
+.member-form {
+	input {
+		display: block;
+		width: 100%;
+		height: 2.8em;
+		margin-bottom: 1.5em;
+		font-family: sans-serif;
+		font-size: 0.3em;
+		border: 0.1em solid $color-input-border;
+		&::placeholder {
+			color: $color-input-border;
+		}
+		&.is-invalid {
+			border-color: $color-invalid-border !important;
+		}
+	}
+	small {
+		position: absolute;
+		color: $color-invalid-border;
+		bottom: -1.8em;
+		left: 0em;
+		visibility: hidden;
+		font-size: 0.2em;
+	}
+	i {
+		position: absolute;
+		top: 0.7em;
+		right: 0.4em;
+		visibility: hidden;
+		font-size: 0.35em;
+	}
+}
+
+.username-input,
+.password-input {
+	position: relative;
+}
+
+.username-input.error > i.fa-exclamation-circle,
+.password-input.error > i.fa-exclamation-circle,
+.username-input.error > small,
+.password-input.error > small {
+	color: $color-invalid-border;
+	visibility: visible;
+}
+
+#submit-btn {
+	display: inline-block;
+	height: 2.1em;
+	margin-bottom: 0.5em;
+	font-family: sans-serif;
+	font-size: 0.5em;
+	text-shadow: 0 0.11em 0 rgba(0, 0, 0, 0.4);
+	background: $color-primary-medium;
+	border-radius: 0.45em;
+}
+
+.member-link {
+	font-family: 'Fjalla One';
+	font-size: 0.3em;
+	color: $color-primary-medium;
+	& > span {
+		color: $color-gray-dark;
+	}
+}
+
+footer {
+	margin-top: 32px;
+	font-size: 18px;
+}
+
+.role {
+	font-family: 'Montserrat', sans-serif;
+	letter-spacing: 0.1vmin;
+	color: white;
+	text-decoration: underline;
+	margin: auto;
+}
+
+.name {
+	color: $color-primary-medium;
+}
+
+.socials > a {
+	font-size: 1.5em;
+	color: white;
+	text-decoration: none;
+}
