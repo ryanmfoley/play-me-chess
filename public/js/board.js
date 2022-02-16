@@ -133,7 +133,7 @@ class Board {
 						piece: { name: piece },
 					} = square
 
-					img.src = `./images/${color}-${piece}.svg`
+					img.src = `/assets/images/${color}-${piece}.svg`
 					img.className = color === 'white' ? 'piece' : 'piece black-piece'
 					img.draggable = true
 

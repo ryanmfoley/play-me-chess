@@ -208,7 +208,7 @@ class Player {
 		for (const piece of pieces) {
 			const img = document.createElement('img')
 
-			img.src = `./images/${this.color}-${piece}.svg`
+			img.src = `/assets/images/${this.color}-${piece}.svg`
 			img.className = this.color === 'white' ? 'piece' : 'piece black-piece'
 			img.setAttribute('data-piece', piece)
 
