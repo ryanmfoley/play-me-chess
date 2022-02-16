@@ -210,6 +210,7 @@ class Player {
 
 			img.src = `/assets/images/${this.color}-${piece}.svg`
 			img.className = this.color === 'white' ? 'piece' : 'piece black-piece'
+			img.alt = `${this.color} ${piece} chess piece`
 			img.setAttribute('data-piece', piece)
 
 			promoteModal.append(img)

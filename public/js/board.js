@@ -135,6 +135,7 @@ class Board {
 
 					img.src = `/assets/images/${color}-${piece}.svg`
 					img.className = color === 'white' ? 'piece' : 'piece black-piece'
+          img.alt = `${color} ${piece} chess piece`
 					img.draggable = true
 
 					square.cellBox.append(img)
