@@ -51,13 +51,14 @@ function Player(id, username, room = id) {
 }
 
 function sendText(player) {
-  client.messages.create({
-	  body: `${player} wants to play a game with you.`,
-	  from: fromNumber,
-	  to: toNumber
-  })
-  .then(msg => console.log(msg))
-  .catch(err => console.log('err'))
+	client.messages
+		.create({
+			body: `${player} wants to play a game with you.`,
+			from: fromNumber,
+			to: toNumber,
+		})
+		.then((msg) => console.log(msg))
+		.catch((err) => console.error({ msg: err.message }))
 }
 
 //______________________________________________________________
@@ -91,12 +92,12 @@ io.on('connection', (socket) => {
 		const { player } = socket.handshake.session
 
 		if (id) {
-      // Joining already created game //
-      player.room = id
-    } else {
-      // New game created //
-      playersWaiting.push(player)
-    }
+			// Joining already created game //
+			player.room = id
+		} else {
+			// New game created //
+			playersWaiting.push(player)
+		}
 
 		player.color = color
 
@@ -110,11 +111,11 @@ io.on('connection', (socket) => {
 	})
 
 	socket.once('leaveGame', async (id) => {
-    if (socket.handshake.session.player) {
-		const { room } = await socket.handshake.session.player
+		if (socket.handshake.session.player) {
+			const { room } = await socket.handshake.session.player
 
-		io.to(room).emit('leaveGame', id)
-    }
+			io.to(room).emit('leaveGame', id)
+		}
 	})
 
 	socket.on('updatePlayersWaiting', (id) => {
@@ -141,11 +142,11 @@ io.on('connection', (socket) => {
 		})
 
 		if (player.color === 'black') io.to(room).emit('startGame')
-		
+
 		socket.on('movePiece', ({ turn, selectedCell, landingCell }) => {
 			// Change turn //
 			turn = turn === 'white' ? 'black' : 'white'
-			
+
 			// Send game state to client //
 			io.to(room).emit('movePiece', {
 				turn,
@@ -153,14 +154,16 @@ io.on('connection', (socket) => {
 				landingCell,
 			})
 		})
-		
+
 		// Send promoted piece //
-		socket.on('promotePawn', (newPiece) => io.to(room).emit('promotePawn', newPiece))
+		socket.on('promotePawn', (newPiece) =>
+			io.to(room).emit('promotePawn', newPiece)
+		)
 	})
 })
 
 //______________________________________________________________
 
-const { PORT } = process.env 
+const { PORT } = process.env
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
