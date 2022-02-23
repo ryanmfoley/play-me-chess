@@ -91,20 +91,26 @@ router.post(
 		User.findOne({ username: req.body.username })
 			.then((user) => {
 				if (user) {
-					console.log('register')
+					// Username already exists //
 					res.render('register.ejs', {
 						userCheck: 'error',
 						usernameInputBorder: 'is-invalid',
 					})
 				} else {
+					// Hash password //
 					req.body.password = bcrypt.hashSync(
 						req.body.password,
 						bcrypt.genSaltSync(10)
 					)
 
+					// Create user //
 					User.create(req.body)
-						.then(() => res.redirect('/'))
-						.catch((err) => status(500).send({ msg: err.message }))
+						.then((createdUser) => {
+							req.session.currentUser = createdUser
+
+							res.status(201).redirect('/')
+						})
+						.catch((err) => res.status(500).send({ msg: err.message }))
 				}
 			})
 			.catch((err) => res.status(500).send({ msg: err.message }))
