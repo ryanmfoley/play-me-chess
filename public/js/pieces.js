@@ -34,14 +34,16 @@ class Piece {
 			(pieceCopy) => pieceCopy.row === this.row && pieceCopy.col === this.col
 		)
 
+		if (!validMove) return { validMove: false, castle: { validCastle: false } }
+
 		// Check if player is in check after move //
-		if (validMove)
-			chessBoardCopy.movePiece(
-				playerCopy,
-				opponentCopy,
-				selectedPiece,
-				landingSquare
-			)
+		chessBoardCopy.movePiece(
+			playerCopy,
+			opponentCopy,
+			selectedPiece,
+			landingSquare
+		)
+		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 
 		playerCopy.isKingInCheck(chessBoardCopy)
 

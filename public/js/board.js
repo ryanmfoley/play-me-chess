@@ -135,7 +135,7 @@ class Board {
 
 					img.src = `/assets/images/${color}-${piece}.svg`
 					img.className = color === 'white' ? 'piece' : 'piece black-piece'
-          img.alt = `${color} ${piece} chess piece`
+					img.alt = `${color} ${piece} chess piece`
 					img.draggable = true
 
 					square.cellBox.append(img)
@@ -203,9 +203,7 @@ class Board {
 		}
 	}
 
-	movePiece(player, opponent, piece, landingSquare) {
-		const activePlayer = player.color === this.turn ? opponent : player
-		const inActivePlayer = player.color === this.turn ? player : opponent
+	movePiece(activePlayer, inActivePlayer, piece, landingSquare) {
 		const startingSquare = piece.row
 
 		// Remove piece from square //
@@ -213,7 +211,7 @@ class Board {
 
 		////////////// Capture //////////////
 		if (landingSquare.piece) {
-			this.removePieceFromGame(activePlayer, landingSquare.piece)
+			this.removePieceFromGame(inActivePlayer, landingSquare.piece)
 		} else if (piece.enPassant) {
 			const enPassantPiece =
 				piece.color === 'white'
@@ -249,8 +247,8 @@ class Board {
 		}
 	}
 
-	removePieceFromGame(player, pieceToRemove) {
-		player.pieces = player.pieces.filter(
+	removePieceFromGame(inActivePlayer, pieceToRemove) {
+		inActivePlayer.pieces = inActivePlayer.pieces.filter(
 			(piece) =>
 				piece.row !== pieceToRemove.row || piece.col !== pieceToRemove.col
 		)

@@ -173,7 +173,12 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 	const promotePawn =
 		selectedPiece.name === 'pawn' && backRank == landingCell.row ? true : false
 
-	chessBoard.movePiece(player, opponent, selectedPiece, landingSquare, socket)
+	chessBoard.movePiece(
+		activePlayer,
+		inActivePlayer,
+		selectedPiece,
+		landingSquare
+	)
 	chessBoard.displayPieces()
 
 	//////////////////// Check for pawn promotion ////////////////////
