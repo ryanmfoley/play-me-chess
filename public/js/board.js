@@ -121,7 +121,7 @@ class Board {
 		this.board = [...board].map((row) => [...row].map((cell) => ({ ...cell })))
 	}
 
-	displayPieces() {
+	displayPieces(playersColor) {
 		this.board.forEach((row) =>
 			row.forEach((square) => {
 				square.cellBox.innerHTML = ''
@@ -134,7 +134,8 @@ class Board {
 					} = square
 
 					img.src = `/assets/images/${color}-${piece}.svg`
-					img.className = color === 'white' ? 'piece' : 'piece black-piece'
+					img.className =
+						playersColor === 'white' ? 'piece' : 'piece black-piece'
 					img.alt = `${color} ${piece} chess piece`
 					img.draggable = true
 

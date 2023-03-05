@@ -68,7 +68,7 @@ socket.on('startGame', () => {
 
 	chessBoard.clearBoard()
 	placePiecesOnBoard(chessBoard)
-	chessBoard.displayPieces()
+	chessBoard.displayPieces(player.color)
 	chessBoard.markEnemySquares(player, opponent)
 })
 
