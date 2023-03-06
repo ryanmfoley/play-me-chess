@@ -25,9 +25,11 @@ class Board {
 		}
 	}
 
-	assignPieceToSquare(piece) {
-		this.board[piece.row][piece.col].color = piece.color
-		this.board[piece.row][piece.col].piece = piece
+	assignPieceToSquare(piece, displayMove) {
+		const square = this.board[piece.row][piece.col]
+		square.color = piece.color
+		square.piece = piece
+		if (displayMove) square.cellBox.classList.add('last-move')
 	}
 
 	checkDraw() {
@@ -135,7 +137,7 @@ class Board {
 
 					img.src = `/assets/images/${color}-${piece}.svg`
 					img.className =
-						playersColor === 'white' ? 'piece' : 'piece black-piece'
+						playersColor === 'white' ? 'piece' : 'piece player-black'
 					img.alt = `${color} ${piece} chess piece`
 					img.draggable = true
 
@@ -204,11 +206,17 @@ class Board {
 		}
 	}
 
-	movePiece(activePlayer, inActivePlayer, piece, landingSquare) {
+	movePiece(
+		activePlayer,
+		inActivePlayer,
+		piece,
+		landingSquare,
+		displayMove = true
+	) {
 		const startingSquare = piece.row
 
 		// Remove piece from square //
-		this.removePieceFromSquare(piece)
+		this.removePieceFromSquare(piece, displayMove)
 
 		////////////// Capture //////////////
 		if (landingSquare.piece) {
@@ -220,13 +228,13 @@ class Board {
 					: this.board[landingSquare.row - 1][landingSquare.col].piece
 
 			if (enPassantPiece) {
-				this.removePieceFromSquare(enPassantPiece)
+				this.removePieceFromSquare(enPassantPiece, displayMove)
 				this.removePieceFromGame(inActivePlayer, enPassantPiece)
 			}
 		}
 
 		piece.changePosition(landingSquare)
-		this.assignPieceToSquare(piece)
+		this.assignPieceToSquare(piece, displayMove)
 
 		// Mark enemyEnemySquares //
 		this.markEnemySquares(activePlayer, inActivePlayer)
@@ -255,9 +263,19 @@ class Board {
 		)
 	}
 
-	removePieceFromSquare({ row, col }) {
+	removePieceFromSquare({ row, col }, displayMove) {
 		this.board[row][col].color = ''
 		this.board[row][col].piece = ''
+		const { cellBox } = this.board[row][col]
+
+		if (displayMove) {
+			// Reset all square background colors //
+			this.board.forEach((row) =>
+				row.forEach((cell) => cell.cellBox.classList.remove('last-move'))
+			)
+			// Style last move squares //
+			cellBox.classList.add('last-move')
+		}
 	}
 
 	selectSquare({ row, col }) {

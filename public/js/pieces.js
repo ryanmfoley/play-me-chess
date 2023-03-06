@@ -41,7 +41,8 @@ class Piece {
 			playerCopy,
 			opponentCopy,
 			selectedPiece,
-			landingSquare
+			landingSquare,
+			false
 		)
 		chessBoardCopy.markEnemySquares(playerCopy, opponentCopy)
 

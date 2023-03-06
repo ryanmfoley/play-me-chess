@@ -95,7 +95,8 @@ class Player {
 							playerCopy,
 							opponentCopy,
 							selectedPiece,
-							landingSquare
+							landingSquare,
+							false
 						)
 
 						// Move rook //
@@ -103,7 +104,8 @@ class Player {
 							playerCopy,
 							opponentCopy,
 							castle.rook,
-							rooksLandingSquare
+							rooksLandingSquare,
+							false
 						)
 					} else if (promotePawn) {
 						//////////////////// Check for pawn promotion ////////////////////
@@ -118,7 +120,8 @@ class Player {
 								playerCopy,
 								opponentCopy,
 								newPiece,
-								landingSquare
+								landingSquare,
+								false
 							)
 
 							playerCopy.isKingInCheck(chessBoardCopy)
@@ -134,7 +137,8 @@ class Player {
 							playerCopy,
 							opponentCopy,
 							selectedPiece,
-							landingSquare
+							landingSquare,
+							false
 						)
 					}
 
@@ -209,7 +213,7 @@ class Player {
 			const img = document.createElement('img')
 
 			img.src = `/assets/images/${this.color}-${piece}.svg`
-			img.className = this.color === 'white' ? 'piece' : 'piece black-piece'
+			img.className = this.color === 'white' ? 'piece' : 'piece player-black'
 			img.alt = `${this.color} ${piece} chess piece`
 			img.setAttribute('data-piece', piece)
 

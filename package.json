@@ -4,7 +4,10 @@
   "description": "Chess app to play with friends",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "gulp_default": "gulp",
+    "gulp_watch": "gulp watch",
+    "gulp_minify-css": "gulp minify-css"
   },
   "keywords": [],
   "author": "Ryan Foley",

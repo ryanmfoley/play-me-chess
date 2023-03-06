@@ -39,9 +39,9 @@ socket.on('enterGameRoom', ({ id, username, color }) => {
 		gameInfo.innerHTML = 'WAITING FOR OPPONENT'
 	} else {
 		// Flip board for black //
-		board.classList.add('black-piece')
-		gameInfo.classList.add('black-piece')
-		gameResult.classList.add('black-piece')
+		board.classList.add('player-black')
+		gameInfo.classList.add('player-black')
+		gameResult.classList.add('player-black')
 	}
 })
 
@@ -179,7 +179,7 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 		selectedPiece,
 		landingSquare
 	)
-	chessBoard.displayPieces()
+	chessBoard.displayPieces(player.color)
 
 	//////////////////// Check for pawn promotion ////////////////////
 	if (promotePawn) {
@@ -199,7 +199,7 @@ socket.on('movePiece', async ({ turn, selectedCell, landingCell }) => {
 			promotedPiece,
 			landingSquare
 		)
-		chessBoard.displayPieces()
+		chessBoard.displayPieces(player.color)
 	}
 
 	// Check for draw //

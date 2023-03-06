@@ -1,7 +1,16 @@
-$color-primary-dark: #315991;
+$color-dark-square: #315991;
 $color-light-square: #d9e0e6;
-$color-hover-border: #ed2f09;
-$color-check-square: rgb(255, 160, 160);
+$color-last-move-dark-square: radial-gradient(
+	circle,
+	rgba(255, 253, 164, 1) 0%,
+	rgba(49, 89, 145, 1) 100%
+);
+$color-last-move-light-square: radial-gradient(
+	circle,
+	rgba(250, 255, 154, 1) 0%,
+	rgba(230, 227, 217, 1) 100%
+);
+$color-red: crimson;
 
 #board {
 	position: relative;
@@ -24,6 +33,27 @@ $color-check-square: rgb(255, 160, 160);
 	align-items: center;
 	overflow: hidden;
 	user-select: none;
+
+	&.dark-square {
+		background: $color-dark-square;
+		&.last-move {
+			background: $color-last-move-dark-square !important;
+		}
+	}
+	&.light-square {
+		background: $color-light-square;
+		&.last-move {
+			background: $color-last-move-light-square !important;
+		}
+	}
+
+	#check-square {
+		border: 3px solid $color-red;
+	}
+
+	.hover-border {
+		border: 0.3vmin solid $color-red;
+	}
 }
 
 .piece {
@@ -32,34 +62,8 @@ $color-check-square: rgb(255, 160, 160);
 	user-select: none;
 }
 
-.rows-0:nth-child(even),
-.rows-1:nth-child(odd),
-.rows-2:nth-child(even),
-.rows-3:nth-child(odd),
-.rows-4:nth-child(even),
-.rows-5:nth-child(odd),
-.rows-6:nth-child(even),
-.rows-7:nth-child(odd) {
-	background: $color-primary-dark;
-}
-
-.rows-0:nth-child(odd),
-.rows-1:nth-child(even),
-.rows-2:nth-child(odd),
-.rows-3:nth-child(even),
-.rows-4:nth-child(odd),
-.rows-5:nth-child(even),
-.rows-6:nth-child(odd),
-.rows-7:nth-child(even) {
-	background: $color-light-square;
-}
-
-.black-piece {
+.player-black {
 	transform: rotate(180deg);
-}
-
-.hover-border {
-	border: 0.3vmin dashed $color-hover-border;
 }
 
 #players-name,
@@ -84,10 +88,6 @@ $color-check-square: rgb(255, 160, 160);
 			border: 0.25vh solid white;
 		}
 	}
-}
-
-#check-square {
-	background: $color-check-square;
 }
 
 #game-info-modal {
