@@ -35,9 +35,9 @@ io.use(
 )
 
 // Controllers //
-app.use('/users', require('./controllers/users'))
-app.use('/lobby', require('./controllers/lobby'))
-app.use('/chess', require('./controllers/chess'))
+app.use('/users', require('../controllers/users'))
+app.use('/lobby', require('../controllers/lobby'))
+app.use('/chess', require('../controllers/chess'))
 
 // Routes //
 app.get('/', (req, res) => res.redirect('/lobby'))
