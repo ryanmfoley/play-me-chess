@@ -1,0 +1,3 @@
+[build]
+  command = "echo 'No build process needed'"
+  publish = "."  # Specifies the directory to deploy
