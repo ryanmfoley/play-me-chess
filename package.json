@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon index",
+		"production": "node index",
 		"gulp_default": "gulp",
 		"gulp_watch": "gulp watch",
 		"gulp_minify-css": "gulp minify-css"
