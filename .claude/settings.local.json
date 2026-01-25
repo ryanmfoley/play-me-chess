@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mongosh:*)",
+      "Bash(node:*)",
+      "Bash(xargs:*)",
+      "Bash(mongo:*)"
+    ]
+  }
+}
